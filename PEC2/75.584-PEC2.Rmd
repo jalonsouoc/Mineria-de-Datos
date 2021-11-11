@@ -423,8 +423,77 @@ Presenta el juego de datos, nombre y significado de cada columna, así como las 
 Adicionalmente realiza un estudio similar al de los ejemplos 1.1 y 1.2  
 
 ### Respuesta 1
-> Escribe aquí la respuesta a la pregunta
+````{r message= FALSE, warning=FALSE}
+str(Hawks)
+````
 
+Comprobamos que para el juego de datos de lo shalcones tenemos 908 registros y 19 variables que los caracterizan.
+
+Las variables que compondrán cada uno de los datos de los halcones contenidos en el fichero corresponden a:
+
+* **Month:** Mes en el que serealiza la observación
+* **Day:** Día en el que se realiza la observación
+* **Year:** Año en el que se realiza la observación
+* **CaptureTime:** Hora de la captura
+* **ReleaseTime:** Hora de puesta en libertad
+* **BandNumber:** Código de banda de identificación
+* **Species:** Especie a la que pertenece
+* **Age:** Edad del halcón difrenciando entre adulto o inmaduro
+* **Sex:**  Sexo del halcón
+* **Wing:** Longitud en milímetros del ala primaria desde la punta hasta la articulación de la muñeca a la que se adhiere
+* **Weight:** Peso en gramos
+* **Culmen:** Longitud en milímetros de l amandíbula superior del pico de un ave
+* **Halloux:** Longitud en milímetros de la garra
+* **Tail:** Longitud en milímetros de la cola
+* **StandardTail:** Longitud estándar en milímetros de la medida de la cola
+* **Tarsus:** Longitud en milímetros del hueso de la pata
+* **WingPitFat:** Cantidad de grasa en el hueco del ala 
+* **KeelFat:** Cantidad de grasa en el esternón
+* **Crop:** Cantidad de material en el buche
+
+Mostramos una pequeña muestra de los datos para visualizarlos:
+
+````{r message= FALSE, warning=FALSE}
+head(Hawks)
+````
+
+
+
+````{r message=FALSE, warning=FALSE}
+HawksTrait <- Hawks[,10:14]
+head(HawksTrait)
+
+colSums(is.na(Hawks))
+colSums(is.na(HawksTrait))
+
+HawksTrait$Wing[is.na(HawksTrait$Wing)] <- mean(HawksTrait$Wing,na.rm=T)
+HawksTrait$Weight[is.na(HawksTrait$Weight)] <- mean(HawksTrait$Weight,na.rm=T)
+HawksTrait$Culmen[is.na(HawksTrait$Culmen)] <- mean(HawksTrait$Culmen,na.rm=T)
+HawksTrait$Hallux[is.na(HawksTrait$Hallux)] <- mean(HawksTrait$Hallux,na.rm=T)
+
+
+colSums(is.na(HawksTrait))
+
+
+
+fit <- kmeans(HawksTrait,2)
+fit4 <- kmeans(HawksTrait,4)
+
+
+distance <- daisy(HawksTrait) 
+resultados <- rep(0, 10)
+
+for (i in c(2,3,4,5,6,7,8,9,10))
+{
+  fit           <- kmeans(HawksTrait, i)
+  y_cluster     <- fit$cluster
+  sk            <- silhouette(y_cluster, distance)
+  resultados[i] <- mean(sk[,3])
+}
+
+plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Número de clusters",ylab="Silueta")
+
+````
 
 ## Ejercicio 2
 Con el juego de datos proporcionado realiza un estudio similar al del ejemplo 2
