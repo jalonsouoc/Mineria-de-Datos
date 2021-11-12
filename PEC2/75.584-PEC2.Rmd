@@ -457,43 +457,92 @@ Mostramos una pequeña muestra de los datos para visualizarlos:
 head(Hawks)
 ````
 
+Para realizar laas agrupaciones utilizaremos sólo los datos numéricos en este caso serán las variables Wing, Weight, Culmen, Halloux. Tail, StandardTail, Tarsus, WingPitFat, KeelFat y Crop.
 
+
+Antes de poder aplicar el algoritmo de kmeans debemos de asegurarnos que los datos no tengan valores vacíos, por lo que comprobamos la existencia de valores vacíos en la muestra 
+````{r message= FALSE, warning=FALSE}
+colSums(is.na(Hawks))
+````
+
+Podemos observar que existen demasiados valores vacíos en comparación con el tamaño total de la muestra para las variables StandardTail, Tarsus, WingPitFat y KeelFat por lo que las descartaremos del estudio ya que asociarles un valor no sería beneficioso para el estudio. Almacenas en un nuevo dataset las variables con las que realizaremos las agrupaciones.
 
 ````{r message=FALSE, warning=FALSE}
-HawksTrait <- Hawks[,10:14]
+
+HawksTrait <- na.omit(Hawks[,10:14])
 head(HawksTrait)
+````
 
-colSums(is.na(Hawks))
-colSums(is.na(HawksTrait))
+Realizamos ahora un estudio para obtener el número de clúster idóneo para nuestra muestra, para ello probamos con diferentes números de agrupaciones y visualizamos los resultados
 
-HawksTrait$Wing[is.na(HawksTrait$Wing)] <- mean(HawksTrait$Wing,na.rm=T)
-HawksTrait$Weight[is.na(HawksTrait$Weight)] <- mean(HawksTrait$Weight,na.rm=T)
-HawksTrait$Culmen[is.na(HawksTrait$Culmen)] <- mean(HawksTrait$Culmen,na.rm=T)
-HawksTrait$Hallux[is.na(HawksTrait$Hallux)] <- mean(HawksTrait$Hallux,na.rm=T)
+````{r message=FALSE, warning=FALSE}
+distance <- daisy(HawksTrait)
+resultados <- rep(0,10)
 
-
-colSums(is.na(HawksTrait))
-
-
-
-fit <- kmeans(HawksTrait,2)
-fit4 <- kmeans(HawksTrait,4)
-
-
-distance <- daisy(HawksTrait) 
-resultados <- rep(0, 10)
-
-for (i in c(2,3,4,5,6,7,8,9,10))
-{
-  fit           <- kmeans(HawksTrait, i)
-  y_cluster     <- fit$cluster
-  sk            <- silhouette(y_cluster, distance)
-  resultados[i] <- mean(sk[,3])
+#Comprobamos los resultados para 2 agrupaciones hasta 10 
+for (i in c(2,3,4,5,6,7,8,9,10)) {
+  fit <- kmeans(HawksTrait,i)
+  y_cluster <- fit$cluster
+  silhouette <- silhouette(y_cluster, distance)
+  resultados[i] <- mean(silhouette[,3])
 }
 
-plot(2:10,resultados[2:10],type="o",col="blue",pch=0,xlab="Número de clusters",ylab="Silueta")
-
+plot(2:10, resultados[2:10], type="o",col="blue",pch=0,xlab="Número de clusters",ylab="Silueta")
 ````
+
+Podemos observar que la mejora más significativa se obtiene para 4 agrupaciones.
+
+Evaluaremos ahora el número de clúseters óptimo empleando otra formula en función de aquel que ofrece la menor suma de los cuadrados de las distancias de los puntos de cada grupo con respecto a su centro, con la mayor separación entre centros de grupos.
+````{r message=FALSE, warning=FALSE}
+resultados <- rep(0,10)
+
+for (i in c(2,3,4,5,6,7,8,9,10)){
+  fit <- kmeans(HawksTrait,i)
+  resultados[i] <- fit$tot.withinss
+}
+
+plot(2:10, resultados[2:10], type="o",col="blue",pch=0,xlab="Número de clusters",ylab="tot.tot.withins")
+````
+
+Podemos observar de nuevo que la mejora más significativa se vuelve a producir para 4 agrupaciones.
+
+Realizamos unas últimas comprobaciones ahora empleando la función kmeansruns en función a los cirterios de la silueta media y Calinski-Harabasz
+````{r, message=FALSE, Warning=FALSE}
+fit_asw <- kmeansruns(HawksTrait, krange=1:10, criterion="asw")
+fit_ch <- kmeansruns(HawksTrait, krange=1:10, criterion="ch")
+
+fit_asw$bestk
+fit_ch$bestk
+
+plot(1:10,fit_asw$crit,type="o",col="blue",pch=0,xlab="Número de clústers",ylab="Criterio silueta media")
+plot(1:10,fit_ch$crit,type="o",col="blue",pch=0,xlab="Número de clústers",ylab="Criterio Calinski-Harabasz")
+````
+
+Vemos que con el cirterio de la silueta de la media obtenemos dos clústers y con el criterio de Calinski-harabas obtenes 10 clústers.
+
+
+El caso de estudio sabemos que se pueden agrupar los datos en 3 especies de halcones (ratonero de cola roja, gavilán americano, gavilán de cooper) comprobaremos el comportamiento del algoritmo kmeans para 3 clústers cogiendo de dos en dos las variables.
+
+````{r, message=FALSE, Warning=FALSE}
+Hawks3clusters <- kmeans(HawksTrait,3)
+
+plot(HawksTrait[c(1,2)], col=Hawks3clusters$cluster, main="Clasificación k-means")
+plot(HawksTrait[c(1,2)], col=as.factor(Hawks$Species), main="Clasificación real")
+````
+
+
+````{r, message=FALSE, Warning=FALSE}
+plot(HawksTrait[c(3,4)], col=Hawks3clusters$cluster, main="Clasificación k-means")
+plot(HawksTrait[c(3,4)], col=as.factor(Hawks$Species), main="Clasificación real")
+````
+
+
+
+````{r, message=FALSE, Warning=FALSE}
+plot(HawksTrait[c(4,5)], col=Hawks3clusters$cluster, main="Clasificación k-means")
+plot(HawksTrait[c(4,5)], col=as.factor(Hawks$Species), main="Clasificación real")
+````
+
 
 ## Ejercicio 2
 Con el juego de datos proporcionado realiza un estudio similar al del ejemplo 2
