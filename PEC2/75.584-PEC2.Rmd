@@ -523,7 +523,7 @@ Vemos que con el cirterio de la silueta de la media obtenemos dos clústers y co
 
 El caso de estudio sabemos que se pueden agrupar los datos en 3 especies de halcones (ratonero de cola roja, gavilán americano, gavilán de cooper) comprobaremos el comportamiento del algoritmo kmeans para 3 clústers cogiendo de dos en dos las variables.
 
-````{r, message=FALSE, Warning=FALSE}
+````{r, message=FALSE, Warning=FALSE}   
 Hawks3clusters <- kmeans(HawksTrait,3)
 
 # Wing y Weight
@@ -532,7 +532,7 @@ plot(HawksTrait[c(1,2)], col=as.factor(Hawks$Species), main="Clasificación real
 ````
 
 
-````{r, message=FALSE, Warning=FALSE}
+````{r, message=FALSE, Warning=FALSE}                      
 # Culmen y Hallux
 plot(HawksTrait[c(3,4)], col=Hawks3clusters$cluster, main="Clasificación k-means")
 plot(HawksTrait[c(3,4)], col=as.factor(Hawks$Species), main="Clasificación real")
@@ -553,7 +553,51 @@ Como podemos observar ninguna de las variables parece haber acertado en la clasi
 Con el juego de datos proporcionado realiza un estudio similar al del ejemplo 2
 
 ### Respuesta 2
-> Escribe aquí la respuesta a la pregunta
+
+Analizaremos ahora la muestra de datos de los halcones empleando los algoritmos de DBSCAN y OPTICS. Al igual que en el apartado anterior, aplicaremos el algoritmo a las variables de dos en dos t con una densidada mínima ceptada de 10.
+
+````{r, message=FALSE, warning=FALSE}
+#Wing y Weight
+resOptics12 <- optics(HawksTrait[c(1,2)], minPts = 10)
+plot(resOptics12)
+````
+
+
+````{r, message=FALSE, warning=FALSE}
+plot(HawksTrait[c(1,2)],col="grey")
+polygon(HawksTrait[resOptics12$order,])
+````
+
+````{r, message=FALSE, warning=FALSE}
+# Culmen y Hallux
+resOptics34 <- optics(HawksTrait[c(3,4)], minPts = 10)
+plot(resOptics34)
+````
+
+````{r, message=FALSE, warning=FALSE}
+plot(HawksTrait[c(3,4)],col="grey")
+polygon(HawksTrait[resOptics34$order,])
+head(HawksTrait[resOptics34$order,])
+````
+
+
+````{r, message=FALSE, warning=FALSE}
+# Wing y Tail
+resOptics15 <- optics(HawksTrait[c(1,5)], minPts = 10)
+plot(resOptics15)
+````
+
+
+
+````{r, message=FALSE, warning=FALSE}
+plot(HawksTrait[c(1,5)],col="grey")
+polygon(HawksTrait[resOptics15$order,])
+````
+
+
+````{r, message=FALSE, warning=FALSE}
+head(HawksTrait[resOptics15$order,])
+````
 
 ## Ejercicio 3
 Realiza una comparativa de los métodos *k-means* y *DBSCAN*    
