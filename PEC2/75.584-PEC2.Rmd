@@ -269,9 +269,9 @@ plot(1:10,fit_asw$crit,type="o",col="blue",pch=0,xlab="Número de clústers",yla
 
 Los resultados son muy parecidos a los que hemos obtenido anteriormente. Con el criterio de la silueta media se obtienen dos clústers y con el *Calinski-Harabasz* se obtienen 3.
 
-Como se ha comprobado, conocer el número óptimo de clústers no es un problema fácil. Tampoco lo es la evaluación de los modelos de agregación.
+Como se ha comprobado, conocer el número óptimo de clústeres no es un problema fácil. Tampoco lo es la evaluación de los modelos de agregación.
 
-Como en el caso que estudiamos sabemos que los datos pueden ser agrupados en 3 clases o especies, vamos a ver cómo se ha comportado *kmeans* en el caso de pedirle 3 clústers. Para eso comparamos visualmente los campos dos a dos, con el valor real que sabemos está almacenado en el campo "species" del dataset original.  
+Como en el caso que estudiamos sabemos que los datos pueden ser agrupados en 3 clases o especies, vamos a ver cómo se ha comportado *kmeans* en el caso de pedirle 3 clústeres. Para eso comparamos visualmente los campos dos a dos, con el valor real que sabemos está almacenado en el campo "species" del dataset original.  
 
 ```{r message= FALSE, warning=FALSE}
 penguins3clusters <- kmeans(x, 3)
@@ -427,22 +427,22 @@ Adicionalmente realiza un estudio similar al de los ejemplos 1.1 y 1.2
 str(Hawks)
 ````
 
-Comprobamos que para el juego de datos de lo shalcones tenemos 908 registros y 19 variables que los caracterizan.
+Comprobamos que para el juego de datos de los halcones tenemos 908 registros y 19 variables que los caracterizan.
 
 Las variables que compondrán cada uno de los datos de los halcones contenidos en el fichero corresponden a:
 
-* **Month:** Mes en el que serealiza la observación
+* **Month:** Mes en el que se realiza la observación
 * **Day:** Día en el que se realiza la observación
 * **Year:** Año en el que se realiza la observación
 * **CaptureTime:** Hora de la captura
 * **ReleaseTime:** Hora de puesta en libertad
 * **BandNumber:** Código de banda de identificación
 * **Species:** Especie a la que pertenece
-* **Age:** Edad del halcón difrenciando entre adulto o inmaduro
+* **Age:** Edad del halcón diferenciando entre adulto o inmaduro
 * **Sex:**  Sexo del halcón
 * **Wing:** Longitud en milímetros del ala primaria desde la punta hasta la articulación de la muñeca a la que se adhiere
 * **Weight:** Peso en gramos
-* **Culmen:** Longitud en milímetros de l amandíbula superior del pico de un ave
+* **Culmen:** Longitud en milímetros de la mandíbula superior del pico de un ave
 * **Halloux:** Longitud en milímetros de la garra
 * **Tail:** Longitud en milímetros de la cola
 * **StandardTail:** Longitud estándar en milímetros de la medida de la cola
@@ -457,7 +457,7 @@ Mostramos una pequeña muestra de los datos para visualizarlos:
 head(Hawks)
 ````
 
-Para realizar laas agrupaciones utilizaremos sólo los datos numéricos en este caso serán las variables Wing, Weight, Culmen, Halloux. Tail, StandardTail, Tarsus, WingPitFat, KeelFat y Crop.
+Para realizar las agrupaciones utilizaremos sólo los datos numéricos en este caso serán las variables Wing, Weight, Culmen, Halloux. Tail, StandardTail, Tarsus, WingPitFat, KeelFat y Crop.
 
 
 Antes de poder aplicar el algoritmo de kmeans debemos de asegurarnos que los datos no tengan valores vacíos, por lo que comprobamos la existencia de valores vacíos en la muestra 
@@ -506,7 +506,7 @@ plot(2:10, resultados[2:10], type="o",col="blue",pch=0,xlab="Número de clusters
 
 Podemos observar de nuevo que la mejora más significativa se vuelve a producir para 4 agrupaciones.
 
-Realizamos unas últimas comprobaciones ahora empleando la función kmeansruns en función a los cirterios de la silueta media y Calinski-Harabasz
+Realizamos unas últimas comprobaciones ahora empleando la función kmeansruns en función a los criterios de la silueta media y Calinski-Harabasz
 ````{r, message=FALSE, Warning=FALSE}
 fit_asw <- kmeansruns(HawksTrait, krange=1:10, criterion="asw")
 fit_ch <- kmeansruns(HawksTrait, krange=1:10, criterion="ch")
@@ -514,14 +514,14 @@ fit_ch <- kmeansruns(HawksTrait, krange=1:10, criterion="ch")
 fit_asw$bestk
 fit_ch$bestk
 
-plot(1:10,fit_asw$crit,type="o",col="blue",pch=0,xlab="Número de clústers",ylab="Criterio silueta media")
-plot(1:10,fit_ch$crit,type="o",col="blue",pch=0,xlab="Número de clústers",ylab="Criterio Calinski-Harabasz")
+plot(1:10,fit_asw$crit,type="o",col="blue",pch=0,xlab="Número de clústeres",ylab="Criterio silueta media")
+plot(1:10,fit_ch$crit,type="o",col="blue",pch=0,xlab="Número de clústeres",ylab="Criterio Calinski-Harabasz")
 ````
 
-Vemos que con el cirterio de la silueta de la media obtenemos dos clústers y con el criterio de Calinski-harabas obtenes 10 clústers.
+Vemos que con el criterio de la silueta de la media obtenemos dos clústeres y con el criterio de Calinski-harabas obtenes 10 clústeres.
 
 
-El caso de estudio sabemos que se pueden agrupar los datos en 3 especies de halcones (ratonero de cola roja, gavilán americano, gavilán de cooper) comprobaremos el comportamiento del algoritmo kmeans para 3 clústers cogiendo de dos en dos las variables.
+El caso de estudio sabemos que se pueden agrupar los datos en 3 especies de halcones (ratonero de cola roja, gavilán americano, gavilán de cooper) comprobaremos el comportamiento del algoritmo kmeans para 3 clústeres cogiendo de dos en dos las variables.
 
 ````{r, message=FALSE, Warning=FALSE}   
 Hawks3clusters <- kmeans(HawksTrait,3)
@@ -547,57 +547,150 @@ plot(HawksTrait[c(1,5)], col=as.factor(Hawks$Species), main="Clasificación real
 ````
 
 
-Como podemos observar ninguna de las variables parece haber acertado en la clasificación en comparación con la clasificación real debido a que nos encontramos que la clasificación real es bastante dispersa. Por lo que no aprecen datos relevantes a la hora de clasificar el tipo de halcón de entre las especies de ratonero de cola roja, gavilán americano, gavilán de cooper
+Como podemos observar ninguna de las variables parece haber acertado en la clasificación en comparación con la clasificación real debido a que nos encontramos que la clasificación real es bastante dispersa. Por lo que no aparecen datos relevantes a la hora de clasificar el tipo de halcón de entre las especies de ratonero de cola roja, gavilán americano, gavilán de cooper
 
 ## Ejercicio 2
 Con el juego de datos proporcionado realiza un estudio similar al del ejemplo 2
 
 ### Respuesta 2
 
-Analizaremos ahora la muestra de datos de los halcones empleando los algoritmos de DBSCAN y OPTICS. Al igual que en el apartado anterior, aplicaremos el algoritmo a las variables de dos en dos t con una densidada mínima ceptada de 10.
+Analizaremos ahora la muestra de datos de los halcones empleando los algoritmos de DBSCAN y OPTICS. Al igual que en el apartado anterior, aplicaremos el algoritmo a las variables de dos en dos.
+
+Para las muestras de Wing y Weight aplicaremos una densidad mínima aceptada de 10.
 
 ````{r, message=FALSE, warning=FALSE}
 #Wing y Weight
 resOptics12 <- optics(HawksTrait[c(1,2)], minPts = 10)
+resOptics12
+
+````
+
+Mostramos el diagrama de alcanzabilidad para estas variables:
+
+````{r, message=FALSE, warning=FALSE}
 plot(resOptics12)
 ````
 
+En el diagrama podemos observar que a primera vista podríamos establecer la existencia de 5 clústeres debido a que se aprecian 5 valles en el diagrama.
+
+A continuación mostramos el diagrama de alcanzabilidad, donde se observan las trazas de las distancias entre puntos cercanos.
 
 ````{r, message=FALSE, warning=FALSE}
 plot(HawksTrait[c(1,2)],col="grey")
 polygon(HawksTrait[resOptics12$order,])
 ````
 
+Extraemos ahora las agrupaciones de la ordenación realizada por OPTICS como lo hubiera hecho el algoritmo DBSCAN estableciendo el radio del algoritmo en 50.
+
+`````{r, message=FALSE, warning=FALSE}
+
+
+resOptics12 <- extractDBSCAN(resOptics12, eps_cl = 50)
+plot(resOptics12)
+hullplot(HawksTrait[c(1,2)], resOptics12)
+
+````
+
+Para este radio podemos observar que nos ha generado tres clústeres. hacemos una prueba ahora reduciendo el radio a 30 para ver si varía el número de clústeres ya que visualmente habíamos indicado la posibilidad de que se generasen 5 clústeres.
+
+
+`````{r, message=FALSE, warning=FALSE}
+resOptics12 <- extractDBSCAN(resOptics12, eps_cl = 30)
+plot(resOptics12)
+hullplot(HawksTrait[c(1,2)], resOptics12)
+````
+
+Reduciendo el radio vemos que se ha generado un nuevo clúster pero se sigue sin alcanzar los 5 que definimos visualmente.
+
+Realizamos una variante de la extracción DBSCAN en la que definimos el parámetro de la variación de la densidad en 0.2
+
+`````{r, message=FALSE, warning=FALSE}
+
+
+resOptics12 <- extractXi(resOptics12, xi = 0.2)
+resOptics12
+plot(resOptics12)
+
+hullplot(HawksTrait[c(1,2)], resOptics12)
+
+````
+
+
+Realizamos el estudio ahora para las variables de Culmen y Hallux
+
 ````{r, message=FALSE, warning=FALSE}
-# Culmen y Hallux
+#Culmen y Hallux
 resOptics34 <- optics(HawksTrait[c(3,4)], minPts = 10)
+resOptics34
 plot(resOptics34)
 ````
 
-````{r, message=FALSE, warning=FALSE}
-plot(HawksTrait[c(3,4)],col="grey")
-polygon(HawksTrait[resOptics34$order,])
-head(HawksTrait[resOptics34$order,])
+En este caso observamos que se dificulta el definir el número de clústeres generados visualmente. Podemos observar que el radio en este caso va a ser bastante bajo para poder conformar bien los clústeres. Definimos el radio en 2
+
+`````{r, message=FALSE, warning=FALSE}
+
+
+resOptics34 <- extractDBSCAN(resOptics34, eps_cl = 2)
+plot(resOptics34)
+
 ````
 
+`````{r, message=FALSE, warning=FALSE}
+
+hullplot(HawksTrait[c(3,4)], resOptics34)
+
+````
+
+Se puede observar que en este caso el algoritmo ha generado 3 clústeres.
+
+Observamos ahora el clustering jerárquico de estas variables.
+
+
+`````{r, message=FALSE, warning=FALSE}
+
+
+resOptics34 <- extractXi(resOptics34, xi = 0.15)
+resOptics34
+plot(resOptics34)
+
+hullplot(HawksTrait[c(3,4)], resOptics34)
+
+````
+
+Por último realizamos el estudio para las variables de Wing y Tail.
 
 ````{r, message=FALSE, warning=FALSE}
-# Wing y Tail
+#Wing y Tail
 resOptics15 <- optics(HawksTrait[c(1,5)], minPts = 10)
+resOptics15
 plot(resOptics15)
 ````
 
+En este caso visualmente podemos apreciar de nuevo que podríamos considerar la existencia de 6 clústeres representados por los valles del diagrama de alcanzabilidad.
 
+Extraemos las agrupaciones de la ordenación realizada por OPTCIS y establecemos el radio del algoritmo en 10.
 
-````{r, message=FALSE, warning=FALSE}
-plot(HawksTrait[c(1,5)],col="grey")
-polygon(HawksTrait[resOptics15$order,])
+`````{r, message=FALSE, warning=FALSE}
+
+resOptics15 <- extractDBSCAN(resOptics15, eps_cl = 5)
+plot(resOptics15)
+hullplot(HawksTrait[c(1,5)], resOptics15)
+
 ````
 
+Podemos observar que en este caso el algoritmo ha detectado la existencia de 4 clústeres para el radio de 10, lo cual difiere nuevamente de lo que visualizamos en el diagrama de alcanzabilidad inicial.
 
-````{r, message=FALSE, warning=FALSE}
-head(HawksTrait[resOptics15$order,])
-````
+Por último observamos el clustering jerárquico de estas variables con una variación de la densidad de 0.15.
+
+`````{r, message=FALSE, warning=FALSE}
+
+resOptics15 <- extractXi(resOptics15, xi = 0.15)
+resOptics15
+plot(resOptics15)
+
+hullplot(HawksTrait[c(1,5)], resOptics15)
+
+
 
 ## Ejercicio 3
 Realiza una comparativa de los métodos *k-means* y *DBSCAN*    
