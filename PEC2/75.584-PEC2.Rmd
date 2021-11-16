@@ -689,14 +689,21 @@ resOptics15
 plot(resOptics15)
 
 hullplot(HawksTrait[c(1,5)], resOptics15)
-
+````
 
 
 ## Ejercicio 3
 Realiza una comparativa de los métodos *k-means* y *DBSCAN*    
 
 ### Respuesta 3
-> Escribe aquí la respuesta a la pregunta
+
+Analizando los resultados podemos ver que el método de k-means no nos ha servido para realizar la clasificación correcta del tipo de halcón con los datos seleccionados, lo que nos indica que no son datos relevantes para la clasificación.
+
+De la aplicación de k-means podemos observar que ha clasificado todos los valores en un clúster, incluso valores extremos en contraparte del método de DBSCAN el cual no ha identificado entro de ningún clúster dichos valores extremos, lo que nos muestra un clúster de mayor calidad.
+
+La principal ventaja que encontramos a la hora de aplica el método de k-means es su sencillez y rapidez, pero posee un inconveniente que consiste en que debemos de predefinir el número de clústeres a obtener lo cual nos lleva a realizar un estudio previo para asegurarnos de elegir el valor correcto.
+
+En contra parte nos encontramos con el método DBSCAN el cual posee las ventajas de identificar clústeres de cualquier forma geométrica ya que sólo necesita que existan zonas de alta y baja densidad para poder identificar los diferentes clústeres, lo cual indica la segunda ventaja que es que no se han de predefinir el número de clústeres a obtener. Como inconveniente tiene que debemos definir el máximo radio de vecindad y el mínimo número de puntos dentro de la vecindad.
 
 
 ******
