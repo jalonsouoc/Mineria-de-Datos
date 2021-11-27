@@ -1,6 +1,6 @@
 ---
 title: 'Minería de datos: PRA1 - Selección y preparación de un juego de datos'
-author: "Autor: Nombre estudiante"
+author: "Autor: Jorge Alonso Hernández"
 date: "Noviembre 2021"
 output:
   html_document:
@@ -107,6 +107,16 @@ El estudiante deberá asegurarse de que la licencia no impide específicamente s
 ******
 # Desarrollo de la práctica
 ******
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+ruta_csv <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA1\\2021_Accidentalidad.csv"
+accidentes <- read.csv2(ruta_csv,na.strings="NA", encoding = "UTF-8")
+summary(accidentes)
+str(accidentes)
+
+head(accidentes$lesividad)
+table(accidentes$tipo_vehiculo)
+````
 
 ## Elección del conjunto de datos
 
