@@ -316,7 +316,6 @@ Se debe entregar la PRA1 en el buzón de entregas del aula</p>
 </div>
 <div id="exploración-del-conjunto-de-datos" class="section level2" number="3.2">
 <h2 number="3.2"><span class="header-section-number">3.2</span> Exploración del conjunto de datos</h2>
-<pre class="r"><code>if (!require(&#39;plyr&#39;)) install.packages(&#39;plyr&#39;); library(&#39;plyr&#39;)</code></pre>
 <p>Iniciamos la carga de los datos, para ello realizamos la lectura de un fichero csv con esímbolo separador de “;”. Para obtener la ruta del fichero se utilizará la función file.choose() que nos devuelve la ruta completa del fichero y lo almacenaremos en una variable que denominaremos ruta_csv.</p>
 <pre class="r"><code>ruta_csv &lt;- &quot;C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA1\\2021_Accidentalidad.csv&quot;
 accidentes &lt;- read.csv2(ruta_csv,na.strings=&quot;NA&quot;, encoding = &quot;UTF-8&quot;)
@@ -376,7 +375,7 @@ summary(accidentes)</code></pre>
 ##  $ positiva_alcohol       : chr  &quot;N&quot; &quot;N&quot; &quot;N&quot; &quot;N&quot; ...
 ##  $ positiva_droga         : chr  &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; ...</code></pre>
 <p>Verificamos la estructura de datos obtenida de la carga.</p>
-<pre class="r"><code>str(accidentes)</code></pre>
+<pre class="r"><code>str(accidentes)   </code></pre>
 <pre><code>## &#39;data.frame&#39;:    24464 obs. of  17 variables:
 ##  $ X.U.FEFF.num_expediente: chr  &quot;2020S019534&quot; &quot;2020S019534&quot; &quot;2020S019534&quot; &quot;2020S019534&quot; ...
 ##  $ fecha                  : chr  &quot;01/01/2021&quot; &quot;01/01/2021&quot; &quot;01/01/2021&quot; &quot;01/01/2021&quot; ...
@@ -396,8 +395,9 @@ summary(accidentes)</code></pre>
 ##  $ positiva_alcohol       : chr  &quot;N&quot; &quot;N&quot; &quot;N&quot; &quot;N&quot; ...
 ##  $ positiva_droga         : chr  &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; ...</code></pre>
 <p>Vemos que tenemos 24464 registros referentes a los accidentes de tráfico de la Ciudad de Madrid y 17 variables que los caracterizan.</p>
-<p>Para una mayor legibilidad de los datos modificaremos el nombre de la columna “X.U.FEFF.num_expediente” por “num_expediente”.</p>
-<pre class="r"><code>accidentes &lt;- rename(accidentes, c(X.U.FEFF.num_expediente = &quot;num_expediente&quot;))</code></pre>
+<p>Para una mayor legibilidad de los datos modificaremos el nombre de la columna “X.U.FEFF.num_expediente” por “num_expediente” y para evitarnos problemas con la codificacion renombraremos también la variable “estado_meteorológico” por “estado_meteorologico”</p>
+<pre class="r"><code>accidentes &lt;- rename(accidentes, c(X.U.FEFF.num_expediente = &quot;num_expediente&quot;))
+accidentes &lt;- rename(accidentes, c(estado_meteorológico = &quot;estado_meteorologico&quot;))</code></pre>
 <p>Las descripciones de las variables que caracterizan a la muestra de datos son:</p>
 <ul>
 <li><strong>num_expediente: </strong> número de expediente del accidente. Pueden existir varios registros con el mismo número de expediente debido a que forman parte del mismo accidente donde hay varios afectados</li>
@@ -407,7 +407,7 @@ summary(accidentes)</code></pre>
 <li><strong>numero:</strong> número de la calle donde se produce el accidente</li>
 <li><strong>distrito:</strong> distrito donde se produce el accidente</li>
 <li><strong>tipo_accidente:</strong> corresponde al tipo de accidente, por ejemplo si es una colisión doble, colisión múltiple, atropello, etc.</li>
-<li><strong>estado_metereológico:</strong> condiciones ambientales que se dan en el momento del siniestro</li>
+<li><strong>estado_metereologico:</strong> condiciones ambientales que se dan en el momento del siniestro</li>
 <li><strong>tipo_vehiculo:</strong> tipo del vehículo afectado</li>
 <li><strong>tipo_persona:</strong> tipo de persona vinculada al accidente, ya sea conductor, viajero, peatón o testigo.</li>
 <li><strong>rango_edad:</strong> rango de edad de la persona afectada en el siniestro.</li>
@@ -415,18 +415,55 @@ summary(accidentes)</code></pre>
 <li><strong>lesividad:</strong> gravedad de las lesiones producidas en el accidente.</li>
 <li><strong>coordenada_x_utm:</strong> coordenada x donde se produce el siniestro.</li>
 <li><strong>coordenada_y_utm:</strong> coordenada y donde se produce el siniestro.</li>
-<li><strong>positiva_alcohol:</strong> test de alcoholemia realizado a la persona afectada.</li>
-<li><strong>positiva_droga:</strong> test de drogas realizado a la persona afectada.</li>
+<li><strong>positiva_alcohol:</strong> test de alcoholemia positivo realizado a la persona afectada.</li>
+<li><strong>positiva_droga:</strong> test de drogas positivo realizado a la persona afectada.</li>
 </ul>
-</div>
-<div id="preprocesado-y-gestión-de-características" class="section level2" number="3.3">
-<h2 number="3.3"><span class="header-section-number">3.3</span> Preprocesado y gestión de características</h2>
+<p>Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad o el número, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correct. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.</p>
+<p>Vemos las estadísticas básicas de los datos.</p>
+<pre class="r"><code>summary(accidentes)</code></pre>
+<pre><code>##  num_expediente        fecha               hora           localizacion      
+##  Length:24464       Length:24464       Length:24464       Length:24464      
+##  Class :character   Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+##                                                                             
+##                                                                             
+##                                                                             
+##     numero            distrito         tipo_accidente     estado_meteorologico
+##  Length:24464       Length:24464       Length:24464       Length:24464        
+##  Class :character   Class :character   Class :character   Class :character    
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character    
+##                                                                               
+##                                                                               
+##                                                                               
+##  tipo_vehiculo      tipo_persona        rango_edad            sexo          
+##  Length:24464       Length:24464       Length:24464       Length:24464      
+##  Class :character   Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+##                                                                             
+##                                                                             
+##                                                                             
+##   lesividad         coordenada_x_utm coordenada_y_utm  positiva_alcohol  
+##  Length:24464       Min.   :429069   Min.   :4463986   Length:24464      
+##  Class :character   1st Qu.:439854   1st Qu.:4471626   Class :character  
+##  Mode  :character   Median :441739   Median :4474778   Mode  :character  
+##                     Mean   :442063   Mean   :4474716                     
+##                     3rd Qu.:444020   3rd Qu.:4477471                     
+##                     Max.   :454729   Max.   :4495363                     
+##  positiva_droga    
+##  Length:24464      
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+## </code></pre>
+<p>Al ser la mayoría de variables de tipo cadena no obtenemos ninguna información reseñable del conjunto de datos. No obtenemos de primera mano la existencia de valores no definidos. Como pudimos ver en la estructura del juego de datos, muchos de los valores no definidos venían con la cadena NULL, por lo tanto en la fase de preproceso debemos de buscar por esta cadena para poder actuar en consecuencia para mejorar los datos.</p>
+<p>Obtenemos la cantidad de valores no definidos del conjunto de datos que no pudimos obtener del resumen.</p>
 <pre class="r"><code>colSums(is.na(accidentes))</code></pre>
 <pre><code>##       num_expediente                fecha                 hora 
 ##                    0                    0                    0 
 ##         localizacion               numero             distrito 
 ##                    0                    0                    0 
-##       tipo_accidente estado_meteorológico        tipo_vehiculo 
+##       tipo_accidente estado_meteorologico        tipo_vehiculo 
 ##                    0                    0                    0 
 ##         tipo_persona           rango_edad                 sexo 
 ##                    0                    0                    0 
@@ -434,25 +471,28 @@ summary(accidentes)</code></pre>
 ##                    0                    0                    0 
 ##     positiva_alcohol       positiva_droga 
 ##                    0                    0</code></pre>
-<pre class="r"><code>colSums(accidentes == &quot;&quot;)</code></pre>
+<p>Comprobamos que al ser la mayoría de los datos de tipo cadena no obtenemos valores no definidos(NA). Por lo que realizaremos una primera búsqueda para aquellos valores con cadena vacía.</p>
+<pre class="r"><code>colSums(accidentes == &quot;&quot; | accidentes == &quot; &quot;)</code></pre>
 <pre><code>##       num_expediente                fecha                 hora 
 ##                    0                    0                    0 
 ##         localizacion               numero             distrito 
 ##                    0                    2                    0 
-##       tipo_accidente estado_meteorológico        tipo_vehiculo 
+##       tipo_accidente estado_meteorologico        tipo_vehiculo 
 ##                    0                    0                    0 
 ##         tipo_persona           rango_edad                 sexo 
 ##                    0                    0                    0 
 ##            lesividad     coordenada_x_utm     coordenada_y_utm 
-##                    1                    0                    0 
+##                    2                    0                    0 
 ##     positiva_alcohol       positiva_droga 
 ##                    0                    0</code></pre>
+<p>En este caso tenemos 2 valores vacíos en la variable de lesividad, lo cual no es un error debido a que en la documentación adjunta a los datos se especifica que si viene vacío el campo de lesividad se corresponde con el valor 14 de lesividad correspondiente a “Sin asistencia sanitaria” esta corrección debemos de realizarla en la fase de prerpoceso. También podemos observar que hay 2 números de calle que están vacíos pro serán irrelevantes para el estudio.</p>
+<p>Por último comprobamos los valores nulos del juego de datos.</p>
 <pre class="r"><code>colSums(accidentes == &quot;NULL&quot;)</code></pre>
 <pre><code>##       num_expediente                fecha                 hora 
 ##                    0                    0                    0 
 ##         localizacion               numero             distrito 
 ##                    0                    0                    3 
-##       tipo_accidente estado_meteorológico        tipo_vehiculo 
+##       tipo_accidente estado_meteorologico        tipo_vehiculo 
 ##                    1                 2601                   93 
 ##         tipo_persona           rango_edad                 sexo 
 ##                   10                    0                    0 
@@ -460,38 +500,21 @@ summary(accidentes)</code></pre>
 ##                11170                    0                    0 
 ##     positiva_alcohol       positiva_droga 
 ##                   93                24401</code></pre>
+<p>En este caso si podemos observar la existencia de una importante cantidad de valores nulos en los test de droga. Lo cual nos dice que no se realizan practicamente test de drogas en los accidentes de tráfico dado que de una muestra de 24464 accidentes, sólo se realizó un test de drogas en 63 ocasiones, lo cual es un valor ínfimo. También podemos observar la existencia de bastantes valores nulos en la variable de lesividad, nuevamente para esta variable hay un valor asignado para cuando se desconoce el grado de lesividad, que en la docmentación corresponde al valor 77, este cambio lo realizaremos en la fase de preproceso para poder tener la variable lesividad en el valor numérico que le corresponde por ser los códigos de lesividad. Por último destacar también que existe una cantidad destacable de estados meteorológicos desconocidos en los que se producen los accidentes de tráfico.</p>
+</div>
+<div id="preprocesado-y-gestión-de-características" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Preprocesado y gestión de características</h2>
+<p>Como incio de la fase de preproceso, realizaremos la sustitución de los valores no definidos o nulos por los valores correspondientes. Iniciaremos con la variable de lesividad dado que conocemos de antemano los valores por los que debemos sustituir. Sustitumos los valores vacíos por el valor 14 correspondiente a “Sin asistencia sanitaria” y los valores nulos por el valor 77 “Se desconoce”. Una vez hecho el cambio convertimos el tipo de dato de la variable al tipo entero.</p>
 <pre class="r"><code>accidentes$lesividad[accidentes$lesividad == &quot;&quot; | accidentes$lesividad == &quot; &quot;] = 14
 accidentes$lesividad[accidentes$lesividad == &quot;NULL&quot;] = 77
-colSums(accidentes == &quot;&quot;)</code></pre>
-<pre><code>##       num_expediente                fecha                 hora 
-##                    0                    0                    0 
-##         localizacion               numero             distrito 
-##                    0                    2                    0 
-##       tipo_accidente estado_meteorológico        tipo_vehiculo 
-##                    0                    0                    0 
-##         tipo_persona           rango_edad                 sexo 
-##                    0                    0                    0 
-##            lesividad     coordenada_x_utm     coordenada_y_utm 
-##                    0                    0                    0 
-##     positiva_alcohol       positiva_droga 
-##                    0                    0</code></pre>
-<pre class="r"><code>colSums(accidentes == &quot;NULL&quot;)</code></pre>
-<pre><code>##       num_expediente                fecha                 hora 
-##                    0                    0                    0 
-##         localizacion               numero             distrito 
-##                    0                    0                    3 
-##       tipo_accidente estado_meteorológico        tipo_vehiculo 
-##                    1                 2601                   93 
-##         tipo_persona           rango_edad                 sexo 
-##                   10                    0                    0 
-##            lesividad     coordenada_x_utm     coordenada_y_utm 
-##                    0                    0                    0 
-##     positiva_alcohol       positiva_droga 
-##                   93                24401</code></pre>
-<pre class="r"><code>table(accidentes$lesividad)</code></pre>
-<pre><code>## 
-##     1    14     2     3     4     5     6     7    77 
-##   777  7277   926   337    16   283   528  3150 11170</code></pre>
+accidentes$lesividad &lt;- as.integer(accidentes$lesividad)</code></pre>
+<p>Para una mayor legibilidad de los datos, convertiremos los valores nulos de los test de drogas y test de alcohol por el valor “No realizado”. También transformaremos los valores nulos del estado meteorológico, el tipo de persona, el tipo de accidente y el tipo de vehículo por el valor “Desconocido”</p>
+<pre class="r"><code>accidentes$positiva_alcohol[accidentes$positiva_alcohol == &quot;NULL&quot;] &lt;- &quot;No realizado&quot;
+accidentes$positiva_droga[accidentes$positiva_droga == &quot;NULL&quot;] &lt;- &quot;No realizado&quot;
+accidentes$estado_meteorologico[accidentes$estado_meteorologico == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
+accidentes$tipo_persona[accidentes$tipo_persona == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
+accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
+accidentes$tipo_accidente[accidentes$tipo_accidente == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;</code></pre>
 <pre class="r"><code>accidentes$grado_lesividad &lt;- &quot;&quot;
 accidentes$grado_lesividad[accidentes$lesividad == 1 | accidentes$lesividad == 2 | accidentes$lesividad == 5 | accidentes$lesividad == 6 | accidentes$lesividad == 7] &lt;- &quot;Leve&quot;
 accidentes$grado_lesividad[accidentes$lesividad == 3] &lt;- &quot;Grave&quot;

@@ -112,7 +112,7 @@ El estudiante deberá asegurarse de que la licencia no impide específicamente s
 
 ## Exploración del conjunto de datos
 
-````{r echo=TRUE, message=FALSE, warning=FALSE}
+````{r echo=FALSE, message=FALSE, warning=FALSE}
 if (!require('plyr')) install.packages('plyr'); library('plyr')
 ````
 
@@ -127,15 +127,16 @@ str(accidentes)
 
 Verificamos la estructura de datos obtenida de la carga.
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-str(accidentes)
+str(accidentes)   
 ````
 
 Vemos que tenemos 24464 registros referentes a los accidentes de tráfico de la Ciudad de Madrid y 17 variables que los caracterizan.
 
-Para una mayor legibilidad de los datos modificaremos el nombre de la columna "X.U.FEFF.num_expediente" por "num_expediente".
+Para una mayor legibilidad de los datos modificaremos el nombre de la columna "X.U.FEFF.num_expediente" por "num_expediente" y para evitarnos problemas con la codificacion renombraremos también la variable "estado_meteorológico" por "estado_meteorologico"
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 accidentes <- rename(accidentes, c(X.U.FEFF.num_expediente = "num_expediente"))
+accidentes <- rename(accidentes, c(estado_meteorológico = "estado_meteorologico"))
 ````
 
 Las descripciones de las variables que caracterizan a la muestra de datos son:
@@ -147,7 +148,7 @@ Las descripciones de las variables que caracterizan a la muestra de datos son:
 * **numero:** número de la calle donde se produce el accidente
 * **distrito:** distrito donde se produce el accidente
 * **tipo_accidente:** corresponde al tipo de accidente, por ejemplo si es una colisión doble, colisión múltiple, atropello, etc.
-* **estado_metereológico:** condiciones ambientales que se dan en el momento del siniestro
+* **estado_metereologico:** condiciones ambientales que se dan en el momento del siniestro
 * **tipo_vehiculo:** tipo del vehículo afectado
 * **tipo_persona:** tipo de persona vinculada al accidente, ya sea conductor, viajero, peatón o testigo.
 * **rango_edad:** rango de edad de la persona afectada en el siniestro.
@@ -155,27 +156,67 @@ Las descripciones de las variables que caracterizan a la muestra de datos son:
 * **lesividad:** gravedad de las lesiones producidas en el accidente.
 * **coordenada_x_utm:** coordenada x donde se produce el siniestro.
 * **coordenada_y_utm:** coordenada y donde se produce el siniestro.
-* **positiva_alcohol:** test de alcoholemia realizado a la persona afectada.
-* **positiva_droga:** test de drogas realizado a la persona afectada.
+* **positiva_alcohol:** test de alcoholemia positivo realizado a la persona afectada.
+* **positiva_droga:** test de drogas positivo realizado a la persona afectada.
 
 
+Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad o el número, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correct. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.
+
+Vemos las estadísticas básicas de los datos.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+summary(accidentes)
+````
+
+Al ser la mayoría de variables de tipo cadena no obtenemos ninguna información reseñable del conjunto de datos. No obtenemos de primera mano la existencia de valores no definidos. Como pudimos ver en la estructura del juego de datos, muchos de los valores no definidos venían con la cadena NULL, por lo tanto en la fase de preproceso debemos de buscar por esta cadena para poder actuar en consecuencia para mejorar los datos. 
 
 
+Obtenemos la cantidad de valores no definidos del conjunto de datos que no pudimos obtener del resumen.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+colSums(is.na(accidentes))
+````
+
+Comprobamos que al ser la mayoría de los datos de tipo cadena no obtenemos valores no definidos(NA). Por lo que realizaremos una primera búsqueda para aquellos valores con cadena vacía.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+colSums(accidentes == "" | accidentes == " ")
+````
+
+En este caso tenemos 2 valores vacíos en la variable de lesividad, lo cual no es un error debido a que en la documentación adjunta a los datos se especifica que si viene vacío el campo de lesividad se corresponde con el valor 14 de lesividad correspondiente a "Sin asistencia sanitaria" esta corrección debemos de realizarla en la fase de prerpoceso. También podemos observar que hay 2 números de calle que están vacíos pro serán irrelevantes para el estudio.
+
+Por último comprobamos los valores nulos del juego de datos.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+colSums(accidentes == "NULL")
+````
+
+En este caso si podemos observar la existencia de una importante cantidad de valores nulos en los test de droga. Lo cual nos dice que no se realizan practicamente test de drogas en los accidentes de tráfico dado que de una muestra de 24464 accidentes, sólo se realizó un test de drogas en 63 ocasiones, lo cual es un valor ínfimo. También podemos observar la existencia de bastantes valores nulos en la variable de lesividad, nuevamente para esta variable hay un valor asignado para cuando se desconoce el grado de lesividad, que en la docmentación corresponde al valor 77, este cambio lo realizaremos en la fase de preproceso para poder tener la variable lesividad en el valor numérico que le corresponde por ser los códigos de lesividad. Por último destacar también que existe una cantidad destacable de estados meteorológicos desconocidos en los que se producen los accidentes de tráfico.
 
 ## Preprocesado y gestión de características
 
+Como incio de la fase de preproceso, realizaremos la sustitución de los valores no definidos o nulos por los valores correspondientes. Iniciaremos con la variable de lesividad dado que conocemos de antemano los valores por los que debemos sustituir. Sustitumos los valores vacíos por el valor 14 correspondiente a "Sin asistencia sanitaria" y los valores nulos por el valor 77 "Se desconoce". Una vez hecho el cambio convertimos el tipo de dato de la variable al tipo entero.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+accidentes$lesividad[accidentes$lesividad == "" | accidentes$lesividad == " "] = 14
+accidentes$lesividad[accidentes$lesividad == "NULL"] = 77
+accidentes$lesividad <- as.integer(accidentes$lesividad)
+````
+
+Para una mayor legibilidad de los datos, convertiremos los valores nulos de los test de drogas y test de alcohol por el valor "No realizado". También transformaremos los valores nulos del estado meteorológico, el tipo de persona, el tipo de accidente y el tipo de vehículo por el valor "Desconocido"
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+accidentes$positiva_alcohol[accidentes$positiva_alcohol == "NULL"] <- "No realizado"
+accidentes$positiva_droga[accidentes$positiva_droga == "NULL"] <- "No realizado"
+accidentes$estado_meteorologico[accidentes$estado_meteorologico == "NULL"] <- "Desconocido"
+accidentes$tipo_persona[accidentes$tipo_persona == "NULL"] <- "Desconocido"
+accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == "NULL"] <- "Desconocido"
+accidentes$tipo_accidente[accidentes$tipo_accidente == "NULL"] <- "Desconocido"
+````
+
+Por último para asignarle un valor numérico a la variable de la calle 
 
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-colSums(is.na(accidentes))
-colSums(accidentes == "")
-colSums(accidentes == "NULL")
-
-accidentes$lesividad[accidentes$lesividad == "" | accidentes$lesividad == " "] = 14
-accidentes$lesividad[accidentes$lesividad == "NULL"] = 77
-colSums(accidentes == "")
-colSums(accidentes == "NULL")
-table(accidentes$lesividad)
 
 accidentes$grado_lesividad <- ""
 accidentes$grado_lesividad[accidentes$lesividad == 1 | accidentes$lesividad == 2 | accidentes$lesividad == 5 | accidentes$lesividad == 6 | accidentes$lesividad == 7] <- "Leve"
