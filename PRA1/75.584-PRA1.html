@@ -418,7 +418,7 @@ accidentes &lt;- rename(accidentes, c(estado_meteorológico = &quot;estado_meteo
 <li><strong>positiva_alcohol:</strong> test de alcoholemia positivo realizado a la persona afectada.</li>
 <li><strong>positiva_droga:</strong> test de drogas positivo realizado a la persona afectada.</li>
 </ul>
-<p>Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad o el número, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correct. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.</p>
+<p>Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correcto. La variable numero por su nomenclatura y su definición podría llevarnos a engaño de lclasificarla como numérica pero no será el caso al existir números de calle con letras. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.</p>
 <p>Vemos las estadísticas básicas de los datos.</p>
 <pre class="r"><code>summary(accidentes)</code></pre>
 <pre><code>##  num_expediente        fecha               hora           localizacion      
@@ -508,14 +508,14 @@ accidentes &lt;- rename(accidentes, c(estado_meteorológico = &quot;estado_meteo
 <pre class="r"><code>accidentes$lesividad[accidentes$lesividad == &quot;&quot; | accidentes$lesividad == &quot; &quot;] = 14
 accidentes$lesividad[accidentes$lesividad == &quot;NULL&quot;] = 77
 accidentes$lesividad &lt;- as.integer(accidentes$lesividad)</code></pre>
-<p>Para una mayor legibilidad de los datos, convertiremos los valores nulos de los test de drogas y test de alcohol por el valor “No realizado”. También transformaremos los valores nulos del estado meteorológico, el tipo de persona, el tipo de accidente y el tipo de vehículo por el valor “Desconocido”</p>
+<p>Para una mayor legibilidad de los datos, convertiremos los valores nulos de los test de drogas y test de alcohol por el valor “No realizado”. También transformaremos los valores nulos del estado meteorológico, el numero de la calle, el tipo de persona, el tipo de accidente y el tipo de vehículo por el valor “Desconocido”</p>
 <pre class="r"><code>accidentes$positiva_alcohol[accidentes$positiva_alcohol == &quot;NULL&quot;] &lt;- &quot;No realizado&quot;
 accidentes$positiva_droga[accidentes$positiva_droga == &quot;NULL&quot;] &lt;- &quot;No realizado&quot;
 accidentes$estado_meteorologico[accidentes$estado_meteorologico == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
+accidentes$numero[accidentes$numero == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
 accidentes$tipo_persona[accidentes$tipo_persona == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
 accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
 accidentes$tipo_accidente[accidentes$tipo_accidente == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;</code></pre>
-<p>Por último para asignarle un valor numérico a la variable del número de la calle le daremos un valor extremo</p>
 <pre class="r"><code>max(accidentes$numero)</code></pre>
 <pre><code>## [1] &quot;9A&quot;</code></pre>
 <pre class="r"><code>accidentes$grado_lesividad &lt;- &quot;&quot;

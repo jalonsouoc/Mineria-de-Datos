@@ -203,18 +203,15 @@ accidentes$lesividad[accidentes$lesividad == "NULL"] = 77
 accidentes$lesividad <- as.integer(accidentes$lesividad)
 ````
 
-Para una mayor legibilidad de los datos, convertiremos los valores nulos de los test de drogas y test de alcohol por el valor "No realizado". También transformaremos los valores nulos del estado meteorológico, el tipo de persona, el tipo de accidente y el tipo de vehículo por el valor "Desconocido"
+Para una mayor legibilidad de los datos, convertiremos los valores nulos de los test de drogas y test de alcohol por el valor "No realizado". También transformaremos los valores nulos del estado meteorológico, el numero de la calle, el tipo de persona, el tipo de accidente y el tipo de vehículo por el valor "Desconocido"
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 accidentes$positiva_alcohol[accidentes$positiva_alcohol == "NULL"] <- "No realizado"
 accidentes$positiva_droga[accidentes$positiva_droga == "NULL"] <- "No realizado"
 accidentes$estado_meteorologico[accidentes$estado_meteorologico == "NULL"] <- "Desconocido"
+accidentes$numero[accidentes$numero == "NULL"] <- "Desconocido"
 accidentes$tipo_persona[accidentes$tipo_persona == "NULL"] <- "Desconocido"
 accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == "NULL"] <- "Desconocido"
 accidentes$tipo_accidente[accidentes$tipo_accidente == "NULL"] <- "Desconocido"
-````
-
-````{r echo=TRUE, message=FALSE, warning=FALSE}
-max(accidentes$numero)
 ````
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
