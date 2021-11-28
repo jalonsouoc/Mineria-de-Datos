@@ -108,21 +108,84 @@ El estudiante deberá asegurarse de que la licencia no impide específicamente s
 # Desarrollo de la práctica
 ******
 
+## Elección del conjunto de datos
+
+## Exploración del conjunto de datos
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+if (!require('plyr')) install.packages('plyr'); library('plyr')
+````
+
+Iniciamos la carga de los datos, para ello realizamos la lectura de un fichero csv con esímbolo separador de ";". Para obtener la ruta del fichero se utilizará la función file.choose() que nos devuelve la ruta completa del fichero y lo almacenaremos en una variable que denominaremos ruta_csv.
+
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 ruta_csv <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA1\\2021_Accidentalidad.csv"
 accidentes <- read.csv2(ruta_csv,na.strings="NA", encoding = "UTF-8")
 summary(accidentes)
 str(accidentes)
-
-head(accidentes$lesividad)
-table(accidentes$tipo_vehiculo)
 ````
 
-## Elección del conjunto de datos
+Verificamos la estructura de datos obtenida de la carga.
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+str(accidentes)
+````
 
-## Exploración del conjunto de datos
+Vemos que tenemos 24464 registros referentes a los accidentes de tráfico de la Ciudad de Madrid y 17 variables que los caracterizan.
+
+Para una mayor legibilidad de los datos modificaremos el nombre de la columna "X.U.FEFF.num_expediente" por "num_expediente".
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+accidentes <- rename(accidentes, c(X.U.FEFF.num_expediente = "num_expediente"))
+````
+
+Las descripciones de las variables que caracterizan a la muestra de datos son:
+
+* **num_expediente: ** número de expediente del accidente. Pueden existir varios registros con el mismo número de expediente debido a que forman parte del mismo accidente donde hay varios afectados
+* **fecha:** fecha en la que se produce el accidente
+* **hora:** hora en la que s eproduce el accidente
+* **localizacion:** calle en la que se produce el accidente
+* **numero:** número de la calle donde se produce el accidente
+* **distrito:** distrito donde se produce el accidente
+* **tipo_accidente:** corresponde al tipo de accidente, por ejemplo si es una colisión doble, colisión múltiple, atropello, etc.
+* **estado_metereológico:** condiciones ambientales que se dan en el momento del siniestro
+* **tipo_vehiculo:** tipo del vehículo afectado
+* **tipo_persona:** tipo de persona vinculada al accidente, ya sea conductor, viajero, peatón o testigo.
+* **rango_edad:** rango de edad de la persona afectada en el siniestro.
+* **sexo:** sexo de la persona afectada.
+* **lesividad:** gravedad de las lesiones producidas en el accidente.
+* **coordenada_x_utm:** coordenada x donde se produce el siniestro.
+* **coordenada_y_utm:** coordenada y donde se produce el siniestro.
+* **positiva_alcohol:** test de alcoholemia realizado a la persona afectada.
+* **positiva_droga:** test de drogas realizado a la persona afectada.
+
+
+
+
 
 ## Preprocesado y gestión de características
+
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+colSums(is.na(accidentes))
+colSums(accidentes == "")
+colSums(accidentes == "NULL")
+
+accidentes$lesividad[accidentes$lesividad == "" | accidentes$lesividad == " "] = 14
+accidentes$lesividad[accidentes$lesividad == "NULL"] = 77
+colSums(accidentes == "")
+colSums(accidentes == "NULL")
+table(accidentes$lesividad)
+
+accidentes$grado_lesividad <- ""
+accidentes$grado_lesividad[accidentes$lesividad == 1 | accidentes$lesividad == 2 | accidentes$lesividad == 5 | accidentes$lesividad == 6 | accidentes$lesividad == 7] <- "Leve"
+accidentes$grado_lesividad[accidentes$lesividad == 3] <- "Grave"
+accidentes$grado_lesividad[accidentes$lesividad == 4] <- "Mortal"
+accidentes$grado_lesividad[accidentes$lesividad == 14] <- "Sin asistencia"
+accidentes$grado_lesividad[accidentes$lesividad == 77] <- "Desconocido"
+head(accidentes$grado_lesividad)
+
+````
 
 ## Construcción de conjunto de datos final
 

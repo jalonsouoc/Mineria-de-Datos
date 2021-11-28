@@ -311,6 +311,13 @@ Se debe entregar la PRA1 en el buzón de entregas del aula</p>
 <div id="desarrollo-de-la-práctica" class="section level1" number="3">
 <h1 number="3"><span class="header-section-number">3</span> Desarrollo de la práctica</h1>
 <hr />
+<div id="elección-del-conjunto-de-datos" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Elección del conjunto de datos</h2>
+</div>
+<div id="exploración-del-conjunto-de-datos" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Exploración del conjunto de datos</h2>
+<pre class="r"><code>if (!require(&#39;plyr&#39;)) install.packages(&#39;plyr&#39;); library(&#39;plyr&#39;)</code></pre>
+<p>Iniciamos la carga de los datos, para ello realizamos la lectura de un fichero csv con esímbolo separador de “;”. Para obtener la ruta del fichero se utilizará la función file.choose() que nos devuelve la ruta completa del fichero y lo almacenaremos en una variable que denominaremos ruta_csv.</p>
 <pre class="r"><code>ruta_csv &lt;- &quot;C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA1\\2021_Accidentalidad.csv&quot;
 accidentes &lt;- read.csv2(ruta_csv,na.strings=&quot;NA&quot;, encoding = &quot;UTF-8&quot;)
 summary(accidentes)</code></pre>
@@ -368,54 +375,132 @@ summary(accidentes)</code></pre>
 ##  $ coordenada_y_utm       : num  4470383 4470383 4470383 4470383 4470383 ...
 ##  $ positiva_alcohol       : chr  &quot;N&quot; &quot;N&quot; &quot;N&quot; &quot;N&quot; ...
 ##  $ positiva_droga         : chr  &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; ...</code></pre>
-<pre class="r"><code>head(accidentes$lesividad)</code></pre>
-<pre><code>## [1] &quot;NULL&quot; &quot;14&quot;   &quot;7&quot;    &quot;14&quot;   &quot;14&quot;   &quot;2&quot;</code></pre>
-<pre class="r"><code>table(accidentes$tipo_vehiculo)</code></pre>
-<pre><code>## 
-##                  Ambulancia SAMUR                           Autobús 
-##                                 4                               516 
-##                Autobús articulado                       Autobus EMT 
-##                                41                                38 
-##                      Autocaravana                         Bicicleta 
-##                                12                               470 
-## Bicicleta EPAC (pedaleo asistido)                Camión de bomberos 
-##                                94                                 1 
-##                     Camión rígido                             Ciclo 
-##                               590                                16 
-##                        Ciclomotor    Ciclomotor de dos ruedas L1e-B 
-##                               349                                 5 
-##         Ciclomotor de tres ruedas                Cuadriciclo ligero 
-##                                 1                                25 
-##             Cuadriciclo no ligero                         Furgoneta 
-##                                 7                              1659 
-##               Maquinaria agrícola               Maquinaria de obras 
-##                                 2                                75 
-##       Moto de tres ruedas &gt; 125cc   Moto de tres ruedas hasta 125cc 
-##                                 6                                 1 
-##               Motocicleta &gt; 125cc           Motocicleta hasta 125cc 
-##                               972                              1767 
-##                              NULL         Otros vehículos con motor 
-##                                93                                65 
-##         Otros vehículos sin motor                          Patinete 
-##                                 3                                 3 
-##                          Remolque                      Semiremolque 
-##                                 1                                 2 
-##                   Sin especificar                      Todo terreno 
-##                                33                               358 
-##                      Tractocamión                        Tren/metro 
-##                               113                                 1 
-##                           Turismo               Vehículo articulado 
-##                             16762                                54 
-##                     VMU eléctrico 
-##                               325</code></pre>
-<div id="elección-del-conjunto-de-datos" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Elección del conjunto de datos</h2>
-</div>
-<div id="exploración-del-conjunto-de-datos" class="section level2" number="3.2">
-<h2 number="3.2"><span class="header-section-number">3.2</span> Exploración del conjunto de datos</h2>
+<p>Verificamos la estructura de datos obtenida de la carga.</p>
+<pre class="r"><code>str(accidentes)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    24464 obs. of  17 variables:
+##  $ X.U.FEFF.num_expediente: chr  &quot;2020S019534&quot; &quot;2020S019534&quot; &quot;2020S019534&quot; &quot;2020S019534&quot; ...
+##  $ fecha                  : chr  &quot;01/01/2021&quot; &quot;01/01/2021&quot; &quot;01/01/2021&quot; &quot;01/01/2021&quot; ...
+##  $ hora                   : chr  &quot;4:30:00&quot; &quot;4:30:00&quot; &quot;4:30:00&quot; &quot;4:30:00&quot; ...
+##  $ localizacion           : chr  &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; ...
+##  $ numero                 : chr  &quot;57&quot; &quot;57&quot; &quot;57&quot; &quot;57&quot; ...
+##  $ distrito               : chr  &quot;PUENTE DE VALLECAS&quot; &quot;PUENTE DE VALLECAS&quot; &quot;PUENTE DE VALLECAS&quot; &quot;PUENTE DE VALLECAS&quot; ...
+##  $ tipo_accidente         : chr  &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; ...
+##  $ estado_meteorológico   : chr  &quot;Despejado&quot; &quot;Despejado&quot; &quot;Despejado&quot; &quot;Despejado&quot; ...
+##  $ tipo_vehiculo          : chr  &quot;Turismo&quot; &quot;Turismo&quot; &quot;Turismo&quot; &quot;Turismo&quot; ...
+##  $ tipo_persona           : chr  &quot;Conductor&quot; &quot;Conductor&quot; &quot;Conductor&quot; &quot;Pasajero&quot; ...
+##  $ rango_edad             : chr  &quot;Desconocido&quot; &quot;De 30 a 34 años&quot; &quot;De 35 a 39 años&quot; &quot;De 10 a 14 años&quot; ...
+##  $ sexo                   : chr  &quot;Desconocido&quot; &quot;Mujer&quot; &quot;Hombre&quot; &quot;Hombre&quot; ...
+##  $ lesividad              : chr  &quot;NULL&quot; &quot;14&quot; &quot;7&quot; &quot;14&quot; ...
+##  $ coordenada_x_utm       : num  444926 444926 444926 444926 444926 ...
+##  $ coordenada_y_utm       : num  4470383 4470383 4470383 4470383 4470383 ...
+##  $ positiva_alcohol       : chr  &quot;N&quot; &quot;N&quot; &quot;N&quot; &quot;N&quot; ...
+##  $ positiva_droga         : chr  &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; ...</code></pre>
+<p>Vemos que tenemos 24464 registros referentes a los accidentes de tráfico de la Ciudad de Madrid y 17 variables que los caracterizan.</p>
+<p>Para una mayor legibilidad de los datos modificaremos el nombre de la columna “X.U.FEFF.num_expediente” por “num_expediente”.</p>
+<pre class="r"><code>accidentes &lt;- rename(accidentes, c(X.U.FEFF.num_expediente = &quot;num_expediente&quot;))</code></pre>
+<p>Las descripciones de las variables que caracterizan a la muestra de datos son:</p>
+<ul>
+<li><strong>num_expediente: </strong> número de expediente del accidente. Pueden existir varios registros con el mismo número de expediente debido a que forman parte del mismo accidente donde hay varios afectados</li>
+<li><strong>fecha:</strong> fecha en la que se produce el accidente</li>
+<li><strong>hora:</strong> hora en la que s eproduce el accidente</li>
+<li><strong>localizacion:</strong> calle en la que se produce el accidente</li>
+<li><strong>numero:</strong> número de la calle donde se produce el accidente</li>
+<li><strong>distrito:</strong> distrito donde se produce el accidente</li>
+<li><strong>tipo_accidente:</strong> corresponde al tipo de accidente, por ejemplo si es una colisión doble, colisión múltiple, atropello, etc.</li>
+<li><strong>estado_metereológico:</strong> condiciones ambientales que se dan en el momento del siniestro</li>
+<li><strong>tipo_vehiculo:</strong> tipo del vehículo afectado</li>
+<li><strong>tipo_persona:</strong> tipo de persona vinculada al accidente, ya sea conductor, viajero, peatón o testigo.</li>
+<li><strong>rango_edad:</strong> rango de edad de la persona afectada en el siniestro.</li>
+<li><strong>sexo:</strong> sexo de la persona afectada.</li>
+<li><strong>lesividad:</strong> gravedad de las lesiones producidas en el accidente.</li>
+<li><strong>coordenada_x_utm:</strong> coordenada x donde se produce el siniestro.</li>
+<li><strong>coordenada_y_utm:</strong> coordenada y donde se produce el siniestro.</li>
+<li><strong>positiva_alcohol:</strong> test de alcoholemia realizado a la persona afectada.</li>
+<li><strong>positiva_droga:</strong> test de drogas realizado a la persona afectada.</li>
+</ul>
 </div>
 <div id="preprocesado-y-gestión-de-características" class="section level2" number="3.3">
 <h2 number="3.3"><span class="header-section-number">3.3</span> Preprocesado y gestión de características</h2>
+<pre class="r"><code>colSums(is.na(accidentes))</code></pre>
+<pre><code>##       num_expediente                fecha                 hora 
+##                    0                    0                    0 
+##         localizacion               numero             distrito 
+##                    0                    0                    0 
+##       tipo_accidente estado_meteorológico        tipo_vehiculo 
+##                    0                    0                    0 
+##         tipo_persona           rango_edad                 sexo 
+##                    0                    0                    0 
+##            lesividad     coordenada_x_utm     coordenada_y_utm 
+##                    0                    0                    0 
+##     positiva_alcohol       positiva_droga 
+##                    0                    0</code></pre>
+<pre class="r"><code>colSums(accidentes == &quot;&quot;)</code></pre>
+<pre><code>##       num_expediente                fecha                 hora 
+##                    0                    0                    0 
+##         localizacion               numero             distrito 
+##                    0                    2                    0 
+##       tipo_accidente estado_meteorológico        tipo_vehiculo 
+##                    0                    0                    0 
+##         tipo_persona           rango_edad                 sexo 
+##                    0                    0                    0 
+##            lesividad     coordenada_x_utm     coordenada_y_utm 
+##                    1                    0                    0 
+##     positiva_alcohol       positiva_droga 
+##                    0                    0</code></pre>
+<pre class="r"><code>colSums(accidentes == &quot;NULL&quot;)</code></pre>
+<pre><code>##       num_expediente                fecha                 hora 
+##                    0                    0                    0 
+##         localizacion               numero             distrito 
+##                    0                    0                    3 
+##       tipo_accidente estado_meteorológico        tipo_vehiculo 
+##                    1                 2601                   93 
+##         tipo_persona           rango_edad                 sexo 
+##                   10                    0                    0 
+##            lesividad     coordenada_x_utm     coordenada_y_utm 
+##                11170                    0                    0 
+##     positiva_alcohol       positiva_droga 
+##                   93                24401</code></pre>
+<pre class="r"><code>accidentes$lesividad[accidentes$lesividad == &quot;&quot; | accidentes$lesividad == &quot; &quot;] = 14
+accidentes$lesividad[accidentes$lesividad == &quot;NULL&quot;] = 77
+colSums(accidentes == &quot;&quot;)</code></pre>
+<pre><code>##       num_expediente                fecha                 hora 
+##                    0                    0                    0 
+##         localizacion               numero             distrito 
+##                    0                    2                    0 
+##       tipo_accidente estado_meteorológico        tipo_vehiculo 
+##                    0                    0                    0 
+##         tipo_persona           rango_edad                 sexo 
+##                    0                    0                    0 
+##            lesividad     coordenada_x_utm     coordenada_y_utm 
+##                    0                    0                    0 
+##     positiva_alcohol       positiva_droga 
+##                    0                    0</code></pre>
+<pre class="r"><code>colSums(accidentes == &quot;NULL&quot;)</code></pre>
+<pre><code>##       num_expediente                fecha                 hora 
+##                    0                    0                    0 
+##         localizacion               numero             distrito 
+##                    0                    0                    3 
+##       tipo_accidente estado_meteorológico        tipo_vehiculo 
+##                    1                 2601                   93 
+##         tipo_persona           rango_edad                 sexo 
+##                   10                    0                    0 
+##            lesividad     coordenada_x_utm     coordenada_y_utm 
+##                    0                    0                    0 
+##     positiva_alcohol       positiva_droga 
+##                   93                24401</code></pre>
+<pre class="r"><code>table(accidentes$lesividad)</code></pre>
+<pre><code>## 
+##     1    14     2     3     4     5     6     7    77 
+##   777  7277   926   337    16   283   528  3150 11170</code></pre>
+<pre class="r"><code>accidentes$grado_lesividad &lt;- &quot;&quot;
+accidentes$grado_lesividad[accidentes$lesividad == 1 | accidentes$lesividad == 2 | accidentes$lesividad == 5 | accidentes$lesividad == 6 | accidentes$lesividad == 7] &lt;- &quot;Leve&quot;
+accidentes$grado_lesividad[accidentes$lesividad == 3] &lt;- &quot;Grave&quot;
+accidentes$grado_lesividad[accidentes$lesividad == 4] &lt;- &quot;Mortal&quot;
+accidentes$grado_lesividad[accidentes$lesividad == 14] &lt;- &quot;Sin asistencia&quot;
+accidentes$grado_lesividad[accidentes$lesividad == 77] &lt;- &quot;Desconocido&quot;
+head(accidentes$grado_lesividad)</code></pre>
+<pre><code>## [1] &quot;Desconocido&quot;    &quot;Sin asistencia&quot; &quot;Leve&quot;           &quot;Sin asistencia&quot;
+## [5] &quot;Sin asistencia&quot; &quot;Leve&quot;</code></pre>
 </div>
 <div id="construcción-de-conjunto-de-datos-final" class="section level2" number="3.4">
 <h2 number="3.4"><span class="header-section-number">3.4</span> Construcción de conjunto de datos final</h2>
