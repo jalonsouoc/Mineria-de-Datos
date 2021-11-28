@@ -515,6 +515,9 @@ accidentes$estado_meteorologico[accidentes$estado_meteorologico == &quot;NULL&qu
 accidentes$tipo_persona[accidentes$tipo_persona == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
 accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
 accidentes$tipo_accidente[accidentes$tipo_accidente == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;</code></pre>
+<p>Por último para asignarle un valor numérico a la variable del número de la calle le daremos un valor extremo</p>
+<pre class="r"><code>max(accidentes$numero)</code></pre>
+<pre><code>## [1] &quot;9A&quot;</code></pre>
 <pre class="r"><code>accidentes$grado_lesividad &lt;- &quot;&quot;
 accidentes$grado_lesividad[accidentes$lesividad == 1 | accidentes$lesividad == 2 | accidentes$lesividad == 5 | accidentes$lesividad == 6 | accidentes$lesividad == 7] &lt;- &quot;Leve&quot;
 accidentes$grado_lesividad[accidentes$lesividad == 3] &lt;- &quot;Grave&quot;

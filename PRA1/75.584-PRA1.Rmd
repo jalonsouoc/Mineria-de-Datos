@@ -160,7 +160,7 @@ Las descripciones de las variables que caracterizan a la muestra de datos son:
 * **positiva_droga:** test de drogas positivo realizado a la persona afectada.
 
 
-Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad o el número, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correct. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.
+Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correcto. La variable numero por su nomenclatura y su definición podría llevarnos a engaño de lclasificarla como numérica pero no será el caso al existir números de calle con letras. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.
 
 Vemos las estadísticas básicas de los datos.
 
@@ -213,8 +213,9 @@ accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == "NULL"] <- "Desconocido"
 accidentes$tipo_accidente[accidentes$tipo_accidente == "NULL"] <- "Desconocido"
 ````
 
-Por último para asignarle un valor numérico a la variable de la calle 
-
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+max(accidentes$numero)
+````
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
