@@ -323,6 +323,24 @@ plot(factor(accidentes$grado_lesividad), main="Grado lesividad de accidentes", x
 
 ````
 
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+accidentes$mes <- factor(months(accidentes$fecha), levels=c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))
+head(accidentes$mes)
+````
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+head(accidentes$mes)  
+plot(accidentes$mes, main="Grado lesividad de accidentes", xlab="grado lesividad", ylab="Cantidad", col="ivory", las=2)
+````
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+ggplot(data=accidentes, aes(x=mes, fill=grado_lesividad))+geom_bar()+ggtitle("Relación entre la puntuación de la apariencia y la puntuación general")+scale_x_discrete(guide = guide_axis(angle = 90))
+````
+
+
 ## Construcción de conjunto de datos final
 
 ******
