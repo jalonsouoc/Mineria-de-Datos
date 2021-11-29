@@ -104,22 +104,35 @@ El estudiante deberá asegurarse de que la licencia no impide específicamente s
 
 > Deberéis, además, adjuntar los ficheros originales cuando las obras utilizadas sean digitales, y su código fuente si corresponde.  
 
-******
+****** 
 # Desarrollo de la práctica
 ******
 
 ## Elección del conjunto de datos
 
+Para la realización de la práctica se ha escogido un juego de datos referente a los accidentes producidos en la Comunidad de Madrid durante el año 2020 Los datos se han obtenido del [Portal de datos abiertos del Ayuntamiento de Madrid](https://datos.madrid.es/portal/site/egob). Este conjunto de datos contiene la información de los accidentes de tráfico registrados por la Policía Municipal.
+
+Se ha seleccionado este conjunto de datos en primer lugar por estar bastante completo ya que posee bastante información referente a los accidentes, pues para un accidente se tiene registro del lugar del accidente, la fecha, el tipo de accidente, el vehículo implicado, el sexo de la persona implicada, la lesividad de la persona implicada, el estado meteorológico, entre otros datos. Además de que la documentación adjunta al conjunto de datos es bastante clara y precisa.
+
+En segundo lugar se ha escodigo dicho conjunto de datos ya que tiene bastante potencial analítico, ya que un estudio correcto de estos datos puede ser de utilidad para los servicios sanitarios y para la policía.
+
+En el ámbito de los servicios sanitarios los datos podrían ayudar a estar mejor preparados para atender a los heridos de accidentes, así como estimar las fechas o los lugares en los que será necesario reforzar el servicio tanto de urgencias como de unidades mobiles en base a las fechas y los distritos donde se producen la mayor cantidad de accidentes o los accidentes más graves.
+
+En cuanto a la policía el estudio puede ayudar a aumentar las patrullas y los controles en los puntos y fechas de mayor frecuencia de accidentes posibilitando la reducción del número de siniestros. También les facilitaría la obtención de un perfil más preciso acerca de los conductores que más accidentes o más accidentes graves ocasionan.
+
+
+
 ## Exploración del conjunto de datos
 
 ````{r echo=FALSE, message=FALSE, warning=FALSE}
 if (!require('plyr')) install.packages('plyr'); library('plyr')
+if (!require('ggplot2')) install.packages('ggplot2'); library('ggplot2')
 ````
 
 Iniciamos la carga de los datos, para ello realizamos la lectura de un fichero csv con esímbolo separador de ";". Para obtener la ruta del fichero se utilizará la función file.choose() que nos devuelve la ruta completa del fichero y lo almacenaremos en una variable que denominaremos ruta_csv.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-ruta_csv <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA1\\2021_Accidentalidad.csv"
+ruta_csv <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA1\\2020_Accidentalidad.csv"
 accidentes <- read.csv2(ruta_csv,na.strings="NA", encoding = "UTF-8")
 summary(accidentes)
 str(accidentes)
@@ -160,7 +173,7 @@ Las descripciones de las variables que caracterizan a la muestra de datos son:
 * **positiva_droga:** test de drogas positivo realizado a la persona afectada.
 
 
-Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correcto. La variable numero por su nomenclatura y su definición podría llevarnos a engaño de lclasificarla como numérica pero no será el caso al existir números de calle con letras. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.
+Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correcto. La variable numero por su nomenclatura y su definición podría llevarnos a engaño de lclasificarla como numérica pero no será el caso al existir números de calle con letras. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.Otra transformación a realizar es convertir las variables tipo cadena en tipo factor para su posterior traramiento.
 
 Vemos las estadísticas básicas de los datos.
 
@@ -192,7 +205,7 @@ colSums(accidentes == "NULL")
 ````
 
 En este caso si podemos observar la existencia de una importante cantidad de valores nulos en los test de droga. Lo cual nos dice que no se realizan practicamente test de drogas en los accidentes de tráfico dado que de una muestra de 24464 accidentes, sólo se realizó un test de drogas en 63 ocasiones, lo cual es un valor ínfimo. También podemos observar la existencia de bastantes valores nulos en la variable de lesividad, nuevamente para esta variable hay un valor asignado para cuando se desconoce el grado de lesividad, que en la docmentación corresponde al valor 77, este cambio lo realizaremos en la fase de preproceso para poder tener la variable lesividad en el valor numérico que le corresponde por ser los códigos de lesividad. Por último destacar también que existe una cantidad destacable de estados meteorológicos desconocidos en los que se producen los accidentes de tráfico.
-
+ 
 ## Preprocesado y gestión de características
 
 Como incio de la fase de preproceso, realizaremos la sustitución de los valores no definidos o nulos por los valores correspondientes. Iniciaremos con la variable de lesividad dado que conocemos de antemano los valores por los que debemos sustituir. Sustitumos los valores vacíos por el valor 14 correspondiente a "Sin asistencia sanitaria" y los valores nulos por el valor 77 "Se desconoce". Una vez hecho el cambio convertimos el tipo de dato de la variable al tipo entero.
@@ -204,15 +217,47 @@ accidentes$lesividad <- as.integer(accidentes$lesividad)
 ````
 
 Para una mayor legibilidad de los datos, convertiremos los valores nulos de los test de drogas y test de alcohol por el valor "No realizado". También transformaremos los valores nulos del estado meteorológico, el numero de la calle, el tipo de persona, el tipo de accidente y el tipo de vehículo por el valor "Desconocido"
+
+
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 accidentes$positiva_alcohol[accidentes$positiva_alcohol == "NULL"] <- "No realizado"
 accidentes$positiva_droga[accidentes$positiva_droga == "NULL"] <- "No realizado"
-accidentes$estado_meteorologico[accidentes$estado_meteorologico == "NULL"] <- "Desconocido"
+accidentes$estado_meteorologico[accidentes$estado_meteorologico == "NULL" | accidentes$estado_meteorologico == "Se desconoce"] <- "Desconocido"
 accidentes$numero[accidentes$numero == "NULL"] <- "Desconocido"
 accidentes$tipo_persona[accidentes$tipo_persona == "NULL"] <- "Desconocido"
-accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == "NULL"] <- "Desconocido"
+accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == "NULL" | accidentes$tipo_vehiculo == "Sin especificar"] <- "Desconocido"
 accidentes$tipo_accidente[accidentes$tipo_accidente == "NULL"] <- "Desconocido"
 ````
+
+Realizamos las conversiones de tipos de datos necesarias.
+
+`````{r echo=TRUE, message=FALSE, warning=FALSE}
+accidentes$fecha <- as.Date(accidentes$fecha)
+accidentes$sexo = as.factor(accidentes$sexo)
+accidentes$distrito = as.factor(accidentes$distrito)
+accidentes$tipo_persona = as.factor(accidentes$tipo_persona)
+accidentes$tipo_vehiculo = as.factor(accidentes$tipo_vehiculo)
+
+sapply(accidentes,class)
+````
+
+EL siguiente paso que realizaremos será el de discretizar la variable de lesividad, obteniendo dos nuevas variables una con un categorización más general de la lesividad del accidente y otra con la categorización específica. Para la obtención de estas nuevas variables discretizaremos cada uno de los códigos de lesividad a su correspondiente categoría que se especifica en la documentación del juego de datos.
+
+La categorización general especificada en la documentación es la siguiente:
+
+| Código lesividad | Grado lesividad |
+|------------------|-----------------|
+| 01               | Leve            |
+| 02               | Leve            |
+| 03               | Grave           |
+| 04               | Mortal          |
+| 05               | Leve            |
+| 06               | Leve            |
+| 07               | Leve            |
+| 14               | Sin asistencia  |
+| 77               | Desconocido     |
+
+Discretizamos la lesividad en categorias generales :
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -222,7 +267,59 @@ accidentes$grado_lesividad[accidentes$lesividad == 3] <- "Grave"
 accidentes$grado_lesividad[accidentes$lesividad == 4] <- "Mortal"
 accidentes$grado_lesividad[accidentes$lesividad == 14] <- "Sin asistencia"
 accidentes$grado_lesividad[accidentes$lesividad == 77] <- "Desconocido"
+
+accidentes$grado_lesividad <- as.factor(accidentes$grado_lesividad)
+````
+
+Observamos una muestra de la variable resultante
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
 head(accidentes$grado_lesividad)
+````
+
+La categorización específica indicada en la documentación es la siguiente:
+
+| Código lesividad | Grado lesividad                                          |
+|------------------|----------------------------------------------------------|
+| 01               | Asistencia en urgencias sin posterior ingreso            |
+| 02               | Ingreso inferior o igual a 24 horas                      |
+| 03               | Ingreso superior a 24 horas                              |
+| 04               | Fallecido 24 horas                                       |
+| 05               | Asistencia ambulatoria con posterioridad                 |
+| 06               | Asistencia sanitaria inmediata en centro de salud o mutua|
+| 07               | Asistencia sanitaria sólo en el lugar del accidente      |
+| 14               | Sin asistencia sanitaria                                 |
+| 77               | Se desconoce                                             |
+
+Discretizamos la lesividad en categorías específicas
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+accidentes$categoria_lesividad <- ""
+accidentes$categoria_lesividad[accidentes$lesividad == 1] <- "Asistencia en urgencias sin posterior ingreso"
+accidentes$categoria_lesividad[accidentes$lesividad == 2] <- "Ingreso inferior o igual a 24 horas"
+accidentes$categoria_lesividad[accidentes$lesividad == 3] <- "Ingreso superior a 24 horas"
+accidentes$categoria_lesividad[accidentes$lesividad == 4] <- "Fallecido 24 horas"
+accidentes$categoria_lesividad[accidentes$lesividad == 5] <- "Asistencia ambulatoria con posterioridad"
+accidentes$categoria_lesividad[accidentes$lesividad == 6] <- "Asistencia sanitaria inmediata en centro de salud o mutua"
+accidentes$categoria_lesividad[accidentes$lesividad == 7] <- "Asistencia sanitaria sólo en el lugar del accidente"
+accidentes$categoria_lesividad[accidentes$lesividad == 14] <- "Sin asistencia sanitaria"
+accidentes$categoria_lesividad[accidentes$lesividad == 77] <- "Se desconoce"
+
+
+accidentes$categoria_lesividad <- as.factor(accidentes$categoria_lesividad)
+````
+
+Mostramos los resultados de la nueva variable
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+head(accidentes$categoria_lesividad)
+````
+
+Vemos ahora la cantidad de accidentes agrupados por su lesividad general.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(factor(accidentes$grado_lesividad), main="Grado lesividad de accidentes", xlab="grado lesividad", ylab="Cantidad", col="ivory")
 
 ````
 

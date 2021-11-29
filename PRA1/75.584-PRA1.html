@@ -313,86 +313,87 @@ Se debe entregar la PRA1 en el buzón de entregas del aula</p>
 <hr />
 <div id="elección-del-conjunto-de-datos" class="section level2" number="3.1">
 <h2 number="3.1"><span class="header-section-number">3.1</span> Elección del conjunto de datos</h2>
+<p>Para la realización de la práctica se ha escogido un juego de datos referente a los accidentes producidos en la Comunidad de Madrid durante el año 2020 Los datos se han obtenido del <a href="https://datos.madrid.es/portal/site/egob">Portal de datos abiertos del Ayuntamiento de Madrid</a>. Este conjunto de datos contiene la información de los accidentes de tráfico</p>
 </div>
 <div id="exploración-del-conjunto-de-datos" class="section level2" number="3.2">
 <h2 number="3.2"><span class="header-section-number">3.2</span> Exploración del conjunto de datos</h2>
 <p>Iniciamos la carga de los datos, para ello realizamos la lectura de un fichero csv con esímbolo separador de “;”. Para obtener la ruta del fichero se utilizará la función file.choose() que nos devuelve la ruta completa del fichero y lo almacenaremos en una variable que denominaremos ruta_csv.</p>
-<pre class="r"><code>ruta_csv &lt;- &quot;C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA1\\2021_Accidentalidad.csv&quot;
+<pre class="r"><code>ruta_csv &lt;- &quot;C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA1\\2020_Accidentalidad.csv&quot;
 accidentes &lt;- read.csv2(ruta_csv,na.strings=&quot;NA&quot;, encoding = &quot;UTF-8&quot;)
 summary(accidentes)</code></pre>
 <pre><code>##  X.U.FEFF.num_expediente    fecha               hora          
-##  Length:24464            Length:24464       Length:24464      
+##  Length:32427            Length:32427       Length:32427      
 ##  Class :character        Class :character   Class :character  
 ##  Mode  :character        Mode  :character   Mode  :character  
 ##                                                               
 ##                                                               
 ##                                                               
 ##  localizacion          numero            distrito         tipo_accidente    
-##  Length:24464       Length:24464       Length:24464       Length:24464      
+##  Length:32427       Length:32427       Length:32427       Length:32427      
 ##  Class :character   Class :character   Class :character   Class :character  
 ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
 ##                                                                             
 ##                                                                             
 ##                                                                             
 ##  estado_meteorológico tipo_vehiculo      tipo_persona        rango_edad       
-##  Length:24464         Length:24464       Length:24464       Length:24464      
+##  Length:32427         Length:32427       Length:32427       Length:32427      
 ##  Class :character     Class :character   Class :character   Class :character  
 ##  Mode  :character     Mode  :character   Mode  :character   Mode  :character  
 ##                                                                               
 ##                                                                               
 ##                                                                               
 ##      sexo            lesividad         coordenada_x_utm coordenada_y_utm 
-##  Length:24464       Length:24464       Min.   :429069   Min.   :4463986  
-##  Class :character   Class :character   1st Qu.:439854   1st Qu.:4471626  
-##  Mode  :character   Mode  :character   Median :441739   Median :4474778  
-##                                        Mean   :442063   Mean   :4474716  
-##                                        3rd Qu.:444020   3rd Qu.:4477471  
-##                                        Max.   :454729   Max.   :4495363  
+##  Length:32427       Length:32427       Min.   :429069   Min.   :4463495  
+##  Class :character   Class :character   1st Qu.:439962   1st Qu.:4471803  
+##  Mode  :character   Mode  :character   Median :441917   Median :4475026  
+##                                        Mean   :442218   Mean   :4474898  
+##                                        3rd Qu.:444328   3rd Qu.:4477652  
+##                                        Max.   :454624   Max.   :4488100  
 ##  positiva_alcohol   positiva_droga    
-##  Length:24464       Length:24464      
+##  Length:32427       Length:32427      
 ##  Class :character   Class :character  
 ##  Mode  :character   Mode  :character  
 ##                                       
 ##                                       
 ## </code></pre>
 <pre class="r"><code>str(accidentes)</code></pre>
-<pre><code>## &#39;data.frame&#39;:    24464 obs. of  17 variables:
-##  $ X.U.FEFF.num_expediente: chr  &quot;2020S019534&quot; &quot;2020S019534&quot; &quot;2020S019534&quot; &quot;2020S019534&quot; ...
-##  $ fecha                  : chr  &quot;01/01/2021&quot; &quot;01/01/2021&quot; &quot;01/01/2021&quot; &quot;01/01/2021&quot; ...
-##  $ hora                   : chr  &quot;4:30:00&quot; &quot;4:30:00&quot; &quot;4:30:00&quot; &quot;4:30:00&quot; ...
-##  $ localizacion           : chr  &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; ...
-##  $ numero                 : chr  &quot;57&quot; &quot;57&quot; &quot;57&quot; &quot;57&quot; ...
-##  $ distrito               : chr  &quot;PUENTE DE VALLECAS&quot; &quot;PUENTE DE VALLECAS&quot; &quot;PUENTE DE VALLECAS&quot; &quot;PUENTE DE VALLECAS&quot; ...
-##  $ tipo_accidente         : chr  &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; ...
-##  $ estado_meteorológico   : chr  &quot;Despejado&quot; &quot;Despejado&quot; &quot;Despejado&quot; &quot;Despejado&quot; ...
-##  $ tipo_vehiculo          : chr  &quot;Turismo&quot; &quot;Turismo&quot; &quot;Turismo&quot; &quot;Turismo&quot; ...
-##  $ tipo_persona           : chr  &quot;Conductor&quot; &quot;Conductor&quot; &quot;Conductor&quot; &quot;Pasajero&quot; ...
-##  $ rango_edad             : chr  &quot;Desconocido&quot; &quot;De 30 a 34 años&quot; &quot;De 35 a 39 años&quot; &quot;De 10 a 14 años&quot; ...
-##  $ sexo                   : chr  &quot;Desconocido&quot; &quot;Mujer&quot; &quot;Hombre&quot; &quot;Hombre&quot; ...
-##  $ lesividad              : chr  &quot;NULL&quot; &quot;14&quot; &quot;7&quot; &quot;14&quot; ...
-##  $ coordenada_x_utm       : num  444926 444926 444926 444926 444926 ...
-##  $ coordenada_y_utm       : num  4470383 4470383 4470383 4470383 4470383 ...
-##  $ positiva_alcohol       : chr  &quot;N&quot; &quot;N&quot; &quot;N&quot; &quot;N&quot; ...
+<pre><code>## &#39;data.frame&#39;:    32427 obs. of  17 variables:
+##  $ X.U.FEFF.num_expediente: chr  &quot;2019S040008&quot; &quot;2019S040008&quot; &quot;2020S000001&quot; &quot;2020S000001&quot; ...
+##  $ fecha                  : chr  &quot;07/09/2020&quot; &quot;07/09/2020&quot; &quot;01/01/2020&quot; &quot;01/01/2020&quot; ...
+##  $ hora                   : chr  &quot;23:00:00&quot; &quot;23:00:00&quot; &quot;1:15:00&quot; &quot;1:15:00&quot; ...
+##  $ localizacion           : chr  &quot;CALL. SAN MAXIMILIANO, 38&quot; &quot;CALL. SAN MAXIMILIANO, 38&quot; &quot;AVDA. CANILLEJAS A VICALVARO / CALL. SILFIDE&quot; &quot;AVDA. CANILLEJAS A VICALVARO / CALL. SILFIDE&quot; ...
+##  $ numero                 : chr  &quot;38&quot; &quot;38&quot; &quot;1&quot; &quot;1&quot; ...
+##  $ distrito               : chr  &quot;CIUDAD LINEAL&quot; &quot;CIUDAD LINEAL&quot; &quot;SAN BLAS-CANILLEJAS&quot; &quot;SAN BLAS-CANILLEJAS&quot; ...
+##  $ tipo_accidente         : chr  &quot;Choque contra obstáculo fijo&quot; &quot;Choque contra obstáculo fijo&quot; &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; ...
+##  $ estado_meteorológico   : chr  &quot;Despejado&quot; &quot;Despejado&quot; &quot;NULL&quot; &quot;NULL&quot; ...
+##  $ tipo_vehiculo          : chr  &quot;Turismo&quot; &quot;VMU eléctrico&quot; &quot;Turismo&quot; &quot;Turismo&quot; ...
+##  $ tipo_persona           : chr  &quot;Conductor&quot; &quot;Conductor&quot; &quot;Conductor&quot; &quot;Conductor&quot; ...
+##  $ rango_edad             : chr  &quot;De 21 a 24 años&quot; &quot;De 25 a 29 años&quot; &quot;De 18 a 20 años&quot; &quot;De 30 a 34 años&quot; ...
+##  $ sexo                   : chr  &quot;Hombre&quot; &quot;Mujer&quot; &quot;Hombre&quot; &quot;Hombre&quot; ...
+##  $ lesividad              : chr  &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; ...
+##  $ coordenada_x_utm       : num  444598 444598 447711 447711 445076 ...
+##  $ coordenada_y_utm       : num  4475156 4475156 4477156 4477156 4478372 ...
+##  $ positiva_alcohol       : chr  &quot;N&quot; &quot;N&quot; &quot;N&quot; &quot;S&quot; ...
 ##  $ positiva_droga         : chr  &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; ...</code></pre>
 <p>Verificamos la estructura de datos obtenida de la carga.</p>
 <pre class="r"><code>str(accidentes)   </code></pre>
-<pre><code>## &#39;data.frame&#39;:    24464 obs. of  17 variables:
-##  $ X.U.FEFF.num_expediente: chr  &quot;2020S019534&quot; &quot;2020S019534&quot; &quot;2020S019534&quot; &quot;2020S019534&quot; ...
-##  $ fecha                  : chr  &quot;01/01/2021&quot; &quot;01/01/2021&quot; &quot;01/01/2021&quot; &quot;01/01/2021&quot; ...
-##  $ hora                   : chr  &quot;4:30:00&quot; &quot;4:30:00&quot; &quot;4:30:00&quot; &quot;4:30:00&quot; ...
-##  $ localizacion           : chr  &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; &quot;AVDA. PABLO NERUDA / CALL. LEONESES&quot; ...
-##  $ numero                 : chr  &quot;57&quot; &quot;57&quot; &quot;57&quot; &quot;57&quot; ...
-##  $ distrito               : chr  &quot;PUENTE DE VALLECAS&quot; &quot;PUENTE DE VALLECAS&quot; &quot;PUENTE DE VALLECAS&quot; &quot;PUENTE DE VALLECAS&quot; ...
-##  $ tipo_accidente         : chr  &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; ...
-##  $ estado_meteorológico   : chr  &quot;Despejado&quot; &quot;Despejado&quot; &quot;Despejado&quot; &quot;Despejado&quot; ...
-##  $ tipo_vehiculo          : chr  &quot;Turismo&quot; &quot;Turismo&quot; &quot;Turismo&quot; &quot;Turismo&quot; ...
-##  $ tipo_persona           : chr  &quot;Conductor&quot; &quot;Conductor&quot; &quot;Conductor&quot; &quot;Pasajero&quot; ...
-##  $ rango_edad             : chr  &quot;Desconocido&quot; &quot;De 30 a 34 años&quot; &quot;De 35 a 39 años&quot; &quot;De 10 a 14 años&quot; ...
-##  $ sexo                   : chr  &quot;Desconocido&quot; &quot;Mujer&quot; &quot;Hombre&quot; &quot;Hombre&quot; ...
-##  $ lesividad              : chr  &quot;NULL&quot; &quot;14&quot; &quot;7&quot; &quot;14&quot; ...
-##  $ coordenada_x_utm       : num  444926 444926 444926 444926 444926 ...
-##  $ coordenada_y_utm       : num  4470383 4470383 4470383 4470383 4470383 ...
-##  $ positiva_alcohol       : chr  &quot;N&quot; &quot;N&quot; &quot;N&quot; &quot;N&quot; ...
+<pre><code>## &#39;data.frame&#39;:    32427 obs. of  17 variables:
+##  $ X.U.FEFF.num_expediente: chr  &quot;2019S040008&quot; &quot;2019S040008&quot; &quot;2020S000001&quot; &quot;2020S000001&quot; ...
+##  $ fecha                  : chr  &quot;07/09/2020&quot; &quot;07/09/2020&quot; &quot;01/01/2020&quot; &quot;01/01/2020&quot; ...
+##  $ hora                   : chr  &quot;23:00:00&quot; &quot;23:00:00&quot; &quot;1:15:00&quot; &quot;1:15:00&quot; ...
+##  $ localizacion           : chr  &quot;CALL. SAN MAXIMILIANO, 38&quot; &quot;CALL. SAN MAXIMILIANO, 38&quot; &quot;AVDA. CANILLEJAS A VICALVARO / CALL. SILFIDE&quot; &quot;AVDA. CANILLEJAS A VICALVARO / CALL. SILFIDE&quot; ...
+##  $ numero                 : chr  &quot;38&quot; &quot;38&quot; &quot;1&quot; &quot;1&quot; ...
+##  $ distrito               : chr  &quot;CIUDAD LINEAL&quot; &quot;CIUDAD LINEAL&quot; &quot;SAN BLAS-CANILLEJAS&quot; &quot;SAN BLAS-CANILLEJAS&quot; ...
+##  $ tipo_accidente         : chr  &quot;Choque contra obstáculo fijo&quot; &quot;Choque contra obstáculo fijo&quot; &quot;Colisión fronto-lateral&quot; &quot;Colisión fronto-lateral&quot; ...
+##  $ estado_meteorológico   : chr  &quot;Despejado&quot; &quot;Despejado&quot; &quot;NULL&quot; &quot;NULL&quot; ...
+##  $ tipo_vehiculo          : chr  &quot;Turismo&quot; &quot;VMU eléctrico&quot; &quot;Turismo&quot; &quot;Turismo&quot; ...
+##  $ tipo_persona           : chr  &quot;Conductor&quot; &quot;Conductor&quot; &quot;Conductor&quot; &quot;Conductor&quot; ...
+##  $ rango_edad             : chr  &quot;De 21 a 24 años&quot; &quot;De 25 a 29 años&quot; &quot;De 18 a 20 años&quot; &quot;De 30 a 34 años&quot; ...
+##  $ sexo                   : chr  &quot;Hombre&quot; &quot;Mujer&quot; &quot;Hombre&quot; &quot;Hombre&quot; ...
+##  $ lesividad              : chr  &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; ...
+##  $ coordenada_x_utm       : num  444598 444598 447711 447711 445076 ...
+##  $ coordenada_y_utm       : num  4475156 4475156 4477156 4477156 4478372 ...
+##  $ positiva_alcohol       : chr  &quot;N&quot; &quot;N&quot; &quot;N&quot; &quot;S&quot; ...
 ##  $ positiva_droga         : chr  &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; &quot;NULL&quot; ...</code></pre>
 <p>Vemos que tenemos 24464 registros referentes a los accidentes de tráfico de la Ciudad de Madrid y 17 variables que los caracterizan.</p>
 <p>Para una mayor legibilidad de los datos modificaremos el nombre de la columna “X.U.FEFF.num_expediente” por “num_expediente” y para evitarnos problemas con la codificacion renombraremos también la variable “estado_meteorológico” por “estado_meteorologico”</p>
@@ -418,39 +419,39 @@ accidentes &lt;- rename(accidentes, c(estado_meteorológico = &quot;estado_meteo
 <li><strong>positiva_alcohol:</strong> test de alcoholemia positivo realizado a la persona afectada.</li>
 <li><strong>positiva_droga:</strong> test de drogas positivo realizado a la persona afectada.</li>
 </ul>
-<p>Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correcto. La variable numero por su nomenclatura y su definición podría llevarnos a engaño de lclasificarla como numérica pero no será el caso al existir números de calle con letras. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.</p>
+<p>Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correcto. La variable numero por su nomenclatura y su definición podría llevarnos a engaño de lclasificarla como numérica pero no será el caso al existir números de calle con letras. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.Otra transformación a realizar es convertir las variables tipo cadena en tipo factor para su posterior traramiento.</p>
 <p>Vemos las estadísticas básicas de los datos.</p>
 <pre class="r"><code>summary(accidentes)</code></pre>
 <pre><code>##  num_expediente        fecha               hora           localizacion      
-##  Length:24464       Length:24464       Length:24464       Length:24464      
+##  Length:32427       Length:32427       Length:32427       Length:32427      
 ##  Class :character   Class :character   Class :character   Class :character  
 ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
 ##                                                                             
 ##                                                                             
 ##                                                                             
 ##     numero            distrito         tipo_accidente     estado_meteorologico
-##  Length:24464       Length:24464       Length:24464       Length:24464        
+##  Length:32427       Length:32427       Length:32427       Length:32427        
 ##  Class :character   Class :character   Class :character   Class :character    
 ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character    
 ##                                                                               
 ##                                                                               
 ##                                                                               
 ##  tipo_vehiculo      tipo_persona        rango_edad            sexo          
-##  Length:24464       Length:24464       Length:24464       Length:24464      
+##  Length:32427       Length:32427       Length:32427       Length:32427      
 ##  Class :character   Class :character   Class :character   Class :character  
 ##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
 ##                                                                             
 ##                                                                             
 ##                                                                             
 ##   lesividad         coordenada_x_utm coordenada_y_utm  positiva_alcohol  
-##  Length:24464       Min.   :429069   Min.   :4463986   Length:24464      
-##  Class :character   1st Qu.:439854   1st Qu.:4471626   Class :character  
-##  Mode  :character   Median :441739   Median :4474778   Mode  :character  
-##                     Mean   :442063   Mean   :4474716                     
-##                     3rd Qu.:444020   3rd Qu.:4477471                     
-##                     Max.   :454729   Max.   :4495363                     
+##  Length:32427       Min.   :429069   Min.   :4463495   Length:32427      
+##  Class :character   1st Qu.:439962   1st Qu.:4471803   Class :character  
+##  Mode  :character   Median :441917   Median :4475026   Mode  :character  
+##                     Mean   :442218   Mean   :4474898                     
+##                     3rd Qu.:444328   3rd Qu.:4477652                     
+##                     Max.   :454624   Max.   :4488100                     
 ##  positiva_droga    
-##  Length:24464      
+##  Length:32427      
 ##  Class :character  
 ##  Mode  :character  
 ##                    
@@ -482,7 +483,7 @@ accidentes &lt;- rename(accidentes, c(estado_meteorológico = &quot;estado_meteo
 ##         tipo_persona           rango_edad                 sexo 
 ##                    0                    0                    0 
 ##            lesividad     coordenada_x_utm     coordenada_y_utm 
-##                    2                    0                    0 
+##                    0                    0                    0 
 ##     positiva_alcohol       positiva_droga 
 ##                    0                    0</code></pre>
 <p>En este caso tenemos 2 valores vacíos en la variable de lesividad, lo cual no es un error debido a que en la documentación adjunta a los datos se especifica que si viene vacío el campo de lesividad se corresponde con el valor 14 de lesividad correspondiente a “Sin asistencia sanitaria” esta corrección debemos de realizarla en la fase de prerpoceso. También podemos observar que hay 2 números de calle que están vacíos pro serán irrelevantes para el estudio.</p>
@@ -491,15 +492,15 @@ accidentes &lt;- rename(accidentes, c(estado_meteorológico = &quot;estado_meteo
 <pre><code>##       num_expediente                fecha                 hora 
 ##                    0                    0                    0 
 ##         localizacion               numero             distrito 
-##                    0                    0                    3 
+##                    0                    0                    2 
 ##       tipo_accidente estado_meteorologico        tipo_vehiculo 
-##                    1                 2601                   93 
+##                    0                 3194                  137 
 ##         tipo_persona           rango_edad                 sexo 
-##                   10                    0                    0 
+##                    0                    0                    0 
 ##            lesividad     coordenada_x_utm     coordenada_y_utm 
-##                11170                    0                    0 
+##                14796                    0                    0 
 ##     positiva_alcohol       positiva_droga 
-##                   93                24401</code></pre>
+##                  102                32345</code></pre>
 <p>En este caso si podemos observar la existencia de una importante cantidad de valores nulos en los test de droga. Lo cual nos dice que no se realizan practicamente test de drogas en los accidentes de tráfico dado que de una muestra de 24464 accidentes, sólo se realizó un test de drogas en 63 ocasiones, lo cual es un valor ínfimo. También podemos observar la existencia de bastantes valores nulos en la variable de lesividad, nuevamente para esta variable hay un valor asignado para cuando se desconoce el grado de lesividad, que en la docmentación corresponde al valor 77, este cambio lo realizaremos en la fase de preproceso para poder tener la variable lesividad en el valor numérico que le corresponde por ser los códigos de lesividad. Por último destacar también que existe una cantidad destacable de estados meteorológicos desconocidos en los que se producen los accidentes de tráfico.</p>
 </div>
 <div id="preprocesado-y-gestión-de-características" class="section level2" number="3.3">
@@ -511,22 +512,161 @@ accidentes$lesividad &lt;- as.integer(accidentes$lesividad)</code></pre>
 <p>Para una mayor legibilidad de los datos, convertiremos los valores nulos de los test de drogas y test de alcohol por el valor “No realizado”. También transformaremos los valores nulos del estado meteorológico, el numero de la calle, el tipo de persona, el tipo de accidente y el tipo de vehículo por el valor “Desconocido”</p>
 <pre class="r"><code>accidentes$positiva_alcohol[accidentes$positiva_alcohol == &quot;NULL&quot;] &lt;- &quot;No realizado&quot;
 accidentes$positiva_droga[accidentes$positiva_droga == &quot;NULL&quot;] &lt;- &quot;No realizado&quot;
-accidentes$estado_meteorologico[accidentes$estado_meteorologico == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
+accidentes$estado_meteorologico[accidentes$estado_meteorologico == &quot;NULL&quot; | accidentes$estado_meteorologico == &quot;Se desconoce&quot;] &lt;- &quot;Desconocido&quot;
 accidentes$numero[accidentes$numero == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
 accidentes$tipo_persona[accidentes$tipo_persona == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
-accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;
+accidentes$tipo_vehiculo[accidentes$tipo_vehiculo == &quot;NULL&quot; | accidentes$tipo_vehiculo == &quot;Sin especificar&quot;] &lt;- &quot;Desconocido&quot;
 accidentes$tipo_accidente[accidentes$tipo_accidente == &quot;NULL&quot;] &lt;- &quot;Desconocido&quot;</code></pre>
-<pre class="r"><code>max(accidentes$numero)</code></pre>
-<pre><code>## [1] &quot;9A&quot;</code></pre>
+<p>Realizamos las conversiones de tipos de datos necesarias.</p>
+<pre class="r"><code>accidentes$fecha &lt;- as.Date(accidentes$fecha)
+accidentes$sexo = as.factor(accidentes$sexo)
+accidentes$distrito = as.factor(accidentes$distrito)
+accidentes$tipo_persona = as.factor(accidentes$tipo_persona)
+accidentes$tipo_vehiculo = as.factor(accidentes$tipo_vehiculo)
+
+sapply(accidentes,class)</code></pre>
+<pre><code>##       num_expediente                fecha                 hora 
+##          &quot;character&quot;               &quot;Date&quot;          &quot;character&quot; 
+##         localizacion               numero             distrito 
+##          &quot;character&quot;          &quot;character&quot;             &quot;factor&quot; 
+##       tipo_accidente estado_meteorologico        tipo_vehiculo 
+##          &quot;character&quot;          &quot;character&quot;             &quot;factor&quot; 
+##         tipo_persona           rango_edad                 sexo 
+##             &quot;factor&quot;          &quot;character&quot;             &quot;factor&quot; 
+##            lesividad     coordenada_x_utm     coordenada_y_utm 
+##            &quot;integer&quot;            &quot;numeric&quot;            &quot;numeric&quot; 
+##     positiva_alcohol       positiva_droga 
+##          &quot;character&quot;          &quot;character&quot;</code></pre>
+<p>EL siguiente paso que realizaremos será el de discretizar la variable de lesividad, obteniendo dos nuevas variables una con un categorización más general de la lesividad del accidente y otra con la categorización específica. Para la obtención de estas nuevas variables discretizaremos cada uno de los códigos de lesividad a su correspondiente categoría que se especifica en la documentación del juego de datos.</p>
+<p>La categorización general especificada en la documentación es la siguiente:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Código lesividad</th>
+<th>Grado lesividad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>01</td>
+<td>Leve</td>
+</tr>
+<tr class="even">
+<td>02</td>
+<td>Leve</td>
+</tr>
+<tr class="odd">
+<td>03</td>
+<td>Grave</td>
+</tr>
+<tr class="even">
+<td>04</td>
+<td>Mortal</td>
+</tr>
+<tr class="odd">
+<td>05</td>
+<td>Leve</td>
+</tr>
+<tr class="even">
+<td>06</td>
+<td>Leve</td>
+</tr>
+<tr class="odd">
+<td>07</td>
+<td>Leve</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>Sin asistencia</td>
+</tr>
+<tr class="odd">
+<td>77</td>
+<td>Desconocido</td>
+</tr>
+</tbody>
+</table>
+<p>Discretizamos la lesividad en categorias generales :</p>
 <pre class="r"><code>accidentes$grado_lesividad &lt;- &quot;&quot;
 accidentes$grado_lesividad[accidentes$lesividad == 1 | accidentes$lesividad == 2 | accidentes$lesividad == 5 | accidentes$lesividad == 6 | accidentes$lesividad == 7] &lt;- &quot;Leve&quot;
 accidentes$grado_lesividad[accidentes$lesividad == 3] &lt;- &quot;Grave&quot;
 accidentes$grado_lesividad[accidentes$lesividad == 4] &lt;- &quot;Mortal&quot;
 accidentes$grado_lesividad[accidentes$lesividad == 14] &lt;- &quot;Sin asistencia&quot;
 accidentes$grado_lesividad[accidentes$lesividad == 77] &lt;- &quot;Desconocido&quot;
-head(accidentes$grado_lesividad)</code></pre>
-<pre><code>## [1] &quot;Desconocido&quot;    &quot;Sin asistencia&quot; &quot;Leve&quot;           &quot;Sin asistencia&quot;
-## [5] &quot;Sin asistencia&quot; &quot;Leve&quot;</code></pre>
+
+accidentes$grado_lesividad &lt;- as.factor(accidentes$grado_lesividad)</code></pre>
+<p>Observamos una muestra de la variable resultante</p>
+<pre class="r"><code>head(accidentes$grado_lesividad)</code></pre>
+<pre><code>## [1] Desconocido Desconocido Desconocido Desconocido Desconocido Desconocido
+## Levels: Desconocido Grave Leve Mortal Sin asistencia</code></pre>
+<p>La categorización específica indicada en la documentación es la siguiente:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Código lesividad</th>
+<th>Grado lesividad</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>01</td>
+<td>Asistencia en urgencias sin posterior ingreso</td>
+</tr>
+<tr class="even">
+<td>02</td>
+<td>Ingreso inferior o igual a 24 horas</td>
+</tr>
+<tr class="odd">
+<td>03</td>
+<td>Ingreso superior a 24 horas</td>
+</tr>
+<tr class="even">
+<td>04</td>
+<td>Fallecido 24 horas</td>
+</tr>
+<tr class="odd">
+<td>05</td>
+<td>Asistencia ambulatoria con posterioridad</td>
+</tr>
+<tr class="even">
+<td>06</td>
+<td>Asistencia sanitaria inmediata en centro de salud o mutua</td>
+</tr>
+<tr class="odd">
+<td>07</td>
+<td>Asistencia sanitaria sólo en el lugar del accidente</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>Sin asistencia sanitaria</td>
+</tr>
+<tr class="odd">
+<td>77</td>
+<td>Se desconoce</td>
+</tr>
+</tbody>
+</table>
+<p>Discretizamos la lesividad en categorías específicas</p>
+<pre class="r"><code>accidentes$categoria_lesividad &lt;- &quot;&quot;
+accidentes$categoria_lesividad[accidentes$lesividad == 1] &lt;- &quot;Asistencia en urgencias sin posterior ingreso&quot;
+accidentes$categoria_lesividad[accidentes$lesividad == 2] &lt;- &quot;Ingreso inferior o igual a 24 horas&quot;
+accidentes$categoria_lesividad[accidentes$lesividad == 3] &lt;- &quot;Ingreso superior a 24 horas&quot;
+accidentes$categoria_lesividad[accidentes$lesividad == 4] &lt;- &quot;Fallecido 24 horas&quot;
+accidentes$categoria_lesividad[accidentes$lesividad == 5] &lt;- &quot;Asistencia ambulatoria con posterioridad&quot;
+accidentes$categoria_lesividad[accidentes$lesividad == 6] &lt;- &quot;Asistencia sanitaria inmediata en centro de salud o mutua&quot;
+accidentes$categoria_lesividad[accidentes$lesividad == 7] &lt;- &quot;Asistencia sanitaria sólo en el lugar del accidente&quot;
+accidentes$categoria_lesividad[accidentes$lesividad == 14] &lt;- &quot;Sin asistencia sanitaria&quot;
+accidentes$categoria_lesividad[accidentes$lesividad == 77] &lt;- &quot;Se desconoce&quot;
+
+
+accidentes$categoria_lesividad &lt;- as.factor(accidentes$categoria_lesividad)</code></pre>
+<p>Mostramos los resultados de la nueva variable</p>
+<pre class="r"><code>head(accidentes$categoria_lesividad)</code></pre>
+<pre><code>## [1] Se desconoce Se desconoce Se desconoce Se desconoce Se desconoce
+## [6] Se desconoce
+## 9 Levels: Asistencia ambulatoria con posterioridad ...</code></pre>
+<p>Vemos ahora la cantidad de accidentes agrupados por su lesividad general.</p>
+<pre class="r"><code>plot(factor(accidentes$grado_lesividad), main=&quot;Grado lesividad de accidentes&quot;, xlab=&quot;grado lesividad&quot;, ylab=&quot;Cantidad&quot;, col=&quot;ivory&quot;)</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
 </div>
 <div id="construcción-de-conjunto-de-datos-final" class="section level2" number="3.4">
 <h2 number="3.4"><span class="header-section-number">3.4</span> Construcción de conjunto de datos final</h2>
