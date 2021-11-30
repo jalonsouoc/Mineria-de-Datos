@@ -319,27 +319,60 @@ head(accidentes$categoria_lesividad)
 Vemos ahora la cantidad de accidentes agrupados por su lesividad general.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-plot(factor(accidentes$grado_lesividad), main="Grado lesividad de accidentes", xlab="grado lesividad", ylab="Cantidad", col="ivory")
+plot(accidentes$grado_lesividad, main="Grado lesividad de accidentes", xlab="grado lesividad", ylab="Cantidad", col="ivory")
 
 ````
 
+Podemos observar que la cantidad de accidentes mortales es bastante ínfima en comparación con los accidentes que no necesitaron asistencia sanitaria o un ingreso ingreso superior a las 24 horas, un caso parecido lo tenemos con los accidentes graves donde hay un mayor número de accidentes de este tipo que de los accidentes mortales. por último destaca la gran cantidad de accidentes de los que se desconoce el gradod el grado de lesividad. 
+
+Mostramos ahora la cantidad de accidentes agrupados por su categorización de lesividad.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+par(mar=c(2,25,2,2))
+barplot(table(accidentes$categoria_lesividad), horiz = TRUE, las=1, col="ivory")
+````
+
+Como era de esperar tras lo visto en el gráfico anterior predomina los accidentes con lesividad desconocida. Se puede apreciar que en la mayoría de los accidentes o se requirio asistencia sanitaria y si se necesitó no hizo falta el traslado a urgencias sino que se atendieron en el lugar del acciednte.
+
+Obtenemos ahora una nueva variable que va a corresponder con el mes en el que se producen los siniestros.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 accidentes$mes <- factor(months(accidentes$fecha), levels=c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))
 head(accidentes$mes)
 ````
 
-````{r echo=TRUE, message=FALSE, warning=FALSE}
+Mostramos los resultados de la nueva variable obtenida.
 
-head(accidentes$mes)  
+````{r echo=TRUE, message=FALSE, warning=FALSE}
 plot(accidentes$mes, main="Grado lesividad de accidentes", xlab="grado lesividad", ylab="Cantidad", col="ivory", las=2)
 ````
+
+En este caso podemos comprobar que los meses con más incidencias de tráfico corresponden con los meses de Enero y febrero notandose una gran disminución en los meses primaverales y de nuevo un aumento gradual en los meses otoñales siendo con bastante diferencia los meses de invierno en los que más accidentes de tráfico se producen, esto peude deberse a las condiciones climatológicas.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+ggplot(data=accidentes, aes(x=mes, fill=estado_meteorologico))+geom_bar()+ggtitle("Relación entre la puntuación de la apariencia y la puntuación general")+scale_x_discrete(guide = guide_axis(angle = 90))
+````
+
+Observamos que el clima predominante en los siniestros producidos durante los meses de invierno es el clima despejado, y no se observan estados meteorológicos adversos  significativos en estos meses, con lo cual podemos determinar que el estado meteorológico no es el principal motivo  que provoca los accidentes.
+
+Vemos el grado de lesividad en función del mes en el que se produce el siniestro.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
 ggplot(data=accidentes, aes(x=mes, fill=grado_lesividad))+geom_bar()+ggtitle("Relación entre la puntuación de la apariencia y la puntuación general")+scale_x_discrete(guide = guide_axis(angle = 90))
 ````
 
+Se puede apreciar que no existe diferencia significativa entre cada uno de los meses y que se reparten los diferentes grados de lesividad de forma similar en cada uno de loss meses, no pudiendo obtener un mes destacable en el que se produzaca un mayor número de accidentes graves.
+
+
+Analizamos ahora el grado de lesividad de los diferentes rangos de edad en función de su sexo.
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+ggplot(data = accidentes,aes(x=grado_lesividad,fill=sexo))+geom_bar(position="fill")+facet_wrap(~rango_edad)+ggtitle("Grado de lesividad por rango de edad y sexo")+scale_x_discrete(guide = guide_axis(angle = 90))
+````
+
+Podemos destactar que la mayor parte de los implicados en los siniestros son Hombres. Predominando la mortalidad en estos a excepción de personas menores de 5 años y de 70 a 74 años donde la unicas victimas son mujeres.
 
 ## Construcción de conjunto de datos final
 
