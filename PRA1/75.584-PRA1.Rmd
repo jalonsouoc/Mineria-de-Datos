@@ -217,7 +217,7 @@ En este caso si podemos observar la existencia de una importante cantidad de val
  
 ## Preprocesado y gestión de características
 
-Como incio de la fase de preproceso, realizaremos la sustitución de los valores no definidos o nulos por los valores correspondientes. Iniciaremos con la variable de lesividad dado que conocemos de antemano los valores por los que debemos sustituir. Sustitumos los valores vacíos por el valor 14 correspondiente a "Sin asistencia sanitaria" y los valores nulos por el valor 77 "Se desconoce". Una vez hecho el cambio convertimos el tipo de dato de la variable al tipo entero.
+Como inicio de la fase de preproceso, realizaremos la sustitución de los valores no definidos o nulos por los valores correspondientes. Iniciaremos con la variable de lesividad dado que conocemos de antemano los valores por los que debemos sustituir. Sustituimos los valores vacíos por el valor 14 correspondiente a "Sin asistencia sanitaria" y los valores nulos por el valor 77 "Se desconoce". Una vez hecho el cambio convertimos el tipo de dato de la variable al tipo entero.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 accidentes$lesividad[accidentes$lesividad == "" | accidentes$lesividad == " "] = 14
@@ -226,7 +226,6 @@ accidentes$lesividad <- as.integer(accidentes$lesividad)
 ````
 
 Para una mayor legibilidad de los datos, convertiremos los valores nulos de los test de drogas y test de alcohol por el valor "No realizado". También transformaremos los valores nulos del estado meteorológico, el numero de la calle, el tipo de persona, el tipo de accidente y el tipo de vehículo por el valor "Desconocido"
-
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 accidentes$positiva_alcohol[accidentes$positiva_alcohol == "NULL"] <- "No realizado"
@@ -250,7 +249,7 @@ accidentes$tipo_vehiculo = as.factor(accidentes$tipo_vehiculo)
 sapply(accidentes,class)
 ````
 
-EL siguiente paso que realizaremos será el de discretizar la variable de lesividad, obteniendo dos nuevas variables una con un categorización más general de la lesividad del accidente y otra con la categorización específica. Para la obtención de estas nuevas variables discretizaremos cada uno de los códigos de lesividad a su correspondiente categoría que se especifica en la documentación del juego de datos.
+EL siguiente paso que realizaremos será el de discretizar la variable de lesividad, obteniendo dos nuevas variables una con una categorización más general de la lesividad del accidente y otra con la categorización específica. Para la obtención de estas nuevas variables discretizaremos cada uno de los códigos de lesividad a su correspondiente categoría que se especifica en la documentación del juego de datos.
 
 La categorización general especificada en la documentación es la siguiente:
 
@@ -266,7 +265,7 @@ La categorización general especificada en la documentación es la siguiente:
 | 14               | Sin asistencia  |
 | 77               | Desconocido     |
 
-Discretizamos la lesividad en categorias generales :
+Discretizamos la lesividad en categorías generales:
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -300,7 +299,7 @@ La categorización específica indicada en la documentación es la siguiente:
 | 14               | Sin asistencia sanitaria                                 |
 | 77               | Se desconoce                                             |
 
-Discretizamos la lesividad en categorías específicas
+Discretizamos la lesividad en categorías específicas.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -319,7 +318,7 @@ accidentes$categoria_lesividad[accidentes$lesividad == 77] <- "Se desconoce"
 accidentes$categoria_lesividad <- as.factor(accidentes$categoria_lesividad)
 ````
 
-Mostramos los resultados de la nueva variable
+Mostramos los resultados de la nueva variable.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 head(accidentes$categoria_lesividad)
@@ -332,7 +331,7 @@ plot(accidentes$grado_lesividad, main="Grado lesividad de accidentes", xlab="gra
 
 ````
 
-Podemos observar que la cantidad de accidentes mortales es bastante ínfima en comparación con los accidentes que no necesitaron asistencia sanitaria o un ingreso ingreso superior a las 24 horas, un caso parecido lo tenemos con los accidentes graves donde hay un mayor número de accidentes de este tipo que de los accidentes mortales. por último destaca la gran cantidad de accidentes de los que se desconoce el gradod el grado de lesividad. 
+Podemos observar que la cantidad de accidentes mortales es bastante ínfima en comparación con los accidentes que no necesitaron asistencia sanitaria o un ingreso superior a las 24 horas, un caso parecido lo tenemos con los accidentes graves donde hay un mayor número de accidentes de este tipo que de los accidentes mortales. por último, destaca la gran cantidad de accidentes de los que se desconoce el grado de lesividad. 
 
 Mostramos ahora la cantidad de accidentes agrupados por su categorización de lesividad.
 
@@ -341,7 +340,7 @@ par(mar=c(2,25,2,2))
 barplot(table(accidentes$categoria_lesividad), horiz = TRUE, las=1, col="ivory")
 ````
 
-Como era de esperar tras lo visto en el gráfico anterior predomina los accidentes con lesividad desconocida. Se puede apreciar que en la mayoría de los accidentes o se requirio asistencia sanitaria y si se necesitó no hizo falta el traslado a urgencias sino que se atendieron en el lugar del acciednte.
+Como era de esperar tras lo visto en el gráfico anterior predomina los accidentes con lesividad desconocida. Se puede apreciar que en la mayoría de los accidentes o se requirió asistencia sanitaria y si se necesitó no hizo falta el traslado a urgencias, sino que se atendieron en el lugar del accidente.
 
 Obtenemos ahora una nueva variable que va a corresponder con el mes en el que se producen los siniestros.
 
@@ -356,14 +355,14 @@ Mostramos los resultados de la nueva variable obtenida.
 plot(accidentes$mes, main="Grado lesividad de accidentes", xlab="grado lesividad", ylab="Cantidad", col="ivory", las=2)
 ````
 
-En este caso podemos comprobar que los meses con más incidencias de tráfico corresponden con los meses de Enero y febrero notandose una gran disminución en los meses primaverales y de nuevo un aumento gradual en los meses otoñales siendo con bastante diferencia los meses de invierno en los que más accidentes de tráfico se producen, esto peude deberse a las condiciones climatológicas.
+En este caso podemos comprobar que los meses con más incidencias de tráfico corresponden con los meses de enero y febrero notándose una gran disminución en los meses primaverales y de nuevo un aumento gradual en los meses otoñales siendo con bastante diferencia los meses de invierno en los que más accidentes de tráfico se producen, esto puede deberse a las condiciones climatológicas.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
 ggplot(data=accidentes, aes(x=mes, fill=estado_meteorologico))+geom_bar()+ggtitle("Relación entre los meses y el estado meteorológico")+scale_x_discrete(guide = guide_axis(angle = 90))
 ````
 
-Observamos que el clima predominante en los siniestros producidos durante los meses de invierno es el clima despejado, y no se observan estados meteorológicos adversos  significativos en estos meses, con lo cual podemos determinar que el estado meteorológico no es el principal motivo  que provoca los accidentes.
+Observamos que el clima predominante en los siniestros producidos durante los meses de invierno es el clima despejado, y no se observan estados meteorológicos adversos significativos en estos meses, con lo cual podemos determinar que el estado meteorológico no es el principal motivo que provoca los accidentes.
 
 Vemos el grado de lesividad en función del mes en el que se produce el siniestro.
 
@@ -372,7 +371,7 @@ Vemos el grado de lesividad en función del mes en el que se produce el siniestr
 ggplot(data=accidentes, aes(x=mes, fill=grado_lesividad))+geom_bar()+ggtitle("Relación entre los meses y los grados de lesividad general")+scale_x_discrete(guide = guide_axis(angle = 90))
 ````
 
-Se puede apreciar que no existe diferencia significativa entre cada uno de los meses y que se reparten los diferentes grados de lesividad de forma similar en cada uno de loss meses, no pudiendo obtener un mes destacable en el que se produzaca un mayor número de accidentes graves.
+Se puede apreciar que no existe diferencia significativa entre cada uno de los meses y que se reparten los diferentes grados de lesividad de forma similar en cada uno de los meses, no pudiendo obtener un mes destacable en el que se produzca un mayor número de accidentes graves.
 
 
 Analizamos ahora el grado de lesividad de los diferentes rangos de edad en función de su sexo.
@@ -381,9 +380,9 @@ Analizamos ahora el grado de lesividad de los diferentes rangos de edad en funci
 ggplot(data = accidentes,aes(x=grado_lesividad,fill=sexo))+geom_bar(position="fill")+facet_wrap(~rango_edad)+ggtitle("Grado de lesividad por rango de edad y sexo")+scale_x_discrete(guide = guide_axis(angle = 90))
 ````
 
-Podemos destactar que la mayor parte de los implicados en los siniestros son Hombres. Predominando la mortalidad en estos a excepción de personas menores de 5 años y de 70 a 74 años donde la unicas victimas son mujeres.
+Podemos destacar que la mayor parte de los implicados en los siniestros son Hombres. Predominando la mortalidad en estos a excepción de personas menores de 5 años y de 70 a 74 años donde las únicas víctimas son mujeres.
 
-La última discretización que vamos a realizar consistira en obtener el momento del día en el que se produce el accidente en función de la hora, clasificaremos las horas entre Mañana, Tarde, Noche  y Madrugada.
+La última discretización que vamos a realizar consistirá en obtener el momento del día en el que se produce el accidente en función de la hora, clasificaremos las horas entre Mañana, Tarde, Noche y Madrugada.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 accidentes$partes_dia <- factor(cut(hour(hms(accidentes$hora)), breaks = c(-0.01,5.9,11.9,18.9, 24), labels = c("Madrugada","Mañana", "Tarde", "Noche"), right=TRUE), levels = c("Mañana", "Tarde", "Noche", "Madrugada"))
@@ -395,7 +394,7 @@ Mostramos los resultados obtenidos.
 plot(accidentes$partes_dia, main="Accidentes en cada parte del día", xlab="Partes del día", ylab="Cantidad", col="ivory")
 ````
 
-Podemos observar que en este caso la mayoría de accidentes se produjeron por la tarde en el periodo entre las 12 AM y las 19 PM.
+Podemos observar que en este caso la mayoría de los accidentes se produjeron por la tarde en el periodo entre las 12 AM y las 19 PM.
 
 Mostramos ahora los accidentes en función del grado de lesividad por cada una de las partes del día.
 
@@ -410,9 +409,9 @@ Por último mostramos las coordenadas en los que han tenido lugar los accidentes
 plot(accidentes$coordenada_x_utm,accidentes$coordenada_y_utm, main="Coordenadas accidentes", xlab="Coordenada x del accidente", ylab = "Coordenada y del accidente")
 ````
 
-Podemos observar que se concnetran más en el centro en lo que podemos considerar el centro de la Comunidad de Madrid, observando conforme se va saliendo del centro los accidentes van disminuyendo hasta ser bastante escasos.
+Podemos observar que se concentra más en el centro en lo que podemos considerar el centro de la Comunidad de Madrid, observando conforme se va saliendo del centro los accidentes van disminuyendo hasta ser bastante escasos.
 
-Como hemos podido observar durante la exploración de los datos, el grado de lesividad predominante es el de Desconocido, lo cual empañará los resultados obtenidos en el análisis, por lo tanto reduciremos la muestra eliminando aquellos siniestros de los cuales se desconoce la lesividad de los implicados. También reduciremos el número de variables obteniendo sólo las que consideramos de interes para el modelo a realziar.
+Como hemos podido observar durante la exploración de los datos, el grado de lesividad predominante es el de Desconocido, lo cual empañará los resultados obtenidos en el análisis, por lo tanto, reduciremos la muestra eliminando aquellos siniestros de los cuales se desconoce la lesividad de los implicados. También reduciremos el número de variables obteniendo sólo las que consideramos de interés para el modelo a realizar.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 accidentesFinal=subset(accidentes, accidentes$grado_lesividad != "Desconocido", select = c(distrito, tipo_accidente, estado_meteorologico, tipo_vehiculo, tipo_persona, rango_edad, sexo, positiva_alcohol, positiva_droga, grado_lesividad, categoria_lesividad, mes, partes_dia))
@@ -423,28 +422,29 @@ Podemos observar que la muestra de datos se ha visto reducida a un total de 1762
 
 ## Construcción de conjunto de datos final
 
-EL conjunto de datos final contiene un total de 17628 registros caracterizados por 13 variables que hemos considerado como las más relevantes para poder clasificar los accidentes de tráficos ocasionas en la Comunidad de Madrid.
+El conjunto de datos final contiene un total de 17628 registros caracterizados por 13 variables que hemos considerado como las más relevantes para poder clasificar los accidentes de tráficos ocasionas en la Comunidad de Madrid.
 
 las variables seleccionadas son:
 
-* **distrito:** distrito donde s eproduce el accidente. Con el tenemos localizado y agrupado geográficamente los accidentes.
-* **tipo_accidente:** corresponde al tipo de accidente. Relevante en relación a obtener la gravedad de la lesividad del siniestro.
-* **estado_meteorologico:** condiciones ambientales que se dan en el momento del siniestro. COmprobaremos si influye finalmente en el grado de lesividadde un accidente, pese a que el estudio previo no es concluyente.
+* **distrito:** distrito donde se produce el accidente. Con el tenemos localizado y agrupado geográficamente los accidentes.
+* **tipo_accidente:** corresponde al tipo de accidente. Relevante en relación con obtener la gravedad de la lesividad del siniestro.
+* **estado_meteorologico:** condiciones ambientales que se dan en el momento del siniestro. COmprobaremos si influye finalmente en el grado de lesividad de un accidente, pese a que el estudio previo no es concluyente.
 * **tipo_vehiculo:** tipo de vehículo afectado. Comprobaremos si la gravedad de un accidente va ligado al tipo de vehículo implicado.
-* **tio_persona:** tipo de persona vinculada al accidente. Veremos como afecta en la gravedad de un accidente el ser pasajero o conductor por ejemplo.
+* **tio_persona:** tipo de persona vinculada al accidente. Veremos cómo afecta en la gravedad de un accidente el ser pasajero o conductor.
 * **rango_edad:** rango de edad de la persona afectada en el siniestro. Comprobaremos si la edad es un factor de riesgo que provoca accidentes.
 * **sexo:** seco de la persona afectada. Veremos la relación de sexos con los accidentes, pese a que en el estudio previo hemos visto que los hombres son más propensos a tener accidentes.
 * **positiva_alcohol:** test de alcoholemia positivo realizado a la persona afectada. Veremos si afecta a la gravedad del siniestro.
 * **positiva_droga:** test de drogas positivo realizado a la persona afectada. veremos si afecta a la gravedad del siniestro, pese a que en el estudio previo hemos visto que prácicamente no se realzian test de drogas, pero podemos analizar si realizando más test de drogas podemos disminuir la gravedad de los accidentes o es irrelevante.
 * **grado_lesividad:** grado de la lesividad de la persona implicada en el siniestro. Nos sirve para medir la lesividad de los accidentes.
 * **categoria_lesividad:** categoría específica de la lesividad de la persona implicada en el siniestro. Nos sirve para medir la lesividad de los accidentes de forma más concreta.
-* **mes:** mes en el que se produce el accidente.Veremos su implicación con la gravedad de los siniestros, aunque hemos visto en el estudio previo que los accidentes tienden a haber más accidentes en invierno.
+* **mes:** mes en el que se produce el accidente. Veremos su implicación con la gravedad de los siniestros, aunque hemos visto en el estudio previo que los accidentes tienden a haber más accidentes en invierno.
 * **partes_dia:** parte del día en la que se produce el accidentes. Veremos su implicación con la gravedad e los siniestros, en el estudio previo pudimos ver que se producen más accidentes durante la tarde.
 
 
-Con todas estas variables, realizaremos el árbold de devisiones, en el cual determinaremos la gravedad de un accidente. Veremos que condiciones son realmente relevantes a la hora de producirse un accidente grave o mortal. Podremos obtener las partes del día, los meses y los distritos que deberán de reforzarse con tal de prevenir accidentes.
+Con todas estas variables, realizaremos el árbol de decisiones, en el cual determinaremos la gravedad de un accidente. Veremos qué condiciones son realmente relevantes a la hora de producirse un accidente grave o mortal. Podremos obtener las partes del día, los meses y los distritos que deberán de reforzarse con tal de prevenir accidentes.
 
-Por último obtenemos el conjunto de datos final en un fichero csv.
+Por último, obtenemos el conjunto de datos final en un fichero csv.
+
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
   write.csv2(accidentesFinal, "accidentes.csv")
