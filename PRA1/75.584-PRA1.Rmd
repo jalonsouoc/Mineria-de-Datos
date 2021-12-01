@@ -114,19 +114,20 @@ Para la realización de la práctica se ha escogido un juego de datos referente 
 
 Se ha seleccionado este conjunto de datos en primer lugar por estar bastante completo ya que posee bastante información referente a los accidentes, pues para un accidente se tiene registro del lugar del accidente, la fecha, el tipo de accidente, el vehículo implicado, el sexo de la persona implicada, la lesividad de la persona implicada, el estado meteorológico, entre otros datos. Además de que la documentación adjunta al conjunto de datos es bastante clara y precisa.
 
-En segundo lugar se ha escodigo dicho conjunto de datos ya que tiene bastante potencial analítico, ya que un estudio correcto de estos datos puede ser de utilidad para los servicios sanitarios y para la policía.
+En segundo lugar, se ha escogido dicho conjunto de datos ya que tiene bastante potencial analítico, ya que un estudio correcto de estos datos puede ser de utilidad para los servicios sanitarios y para la policía.
 
-En el ámbito de los servicios sanitarios los datos podrían ayudar a estar mejor preparados para atender a los heridos de accidentes, así como estimar las fechas o los lugares en los que será necesario reforzar el servicio tanto de urgencias como de unidades mobiles en base a las fechas y los distritos donde se producen la mayor cantidad de accidentes o los accidentes más graves.
+En el ámbito de los servicios sanitarios los datos podrían ayudar a estar mejor preparados para atender a los heridos de accidentes, así como estimar las fechas o los lugares en los que será necesario reforzar el servicio tanto de urgencias como de unidades móviles en base a las fechas y los distritos donde se producen la mayor cantidad de accidentes o los accidentes más graves.
 
 En cuanto a la policía el estudio puede ayudar a aumentar las patrullas y los controles en los puntos y fechas de mayor frecuencia de accidentes posibilitando la reducción del número de siniestros. También les facilitaría la obtención de un perfil más preciso acerca de los conductores que más accidentes o más accidentes graves ocasionan.
 
-Trabajaremos en un modelo de clasificación de forma que podamos clasificar los accidentes de tráfico que se puedan ocasionar en la Comunidad de Madrid permitiendo a la policía y a los servicios sanitarios optimizar sus recursos de cara a atender a los involucrados en dichos accidentes. De esta forma obtendremos los facotres más relevanes a la hora de producirse un accidente de tráfico y permitiendo fijar los factores que implican un accidente de tráfico grave.
+Trabajaremos en un modelo de clasificación de forma que podamos clasificar los accidentes de tráfico que se puedan ocasionar en la Comunidad de Madrid permitiendo a la policía y a los servicios sanitarios optimizar sus recursos de cara a atender a los involucrados en dichos accidentes. De esta forma obtendremos los factores más relevantes a la hora de producirse un accidente de tráfico y permitiendo fijar los factores que implican un accidente de tráfico grave.
 
-Para este estudio construiremos un arbol de decisión que conformaremos a partir de los datos obtenidos. Para la obtención de dicho arbol de decisiones seguiremos una serie de fases:
+Para este estudio construiremos un árbol de decisión que conformaremos a partir de los datos obtenidos. Para la obtención de dicho árbol de decisiones seguiremos una serie de fases:
 
-* **Prepraración de los datos:** en esta primera fase de preprocesamiento de los datos nos encargaremos de realizar la limpieza de los datos dodne nos encargaremos de corregir aquellos errores que observemos en la muestra para postriormente relizaremos transformaciones de los datos de forma que obtengamos una serie de variables que mejoren nuestro análisis. Por último reduciremos nuestra muestra de forma que obtengamos un conjunto de datos lo más preciso posible. El objetivo de esta fase es tener un conjunto de datos con la calidad adecuada y en el formato adecuado para generar un buen modelo de minería de datos.
+* **Preparación de los datos:** en esta primera fase de preprocesamiento de los datos nos encargaremos de realizar la limpieza de los datos donde nos encargaremos de corregir aquellos errores que observemos en la muestra para posteriormente realizaremos transformaciones de los datos de forma que obtengamos una serie de variables que mejoren nuestro análisis. Por último, reduciremos nuestra muestra de forma que obtengamos un conjunto de datos lo más preciso posible. El objetivo de esta fase es tener un conjunto de datos con la calidad adecuada y en el formato adecuado para generar un buen modelo de minería de datos.
 
-* **Minería de datos:** En esta fase realizaremos la construcción del modelo de datos propuesto que no spermita realziar la clasificación de los accidentes de tráfico de la Comunidad de Madrid, por tanto el objetivo en esta fase será el de obtener un modelo que permita la clasificación de los siniestros en función de la gravedad de la lesividad.
+* **Minería de datos:** En esta fase realizaremos la construcción del modelo de datos propuesto que no se permita realizar la clasificación de los accidentes de tráfico de la Comunidad de Madrid, por tanto el objetivo en esta fase será el de obtener un modelo que permita la clasificación de los siniestros en función de la gravedad de la lesividad.
+
 
 ## Exploración del conjunto de datos
 
@@ -136,7 +137,7 @@ if (!require('ggplot2')) install.packages('ggplot2'); library('ggplot2')
 if (!require('lubridate')) install.packages('lubridate'); library('lubridate')
 ````
 
-Iniciamos la carga de los datos, para ello realizamos la lectura de un fichero csv con esímbolo separador de ";". Para obtener la ruta del fichero se utilizará la función file.choose() que nos devuelve la ruta completa del fichero y lo almacenaremos en una variable que denominaremos ruta_csv.
+Iniciamos la carga de los datos, para ello realizamos la lectura de un fichero csv con el símbolo separador de ";". Para obtener la ruta del fichero se utilizará la función file.choose() que nos devuelve la ruta completa del fichero y lo almacenaremos en una variable que denominaremos ruta_csv.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 ruta_csv <- "C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA1\\2020_Accidentalidad.csv"
@@ -163,7 +164,7 @@ Las descripciones de las variables que caracterizan a la muestra de datos son:
 
 * **num_expediente: ** número de expediente del accidente. Pueden existir varios registros con el mismo número de expediente debido a que forman parte del mismo accidente donde hay varios afectados
 * **fecha:** fecha en la que se produce el accidente
-* **hora:** hora en la que s eproduce el accidente
+* **hora:** hora en la que se produce el accidente
 * **localizacion:** calle en la que se produce el accidente
 * **numero:** número de la calle donde se produce el accidente
 * **distrito:** distrito donde se produce el accidente
@@ -180,15 +181,16 @@ Las descripciones de las variables que caracterizan a la muestra de datos son:
 * **positiva_droga:** test de drogas positivo realizado a la persona afectada.
 
 
-Respecto a los tipos de variables podemos ver que la mayoría de datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correcto. La variable numero por su nomenclatura y su definición podría llevarnos a engaño de lclasificarla como numérica pero no será el caso al existir números de calle con letras. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso.Otra transformación a realizar es convertir las variables tipo cadena en tipo factor para su posterior traramiento.
+Respecto a los tipos de variables podemos ver que la mayoría de los datos se han cargado como tipo cadena a excepción de las coordenadas, cosa que no es correcta debido que existen variables que deberían ser numéricas como la lesividad, debido a la existencia de la sentencia NULL para cuando no se tiene datos de esta categoría, esto debemos de corregirlo posteriormente para asignarles el tipo de datos correcto. La variable número por su nomenclatura y su definición podría llevarnos a engaño de clasificarla como numérica pero no será el caso al existir números de calle con letras. Otra variable que no ha sido cargada con el tipo de datos correcto es la fecha ya que está como tipo cadena cuando debe de ser tipo date, nuevamente debemos de corregir esto en la etapa de preproceso. Otra transformación que realizar es convertir las variables tipo cadena en tipo factor para su posterior tratamiento.
 
 Vemos las estadísticas básicas de los datos.
+
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 summary(accidentes)
 ````
 
-Al ser la mayoría de variables de tipo cadena no obtenemos ninguna información reseñable del conjunto de datos. No obtenemos de primera mano la existencia de valores no definidos. Como pudimos ver en la estructura del juego de datos, muchos de los valores no definidos venían con la cadena NULL, por lo tanto en la fase de preproceso debemos de buscar por esta cadena para poder actuar en consecuencia para mejorar los datos. 
+Al ser la mayoría de las variables de tipo cadena no obtenemos ninguna información reseñable del conjunto de datos. No obtenemos de primera mano la existencia de valores no definidos. Como pudimos ver en la estructura del juego de datos, muchos de los valores no definidos venían con la cadena NULL, por lo tanto, en la fase de preproceso debemos de buscar por esta cadena para poder actuar en consecuencia para mejorar los datos. 
 
 
 Obtenemos la cantidad de valores no definidos del conjunto de datos que no pudimos obtener del resumen.
@@ -197,21 +199,21 @@ Obtenemos la cantidad de valores no definidos del conjunto de datos que no pudim
 colSums(is.na(accidentes))
 ````
 
-Comprobamos que al ser la mayoría de los datos de tipo cadena no obtenemos valores no definidos(NA). Por lo que realizaremos una primera búsqueda para aquellos valores con cadena vacía.
+Comprobamos que al ser la mayoría de los datos de tipo cadena no obtenemos valores no definidos (NA). Por lo que realizaremos una primera búsqueda para aquellos valores con cadena vacía.
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
 colSums(accidentes == "" | accidentes == " ")
 ````
 
-En este caso tenemos 2 valores vacíos en la variable de lesividad, lo cual no es un error debido a que en la documentación adjunta a los datos se especifica que si viene vacío el campo de lesividad se corresponde con el valor 14 de lesividad correspondiente a "Sin asistencia sanitaria" esta corrección debemos de realizarla en la fase de prerpoceso. También podemos observar que hay 2 números de calle que están vacíos pro serán irrelevantes para el estudio.
+En este caso tenemos 2 valores vacíos en la variable de lesividad, lo cual no es un error debido a que en la documentación adjunta a los datos se especifica que si viene vacío el campo de lesividad se corresponde con el valor 14 de lesividad correspondiente a "Sin asistencia sanitaria" esta corrección debemos de realizarla en la fase de preproceso. También podemos observar que hay 2 números de calle que están vacíos pro serán irrelevantes para el estudio.
 
-Por último comprobamos los valores nulos del juego de datos.
+Por último, comprobamos los valores nulos del juego de datos.
 
 `````{r echo=TRUE, message=FALSE, warning=FALSE}
 colSums(accidentes == "NULL")
 ````
 
-En este caso si podemos observar la existencia de una importante cantidad de valores nulos en los test de droga. Lo cual nos dice que no se realizan practicamente test de drogas en los accidentes de tráfico dado que de una muestra de 24464 accidentes, sólo se realizó un test de drogas en 63 ocasiones, lo cual es un valor ínfimo. También podemos observar la existencia de bastantes valores nulos en la variable de lesividad, nuevamente para esta variable hay un valor asignado para cuando se desconoce el grado de lesividad, que en la docmentación corresponde al valor 77, este cambio lo realizaremos en la fase de preproceso para poder tener la variable lesividad en el valor numérico que le corresponde por ser los códigos de lesividad. Por último destacar también que existe una cantidad destacable de estados meteorológicos desconocidos en los que se producen los accidentes de tráfico.
+En este caso si podemos observar la existencia de una importante cantidad de valores nulos en los test de droga. Lo cual nos dice que no se realizan prácticamente test de drogas en los accidentes de tráfico dado que, de una muestra de 24464 accidentes, sólo se realizó un test de drogas en 63 ocasiones, lo cual es un valor ínfimo. También podemos observar la existencia de bastantes valores nulos en la variable de lesividad, nuevamente para esta variable hay un valor asignado para cuando se desconoce el grado de lesividad, que en la documentación corresponde al valor 77, este cambio lo realizaremos en la fase de preproceso para poder tener la variable lesividad en el valor numérico que le corresponde por ser los códigos de lesividad. Por último, destacar también que existe una cantidad destacable de estados meteorológicos desconocidos en los que se producen los accidentes de tráfico.
  
 ## Preprocesado y gestión de características
 
@@ -358,7 +360,7 @@ En este caso podemos comprobar que los meses con más incidencias de tráfico co
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
-ggplot(data=accidentes, aes(x=mes, fill=estado_meteorologico))+geom_bar()+ggtitle("Relación entre la puntuación de la apariencia y la puntuación general")+scale_x_discrete(guide = guide_axis(angle = 90))
+ggplot(data=accidentes, aes(x=mes, fill=estado_meteorologico))+geom_bar()+ggtitle("Relación entre los meses y el estado meteorológico")+scale_x_discrete(guide = guide_axis(angle = 90))
 ````
 
 Observamos que el clima predominante en los siniestros producidos durante los meses de invierno es el clima despejado, y no se observan estados meteorológicos adversos  significativos en estos meses, con lo cual podemos determinar que el estado meteorológico no es el principal motivo  que provoca los accidentes.
@@ -367,7 +369,7 @@ Vemos el grado de lesividad en función del mes en el que se produce el siniestr
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 
-ggplot(data=accidentes, aes(x=mes, fill=grado_lesividad))+geom_bar()+ggtitle("Relación entre la puntuación de la apariencia y la puntuación general")+scale_x_discrete(guide = guide_axis(angle = 90))
+ggplot(data=accidentes, aes(x=mes, fill=grado_lesividad))+geom_bar()+ggtitle("Relación entre los meses y los grados de lesividad general")+scale_x_discrete(guide = guide_axis(angle = 90))
 ````
 
 Se puede apreciar que no existe diferencia significativa entre cada uno de los meses y que se reparten los diferentes grados de lesividad de forma similar en cada uno de loss meses, no pudiendo obtener un mes destacable en el que se produzaca un mayor número de accidentes graves.
@@ -390,7 +392,7 @@ accidentes$partes_dia <- factor(cut(hour(hms(accidentes$hora)), breaks = c(-0.01
 Mostramos los resultados obtenidos.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-plot(accidentes$partes_dia, ain="Accidentes en cada parte del día", xlab="Partes del día", ylab="Cantidad", col="ivory")
+plot(accidentes$partes_dia, main="Accidentes en cada parte del día", xlab="Partes del día", ylab="Cantidad", col="ivory")
 ````
 
 Podemos observar que en este caso la mayoría de accidentes se produjeron por la tarde en el periodo entre las 12 AM y las 19 PM.
@@ -402,10 +404,13 @@ Mostramos ahora los accidentes en función del grado de lesividad por cada una d
 ggplot(data=accidentes, aes(x=partes_dia, fill=grado_lesividad))+geom_bar()+ggtitle("Relación entre las partes del día y la lesividad de l accidente")+scale_x_discrete(guide = guide_axis(angle = 90))
 ````
 
+Por último mostramos las coordenadas en los que han tenido lugar los accidentes.
+
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-plot(accidentes$coordenada_x_utm,accidentes$coordenada_y_utm)
+plot(accidentes$coordenada_x_utm,accidentes$coordenada_y_utm, main="Coordenadas accidentes", xlab="Coordenada x del accidente", ylab = "Coordenada y del accidente")
 ````
 
+Podemos observar que se concnetran más en el centro en lo que podemos considerar el centro de la Comunidad de Madrid, observando conforme se va saliendo del centro los accidentes van disminuyendo hasta ser bastante escasos.
 
 Como hemos podido observar durante la exploración de los datos, el grado de lesividad predominante es el de Desconocido, lo cual empañará los resultados obtenidos en el análisis, por lo tanto reduciremos la muestra eliminando aquellos siniestros de los cuales se desconoce la lesividad de los implicados. También reduciremos el número de variables obteniendo sólo las que consideramos de interes para el modelo a realziar.
 
@@ -420,6 +425,30 @@ Podemos observar que la muestra de datos se ha visto reducida a un total de 1762
 
 EL conjunto de datos final contiene un total de 17628 registros caracterizados por 13 variables que hemos considerado como las más relevantes para poder clasificar los accidentes de tráficos ocasionas en la Comunidad de Madrid.
 
+las variables seleccionadas son:
+
+* **distrito:** distrito donde s eproduce el accidente. Con el tenemos localizado y agrupado geográficamente los accidentes.
+* **tipo_accidente:** corresponde al tipo de accidente. Relevante en relación a obtener la gravedad de la lesividad del siniestro.
+* **estado_meteorologico:** condiciones ambientales que se dan en el momento del siniestro. COmprobaremos si influye finalmente en el grado de lesividadde un accidente, pese a que el estudio previo no es concluyente.
+* **tipo_vehiculo:** tipo de vehículo afectado. Comprobaremos si la gravedad de un accidente va ligado al tipo de vehículo implicado.
+* **tio_persona:** tipo de persona vinculada al accidente. Veremos como afecta en la gravedad de un accidente el ser pasajero o conductor por ejemplo.
+* **rango_edad:** rango de edad de la persona afectada en el siniestro. Comprobaremos si la edad es un factor de riesgo que provoca accidentes.
+* **sexo:** seco de la persona afectada. Veremos la relación de sexos con los accidentes, pese a que en el estudio previo hemos visto que los hombres son más propensos a tener accidentes.
+* **positiva_alcohol:** test de alcoholemia positivo realizado a la persona afectada. Veremos si afecta a la gravedad del siniestro.
+* **positiva_droga:** test de drogas positivo realizado a la persona afectada. veremos si afecta a la gravedad del siniestro, pese a que en el estudio previo hemos visto que prácicamente no se realzian test de drogas, pero podemos analizar si realizando más test de drogas podemos disminuir la gravedad de los accidentes o es irrelevante.
+* **grado_lesividad:** grado de la lesividad de la persona implicada en el siniestro. Nos sirve para medir la lesividad de los accidentes.
+* **categoria_lesividad:** categoría específica de la lesividad de la persona implicada en el siniestro. Nos sirve para medir la lesividad de los accidentes de forma más concreta.
+* **mes:** mes en el que se produce el accidente.Veremos su implicación con la gravedad de los siniestros, aunque hemos visto en el estudio previo que los accidentes tienden a haber más accidentes en invierno.
+* **partes_dia:** parte del día en la que se produce el accidentes. Veremos su implicación con la gravedad e los siniestros, en el estudio previo pudimos ver que se producen más accidentes durante la tarde.
+
+
+Con todas estas variables, realizaremos el árbold de devisiones, en el cual determinaremos la gravedad de un accidente. Veremos que condiciones son realmente relevantes a la hora de producirse un accidente grave o mortal. Podremos obtener las partes del día, los meses y los distritos que deberán de reforzarse con tal de prevenir accidentes.
+
+Por último obtenemos el conjunto de datos final en un fichero csv.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+  write.csv2(accidentesFinal, "accidentes.csv")
+````
 
 ******
 # Criterios de evaluación
