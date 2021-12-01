@@ -120,7 +120,13 @@ En el ámbito de los servicios sanitarios los datos podrían ayudar a estar mejo
 
 En cuanto a la policía el estudio puede ayudar a aumentar las patrullas y los controles en los puntos y fechas de mayor frecuencia de accidentes posibilitando la reducción del número de siniestros. También les facilitaría la obtención de un perfil más preciso acerca de los conductores que más accidentes o más accidentes graves ocasionan.
 
+Trabajaremos en un modelo de clasificación de forma que podamos clasificar los accidentes de tráfico que se puedan ocasionar en la Comunidad de Madrid permitiendo a la policía y a los servicios sanitarios optimizar sus recursos de cara a atender a los involucrados en dichos accidentes. De esta forma obtendremos los facotres más relevanes a la hora de producirse un accidente de tráfico y permitiendo fijar los factores que implican un accidente de tráfico grave.
 
+Para este estudio construiremos un arbol de decisión que conformaremos a partir de los datos obtenidos. Para la obtención de dicho arbol de decisiones seguiremos una serie de fases:
+
+* **Prepraración de los datos:** en esta primera fase de preprocesamiento de los datos nos encargaremos de realizar la limpieza de los datos dodne nos encargaremos de corregir aquellos errores que observemos en la muestra para postriormente relizaremos transformaciones de los datos de forma que obtengamos una serie de variables que mejoren nuestro análisis. Por último reduciremos nuestra muestra de forma que obtengamos un conjunto de datos lo más preciso posible. El objetivo de esta fase es tener un conjunto de datos con la calidad adecuada y en el formato adecuado para generar un buen modelo de minería de datos.
+
+* **Minería de datos:** En esta fase realizaremos la construcción del modelo de datos propuesto que no spermita realziar la clasificación de los accidentes de tráfico de la Comunidad de Madrid, por tanto el objetivo en esta fase será el de obtener un modelo que permita la clasificación de los siniestros en función de la gravedad de la lesividad.
 
 ## Exploración del conjunto de datos
 
@@ -374,7 +380,26 @@ ggplot(data = accidentes,aes(x=grado_lesividad,fill=sexo))+geom_bar(position="fi
 
 Podemos destactar que la mayor parte de los implicados en los siniestros son Hombres. Predominando la mortalidad en estos a excepción de personas menores de 5 años y de 70 a 74 años donde la unicas victimas son mujeres.
 
+
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(accidentes$coordenada_x_utm,accidentes$coordenada_y_utm)
+````
+
+
+Como hemos podido observar durante la exploración de los datos, el grado de lesividad predominante es el de Desconocido, lo cual empañará los resultados obtenidos en el análisis, por lo tanto reduciremos la muestra eliminando aquellos siniestros de los cuales se desconoce la lesividad de los implicados. También reduciremos el número de variables obteniendo sólo las que consideramos de interes para el modelo a realziar.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+accidentesFinal=subset(accidentes, accidentes$grado_lesividad != "Desconocido", select = c(distrito, tipo_accidente, estado_meteorologico, tipo_vehiculo, tipo_persona, rango_edad, sexo, positiva_alcohol, positiva_droga, grado_lesividad, categoria_lesividad, mes))
+nrow(accidentesFinal)
+````
+
+Podemos observar que la muestra de datos se ha visto reducida a un total de 17628 registros.
+
 ## Construcción de conjunto de datos final
+
+
+
 
 ******
 # Criterios de evaluación
