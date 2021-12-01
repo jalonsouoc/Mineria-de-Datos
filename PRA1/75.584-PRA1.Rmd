@@ -133,6 +133,7 @@ Para este estudio construiremos un arbol de decisión que conformaremos a partir
 ````{r echo=FALSE, message=FALSE, warning=FALSE}
 if (!require('plyr')) install.packages('plyr'); library('plyr')
 if (!require('ggplot2')) install.packages('ggplot2'); library('ggplot2')
+if (!require('lubridate')) install.packages('lubridate'); library('lubridate')
 ````
 
 Iniciamos la carga de los datos, para ello realizamos la lectura de un fichero csv con esímbolo separador de ";". Para obtener la ruta del fichero se utilizará la función file.choose() que nos devuelve la ruta completa del fichero y lo almacenaremos en una variable que denominaremos ruta_csv.
@@ -380,7 +381,26 @@ ggplot(data = accidentes,aes(x=grado_lesividad,fill=sexo))+geom_bar(position="fi
 
 Podemos destactar que la mayor parte de los implicados en los siniestros son Hombres. Predominando la mortalidad en estos a excepción de personas menores de 5 años y de 70 a 74 años donde la unicas victimas son mujeres.
 
+La última discretización que vamos a realizar consistira en obtener el momento del día en el que se produce el accidente en función de la hora, clasificaremos las horas entre Mañana, Tarde, Noche  y Madrugada.
 
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+accidentes$partes_dia <- factor(cut(hour(hms(accidentes$hora)), breaks = c(-0.01,5.9,11.9,18.9, 24), labels = c("Madrugada","Mañana", "Tarde", "Noche"), right=TRUE), levels = c("Mañana", "Tarde", "Noche", "Madrugada"))
+````
+
+Mostramos los resultados obtenidos.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+plot(accidentes$partes_dia, ain="Accidentes en cada parte del día", xlab="Partes del día", ylab="Cantidad", col="ivory")
+````
+
+Podemos observar que en este caso la mayoría de accidentes se produjeron por la tarde en el periodo entre las 12 AM y las 19 PM.
+
+Mostramos ahora los accidentes en función del grado de lesividad por cada una de las partes del día.
+
+````{r echo=TRUE, message=FALSE, warning=FALSE}
+
+ggplot(data=accidentes, aes(x=partes_dia, fill=grado_lesividad))+geom_bar()+ggtitle("Relación entre las partes del día y la lesividad de l accidente")+scale_x_discrete(guide = guide_axis(angle = 90))
+````
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
 plot(accidentes$coordenada_x_utm,accidentes$coordenada_y_utm)
@@ -390,7 +410,7 @@ plot(accidentes$coordenada_x_utm,accidentes$coordenada_y_utm)
 Como hemos podido observar durante la exploración de los datos, el grado de lesividad predominante es el de Desconocido, lo cual empañará los resultados obtenidos en el análisis, por lo tanto reduciremos la muestra eliminando aquellos siniestros de los cuales se desconoce la lesividad de los implicados. También reduciremos el número de variables obteniendo sólo las que consideramos de interes para el modelo a realziar.
 
 ````{r echo=TRUE, message=FALSE, warning=FALSE}
-accidentesFinal=subset(accidentes, accidentes$grado_lesividad != "Desconocido", select = c(distrito, tipo_accidente, estado_meteorologico, tipo_vehiculo, tipo_persona, rango_edad, sexo, positiva_alcohol, positiva_droga, grado_lesividad, categoria_lesividad, mes))
+accidentesFinal=subset(accidentes, accidentes$grado_lesividad != "Desconocido", select = c(distrito, tipo_accidente, estado_meteorologico, tipo_vehiculo, tipo_persona, rango_edad, sexo, positiva_alcohol, positiva_droga, grado_lesividad, categoria_lesividad, mes, partes_dia))
 nrow(accidentesFinal)
 ````
 
@@ -398,7 +418,7 @@ Podemos observar que la muestra de datos se ha visto reducida a un total de 1762
 
 ## Construcción de conjunto de datos final
 
-
+EL conjunto de datos final contiene un total de 17628 registros caracterizados por 13 variables que hemos considerado como las más relevantes para poder clasificar los accidentes de tráficos ocasionas en la Comunidad de Madrid.
 
 
 ******
