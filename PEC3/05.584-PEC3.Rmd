@@ -415,8 +415,68 @@ Realizamos un aanálisis de los datos a modo general. En primer lugar obtenemos 
 dim(data_credit)
 ````
 
-Observamos que disponemos de 1000 registros y 21 variables que los caracterizan.
+Observamos que disponemos de 1000 registros y 21 variables que los caracterizan. Estas variables que caracterizan el conjunto de datos son:
 
+* **checking_balance:**
+* **month_loan_duration:** meses de duración del prestamo.
+* **credit_history:** historial de crédito.
+* **purpose:** propósito del crédito.
+* **amount:** importe del préstamo.
+* **savings_balance:**
+* **employment_length:** duración del empleo de la persona contratante del prestamo
+* **installment_rate:** porcentaje de la cuota respecto del total del préstamo solicitado
+* **personal_status:** estado civil de la persona contratante del préstamo.
+* **other_debtors:** otros deudores además del prestatario del dinero
+* **residence_history:**
+* **property:**
+* **age:** edad de la persona contratante del crédito.
+* **installment_plan: origen del préstamo**
+* **housing:**
+* **existing_credits:** existencia de otros créditos concedidos
+* **default:** indica si se realiza un incumplimiento en el pago del préstamo 
+* **dependents:**
+* **telephone:** 
+* **foreign_worker:** indica si es un trabajador extranjero
+* **job:** trabajo de la persona contratante del crédito.
+
+vemos el tipo de dato de cada una de las variables.
+
+````{r}
+str(data_credit)
+````
+
+
+Observamos el resumen de cada una de las variables.
+
+`````{r}
+summary(data_credit)
+````
+
+Comprobamos al existencia de valores perdidos en la muestra de daos
+
+`````{r}
+colSums(is.na(data_credit))
+colSums(data_credit == "")
+````
+
+Observamos que no existen valores perdidos por lo tanto no será necesario preparar los datos en este aspecto. Por lo tanto disponemo de un data frame formado por 21 variables sin valores nulos. Deberemos de reducir el número de variables de la muestra a aquellas que sean relevantes para predecir si se producirá un incumplimiento de pago del préstamo.
+
+Pasaremos ahora a visualizar los datos de la muestra
+
+````{r}
+
+grid.newpage()
+plotDebtors<-ggplot(data_credit,aes(other_debtors))+geom_bar() +labs(x="other debtors", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("other_debtors")
+
+plotExisting<-ggplot(data_credit,aes(existing_credits))+geom_bar() +labs(x="existing credits", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("existing credits")
+
+plotEmployment<-ggplot(data_credit,aes(employment_length))+geom_bar() +labs(x="employment length", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("employment_length")
+
+plotSavings<-ggplot(data_credit,aes(savings_balance))+geom_bar() +labs(x="savings balance", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("savings_balance")
+
+grid.arrange(plotDebtors,plotExisting, plotEmployment, plotSavings, ncol=2)
+
+````
 
 ## Primer árbol de decisión
 
