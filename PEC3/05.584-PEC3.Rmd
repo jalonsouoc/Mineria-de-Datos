@@ -414,9 +414,9 @@ Observamos una muestra de los datos cargados para comprobar que la carga se ha r
 head(data_credit)
 ````
 
-De este primer vistazo a los datos, debemso destavar que la unidad de dinero empleada en la muestra es el marco alemán en lugar al euro, lo que nos hace indicar que no es una muestra reciente.
+De este primer vistazo a los datos, debemos destacar que la unidad de dinero empleada en la muestra es el marco alemán en lugar al euro, lo que nos hace indicar que no es una muestra reciente.
 
-Realizamos un análisis de los datos a modo general. En primer lugar obtenemos las dimensiones de la muestra de datos.
+Realizamos un análisis de los datos a modo general. En primer lugar, obtenemos las dimensiones de la muestra de datos.
 
 `````{r}
 dim(data_credit)
@@ -424,13 +424,13 @@ dim(data_credit)
 
 Observamos que disponemos de 1000 registros y 21 variables que los caracterizan. Estas variables que caracterizan el conjunto de datos son:
 
-* **checking_balance:** balance de cuenta de la persona contratante del prestamo
-* **month_loan_duration:** meses de duración del prestamo.
+* **checking_balance:** balance de cuenta de la persona contratante del préstamo
+* **month_loan_duration:** meses de duración del préstamo
 * **credit_history:** historial de crédito.
 * **purpose:** propósito del crédito.
 * **amount:** importe del préstamo.
-* **savings_balance:** balance de ahorros de la persona contratante del prestamo
-* **employment_length:** duración del empleo de la persona contratante del prestamo
+* **savings_balance:** balance de ahorros de la persona contratante del préstamo
+* **employment_length:** duración del empleo de la persona contratante del préstamo
 * **installment_rate:** porcentaje de la cuota respecto del total del préstamo solicitado
 * **personal_status:** estado civil de la persona contratante del préstamo.
 * **other_debtors:** otros deudores además del prestatario del dinero
@@ -461,9 +461,9 @@ Observamos el resumen de cada una de las variables.
 summary(data_credit)
 ````
 
-Del resúmen podemos destacar las variables dicotómicas comentadas anteriormente debido a que s eobserva que algunas variables tienen el valor máximo en 2 y el mínimo en 1 comopueden ser las variables dependents y default. Podemos desracar que la mayoría de prestamos son e un monto pequeño ya que los tres primeros cuartiles abarcan la cantidad de 250 a 3972 marcos alemanes. Podemos observar también que la persona de más edad a la que se le ha concedido un prestamo es de 75ños y la más joven de 19 años
+Del resumen podemos destacar las variables dicotómicas comentadas anteriormente debido a que se observa que algunas variables tienen el valor máximo en 2 y el mínimo en 1 como pueden ser las variables dependientes y default. Podemos destacar que la mayoría de los préstamos son en un monto pequeño ya que los tres primeros cuartiles abarcan la cantidad de 250 a 3972 marcos alemanes. Podemos observar también que la persona de más edad a la que se le ha concedido un préstamo es de 75ños y la más joven de 19 años.
 
-Comprobamos al existencia de valores perdidos en la muestra de datos.
+Comprobamos la existencia de valores perdidos en la muestra de datos.
 
 `````{r}
 colSums(is.na(data_credit))
@@ -472,7 +472,7 @@ colSums(data_credit == "")
 
 Observamos que no existen valores perdidos por lo tanto no será necesario preparar los datos en este aspecto. Disponemos de un dataframe formado por 21 variables sin valores nulos. Debemos de reducir el número de variables de la muestra a aquellas que sean relevantes para predecir si se producirá un incumplimiento de pago del préstamo.
 
-Con el fin de mejorar la visualización e interpretación de los datos se realizán una serie de modificaciones sobre las variables dicotómicas que se definen binarias con los valores 1 y 2, estableciendo el 1 como afirmación falsa y el 2 como afirmación verdadera. Las variables a sustituir son la variable dependents y la variable objetivo default. También dividiremos en rango las adedaes de las personas de forma que se agrupen en rangos de 10 años.
+Con el fin de mejorar la visualización e interpretación de los datos se realiza una serie de modificaciones sobre las variables dicotómicas que se definen binarias con los valores 1 y 2, estableciendo el 1 como afirmación falsa y el 2 como afirmación verdadera. Las variables por sustituir son la variable dependiente y la variable objetivo default. También dividiremos en rango las edades de las personas de forma que se agrupen en rangos de 10 años.
 
 
 ````{r}
@@ -508,8 +508,7 @@ grid.arrange(plotChecking,  plotSavings, plotDebtors, plotCredit, ncol=2)
 
 ````
 
-De estos datos podemos destacar que la mayoría de balances de cuenta son desconocidos en el momento en que se conde el préstamo, sin embargo el balance de ahorros predominante es el inferior a 100 marcos alemanes. También podemos destacar que la mayor parte de personas contratantes no poseen otr deudor. Por último destacar que la mayoría de los creditos pedidos con anterioridad al actual fueron devueltos por las personas.
-
+De estos datos podemos destacar que la mayoría de los balances de cuenta son desconocidos en el momento en que se conde el préstamo, sin embargo, el balance de ahorros predominante es el inferior a 100 marcos alemanes. También podemos destacar que la mayor parte de personas contratantes no poseen otro deudor. Por último, hay que destacar que la mayoría de los créditos pedidos con anterioridad al actual fueron devueltos por las personas.
 
 ````{r}
 
@@ -530,7 +529,7 @@ grid.arrange(plotEmployment, plotPersonal, plotAge, plotDependents, ncol=2)
 
 ````
 
-Podemos ver en este caso que la mayoría de contratantes poseían un empleo de una duración entre 1 y 4 años, también podemos ver que la mayoría de personas era hombres solteros y que la edad de la que más se pide préstamos es entre los 20 y 29 años. Por último destacar que la mayoría de personas no dsisponían de personas a su cargo.
+Podemos ver en este caso que la mayoría de las contratantes poseían un empleo de una duración entre 1 y 4 años, también podemos ver que la mayoría de las personas era hombres solteros y que la edad de la que más se pide préstamos es entre los 20 y 29 años. Por último, hay que destacar que la mayoría de las personas no dispongan de personas a su cargo.
 
 ````{r}
 grid.newpage()
@@ -545,7 +544,7 @@ grid.arrange(plotHousing, plotDefault, ncol=2)
 
 ````
 
-Por último podemos ver  que la mayoría de personas poseían casa propia y que la mayoría de préstamos fueron devueltos.
+Por último, podemos ver que la mayoría de personas poseían casa propia y que la mayoría de préstamos fueron devueltos.
 
 Mostramos la relación entre la variable default que es la que nos indica si se realiza incumplimientos del pago y algunas de las variables anteriores.
 
@@ -564,9 +563,9 @@ grid.arrange(plotAge, plotDebtors, ncol=1)
 
 ````
 
-En este caso podemos observar que la mayor cantidad de impagos se obtiene en el rango de edad de 20 a 29 años, siendo también como vimos antes el rango de edad con mayor cantiodad de prestamos concediods. Hay que destacar que el reango de edad de 30 a 39 años tiene una cantidad de préstamos pagados similar a el rango de eedad de 20 a 29 años siendo reseñable ya que hay una mayor cantidad de préstamos concedidos para este último rango de edad.
+En este caso podemos observar que la mayor cantidad de impagos se obtiene en el rango de edad de 20 a 29 años, siendo también como vimos antes el rango de edad con mayor cantidad de préstamos concedidos. Hay que destacar que el rango de edad de 30 a 39 años tiene una cantidad de préstamos pagados similar a el rango de edad de 20 a 29 años siendo reseñable ya que hay una mayor cantidad de préstamos concedidos para este último rango de edad.
 
-También destacar que las personas que tneían otros deudores destaca que los avalados tienen una mayor cantidad de pre´stamos pagados y los co-solicitantes tienen una mayor cantidad de impagos.
+También hay que destacar que las personas que tenían otros deudores destacan que los avalados tienen una mayor cantidad de préstamos pagados y los co-solicitantes tienen una mayor cantidad de impagos.
 
 
 ````{r}
@@ -581,11 +580,11 @@ plotCredit <- ggplot(data_credit,aes(credit_history,fill=default_var))+geom_bar(
 grid.arrange(plotPersonal, plotCredit, ncol=1)
 ````
 
-Por último destacar que tanto los diferentes estados civiles como los diferentes histórcios de creditos se reparten bastante homogeneamente entre cada uno de los diferentes grupos. Destacar también que para las mujeres nos e hace una distinción del estado civil a diferencia de los hombres que tienen los estados civiles de divorciado, casado y soltero.
+Por último, hay que destacar que tanto los diferentes estados civiles como los diferentes históricos de créditos se reparten bastante homogéneamente entre cada uno de los diferentes grupos. He de destacar también que para las mujeres no se hace una distinción del estado civil a diferencia de los hombres que tienen los estados civiles de divorciado, casado y soltero.
 
 ## Primer árbol de decisión
 
-Para el entrenamiento de los datos incialmente escogemos de todas las variabels que caracterizan nuestra muestra un subconjunto de ellas que hemos considerado las más importaqntes a la hora de saber si se puede conceder un préstamo o no, elegimos un total de 9 variables más la variable objetivo. Las variables seleccionadas son checking_balance, savings_balance, other_debtors, employment_length, personal_status, dependents_var, range_age, credit_history, housing y la variable objetivo default_var
+Para el entrenamiento de los datos inicialmente escogemos de todas las variables que caracterizan nuestra muestra un subconjunto de ellas que hemos considerado las más importantes a la hora de saber si se puede conceder un préstamo o no, elegimos un total de 9 variables más la variable objetivo. Las variables seleccionadas son checking_balance, savings_balance, other_debtors, employment_length, personal_status, dependents_var, range_age, credit_history, housing y la variable objetivo default_var.
 
 ````{r}
 data_credit_model <- data_credit[,c("checking_balance", "savings_balance", "other_debtors", "employment_length", "personal_status", "dependents_var", "range_age", "credit_history", "housing", "default_var")]
@@ -597,9 +596,9 @@ Vemos una pequeña muestra de los datos seleccionados.
 head(data_credit_model)
 ````
 
-Para la realización del modelo de árbol de decisión clasificaremos por la variable default_var que indica si se produjo un impago o no. Obtendremos dos conjuntos de datos uno para el entrenamiento del modelo  y uno para la validación de este. Para la muestra de entrenamiento emplearemos la proporción de 2/3 del conjunto de datos y para la muestra de testeo 1/3 del conjunto de los datos. Con el conjunto de entrenamiento construiremos el árbol de decisiones y con la muestra de testeo realizaremos la validación del árbl generado con el conjnunto de datos de entrenamiento.
+Para la realización del modelo de árbol de decisión clasificaremos por la variable default_var que indica si se produjo un impago o no. Obtendremos dos conjuntos de datos uno para el entrenamiento del modelo y uno para la validación de este. Para la muestra de entrenamiento emplearemos la proporción de 2/3 del conjunto de datos y para la muestra de testeo 1/3 del conjunto de los datos. Con el conjunto de entrenamiento construiremos el árbol de decisiones y con la muestra de testeo realizaremos la validación del árbol generado con el conjunto de datos de entrenamiento.
 
-En primer lugar dividimos el conjunto de datos en dos partes, en la primera parte obtendremos los datos sin la variable objetivo y en el segundo conjunto sólo dispondremos de la variable a evaluar.
+En primer lugar, dividimos el conjunto de datos en dos partes, en la primera parte obtendremos los datos sin la variable objetivo y en el segundo conjunto sólo dispondremos de la variable a evaluar.
 
 `````{r}
 y <-  data_credit_model[,10]
@@ -607,7 +606,7 @@ x <- data_credit_model[,1:9]
 
 ````
 
-Realizamos la división del conjunto de datos en la muestra de entrenamiento y de validación. Realizaremos esta operación tanto con la muestra con la variable objetivo como con la muestra con el resto de variables.
+Realizamos la división del conjunto de datos en la muestra de entrenamiento y de validación. Realizaremos esta operación tanto con la muestra con la variable objetivo como con la muestra con el resto de las variables.
 
 
 `````{r}
@@ -638,7 +637,7 @@ summary(test_x)
 summary(test_y)
 ````
 
-Creamos el árbol de decisión usando los datos de entrenamiento. Convertimos la variable objetivo a tipo factor para que funcione correctmaente.
+Creamos el árbol de decisión usando los datos de entrenamiento. Convertimos la variable objetivo a tipo factor para que funcione correctamente.
 
 `````{r}
 
@@ -652,7 +651,7 @@ Mostramos las reglas definidas por nuestro modelo
 summary(model)
 ````
 
-Observamos que el árbol clasifica mla 145 registros de los 667 registros de la muestra de entrenamiento. Vemos que se han generado 12 reglas que explicaremos en el siguiente apartado.
+Observamos que el árbol clasifica mal 145 registros de los 667 registros de la muestra de entrenamiento. Vemos que se han generado 12 reglas que explicaremos en el siguiente apartado.
 
 Mostramos ahora el árbol d decisión resultante
 
