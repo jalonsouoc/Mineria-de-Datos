@@ -1,7 +1,7 @@
 ---
 title: 'Minería de datos: PEC3 - Clasificación con árboles de decisión'
-author: 
-date: "Noviembre 2021"
+author: "Jorge Alonso Hernández"
+date: "Diciembre 2021"
 output:
   html_document:
     highlight: default
@@ -833,14 +833,14 @@ print(sprintf("La precisión del árbol es: %.4f %%",100*sum(predicted_model == 
 
 Observamos que para la muestra de testeo el modelo acietta en un 71.17% de los casos.
 
-Mostramos la matrix de confusión para identificar los tipos de errores cometidos.
+Mostramos la matriz de confusión para identificar los tipos de errores cometidos.
 
 ````{r}
 mat_conf <- table(test_y, Predicted=predicted_model)
 mat_conf
 ````
 
-Observamos que el princiapl error se comete en los impagos ya que clasifica más registros impagados como pagados. 
+Observamos que el principal error se comete en los impagos ya que clasifica más registros impagados como pagados. 
 
 Mostramos más información acerca de los errores.
 
@@ -852,7 +852,8 @@ CrossTable(test_y, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =
 ## Modelos complementarios
 
 ### RPART 
-En primer lugar emplearemos la tecnica RPART o Recursive Partitioning and Regression Trees mediante la librería con el mismo nombre rpart
+
+En primer lugar, emplearemos la técnica RPART o Recursive Partitioning and Regression Trees mediante la librería con el mismo nombre rpart.
 
 Cargamos la nueva librería.
 
@@ -884,7 +885,7 @@ predicted_model2 <- predict(model2, newdata = test, type="class")
 print(sprintf("La precisión del árbol es: %.4f %%",100*sum(predicted_model2 == test$default_var) / length(predicted_model)))
 ````
 
-Observamos que para la muestra de testeo el modelo acietta en un 70.87% de los casos. Podemos comprobar que es un porcentaje un poco inferior al modelo obtenido en los apartados anteriores.
+Observamos que para la muestra de testeo el modelo acierta en un 70.87% de los casos. Podemos comprobar que es un porcentaje un poco inferior al modelo obtenido en los apartados anteriores.
 
 Mostramos la matriz de confusión para identificar los tipos de errores cometidos.
 
@@ -893,7 +894,7 @@ mat_conf <- table(test$default_var, Predicted=predicted_model2)
 mat_conf
 ````
 
-Podemos observar que esta técnica s ee quivoca más en la clasificación de préstamos pagadfos, ya que clasifica un mayor número de préstamos pagados como impagados.
+Podemos observar que esta técnica se equivoca más en la clasificación de préstamos pagados, ya que clasifica un mayor número de préstamos pagados como impagados.
 
 Mostramos más información acerca de los errores.
 
@@ -903,7 +904,7 @@ CrossTable(test$default_var, predicted_model2,prop.chisq  = FALSE, prop.c = FALS
 
 ### C50 Adaptative boosting
 
-En este caso aplicaremos la mísma técnica empleada durante la prácita C50, pero añadiendo adaptative boosting. Realizamos el nuevo modelo aplicando el cambio. Emplearemos los mismos conjuntos de datos obtenidos para el primer árbol de decisiones obtenido durante la práctica.
+En este caso aplicaremos la misma técnica empleada durante la práctica C50, pero añadiendo adaptative boosting. Realizamos el nuevo modelo aplicando el cambio. Emplearemos los mismos conjuntos de datos obtenidos para el primer árbol de decisiones obtenido durante la práctica.
 
 ````{r, warning = FALSE}
 model3 <- C50::C5.0(train_x, train_y, trials = 10, Rules=TRUE)
@@ -929,7 +930,7 @@ mat_conf <- table(test_y, Predicted=predicted_model)
 mat_conf
 ````
 
-Observamos que este modelo tiene un mayor número de erroes al clasificar los pagos como impagos.
+Observamos que este modelo tiene un mayor número de errores al clasificar los pagos como impagos.
 
 Mostramos más información acerca de los errores.
 
@@ -939,7 +940,7 @@ CrossTable(test_y, predicted_model3,prop.chisq  = FALSE, prop.c = FALSE, prop.r 
 
 ## Conclusiones obtenidas
 
-Hemos realizado varios modelos de ároles de decisiones empleando diferentes técnicas, se han utilizado el C50, el RPART y el C50 añadiendo Adaptative boosting. Los porcentajes de aciertto en cada técnica son:
+Hemos realizado varios modelos de árboles de decisiones empleando diferentes técnicas, se han utilizado el C50, el RPART y el C50 añadiendo Adaptative boosting. Los porcentajes de aciertos en cada técnica son:
 
 * C50: 71.17%
 * RPART: 70.87%
@@ -947,7 +948,7 @@ Hemos realizado varios modelos de ároles de decisiones empleando diferentes té
 
 Siendo el de mejor porcentaje de acierto el C50.
 
-De este estudio obtenemos que hay dos variables importantes a la hora de impagos en los préstamos y son las variables checking_balance y saving_balance, realizandose la mayor parte de impagos cuando el valor del balance de cuenta es inferior a 200 y el balance de ahorros es inferior a 500, por otra parte cuando se posee un balance de cuenta superior a los 200 se realiza la devolución del pago correctamente. También podemos destacar que las mujeres jovenes de entre 20 y 39 años son más propensas a impagos de préstamos, al igual que los hombres casados y divorciados sin distinción de edad. Por último de las variables escogidas para los modelos se puede destacar que las menso relevantes son la housing, que se refiere al alojamiento de la persona contratante y employment_length, que se refiere a la duración del empleo de la persona contratante.
+De este estudio obtenemos que hay dos variables importantes a la hora de impagos en los préstamos y son las variables checking_balance y saving_balance, realizándose la mayor parte de impagos cuando el valor del balance de cuenta es inferior a 200 y el balance de ahorros es inferior a 500, por otra parte, cuando se posee un balance de cuenta superior a los 200 se realiza la devolución del pago correctamente. También podemos destacar que las mujeres jóvenes de entre 20 y 39 años son más propensas a impagos de préstamos, al igual que los hombres casados y divorciados sin distinción de edad. Por último, de las variables escogidas para los modelos se puede destacar que las menso relevantes son la housing, que se refiere al alojamiento de la persona contratante y employment_length, que se refiere a la duración del empleo de la persona contratante.
 
 ******
 # Rúbrica
