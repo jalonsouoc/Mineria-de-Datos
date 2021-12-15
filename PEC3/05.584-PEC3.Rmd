@@ -929,6 +929,15 @@ Observamos que este modelo tiene un mayor número de erroes al clasificar los pa
 
 ## Conclusiones obtenidas
 
+Hemos realizado varios modelos de ároles de decisiones empleando diferentes técnicas, se han utilizado el C50, el RPART y el C50 añadiendo Adaptative boosting. Los porcentajes de aciertto en cada técnica son:
+* C50: 71.17%
+* RPART: 70.87%
+* C50 Adaptative boosting: 70.57%
+
+Siendo el de mejor porcentaje de acierto el C50.
+
+De este estudio obtenemos que hay dos variables importantes a la hora de impagos en los préstamos y son las variables checking_balance y saving_balance, realizandose la mayor parte de impagos cuando el valor del balance de cuenta es inferior a 200 y el balance de ahorros es inferior a 500, por otra parte cuando se posee un balance de cuenta superior a los 200 se realiza la devolución del pago correctamente.
+
 ******
 # Rúbrica
 ******
