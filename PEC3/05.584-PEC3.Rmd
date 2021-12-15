@@ -695,16 +695,180 @@ Esta primera regla nos predice que los hombres casados con un balance de cuenta 
 Esta segunda regla nos establece que las mujeres entre 30 y 39 años con un balance de cuenta menor de 200 marcos alemanes con un historico de créditos pagados o atrasados y con casa propia o gratis realizarán un impago.
 ````
 
-* Rule 3:
+* Regla 3:
+
+````
+## Rule 3: (11/2, lift 2.5)
+##  checking_balance in {< 0 DM, 1 - 200 DM}
+##  savings_balance in {< 100 DM, 101 - 500 DM}
+##  other_debtors = none
+##  employment_length in {4 - 7 yrs, 0 - 1 yrs}
+##  personal_status = married male
+##  credit_history in {repaid, delayed}
+##  ->  class non-payment  [0.769]
+````
+
+Esta tercera regla establece que los hombres casados, sin otros deudores, con un balance de cuenta menor de 200 marcos alemanes y un balance de ahorros menor de 500 marcos alemanes, con una duración de empleo de 4 a 7 años o menor de 1 año y con un historial de crédito pagado o atrasado realizará un impago.
+
+* Regla 4:
+
+````
+## Rule 4: (6/1, lift 2.5)
+##  checking_balance in {< 0 DM, 1 - 200 DM}
+##  savings_balance in {unknown, < 100 DM, 101 - 500 DM}
+##  other_debtors = none
+##  range_age = 10-19
+##  ->  class non-payment  [0.750]
+````
+
+Esta cuarta regla indica que las personas en el rango de edad de 10 a 19 años, con un balance en cuenta menor de 200 marcos alemanes y un balance de ahorros de 500 marcos alemanes y sin otros deudores realizará un impago.
+
+* Regla 5:
+
+````
+## Rule 5: (43/12, lift 2.3)
+##  checking_balance in {< 0 DM, 1 - 200 DM}
+##  credit_history in {fully repaid, fully repaid this bank}
+##  ->  class non-payment  [0.711]
+````
+
+Esta quinta regla establece que cualquier persona con un balance en cuenta menor de 200 marcos alemanes, aunque haya paga compeltamente sus deudas anteriores realizará un impago.
+
+* Regla 6:
+
+````
+## Rule 6: (19/6, lift 2.2)
+##  checking_balance in {< 0 DM, 1 - 200 DM}
+##  savings_balance in {unknown, < 100 DM, 101 - 500 DM}
+##  other_debtors = none
+##  personal_status = divorced male
+##  ->  class non-payment  [0.667]
+````
+La sexta regla establece que los hombres divorciados con un balance en cuenta menor a 200 marcos alemanes y un balance de ahorros menor de 500 marcos alemanes y sin otros deudores realizará un impago.
+
+* Regla 7:
+
+````
+## Rule 7: (39/13, lift 2.2)
+##  checking_balance in {< 0 DM, 1 - 200 DM}
+##  savings_balance in {unknown, < 100 DM, 101 - 500 DM}
+##  other_debtors = none
+##  personal_status = female
+##  range_age = 20-29
+##  credit_history = repaid
+##  ->  class non-payment  [0.659]
+````
+ La séptima regla establece que las mujeres de 20 a 29 años, con un historial de crédito de pagados, sin otros deudores pero con un balance en cuenta menor de 200 marcos alemanes y un balance de ahorros menor de 500 marcos alemanes realizará un impago del préstamo.
+
+
+* Regla 8:
+
+````
+## Rule 8: (16/6, lift 2.0)
+##  checking_balance in {< 0 DM, 1 - 200 DM}
+##  other_debtors = co-applicant
+##  credit_history in {critical, repaid, delayed}
+##  ->  class non-payment  [0.611]
+````
+
+La octava regla dice que aquellos contratantes que tienen otros deudores ya que son co-solicitantes, con un historial de crédito pagado, atrasado y crítico, con un balance en cuenta menor de 200 marcos alemanes realizará un impago de la deuda.
+
+* Regla 9:
+
+```
+## Rule 9: (197/98, lift 1.6)
+##  checking_balance in {< 0 DM, 1 - 200 DM}
+##  savings_balance in {unknown, < 100 DM, 101 - 500 DM}
+##  other_debtors = none
+##  credit_history in {repaid, delayed}
+##  ->  class non-payment  [0.503]`
 
 ````
 
+
+Esta novena regla nos dice que aquellos contratantes sin otros deudores, con un historial de crédito pagado o atrasado, con un balance en cuenta menor de 200 marcos alemanes y con un balance de ahorro menor de 500 marcos alemanes realizará un impago del préstamo concedido.
+
+* Regla 10:
+
 ````
+## Rule 10: (298/40, lift 1.2)
+##  checking_balance in {unknown, > 200 DM}
+##  ->  class repaid  [0.863]
+````
+
+Esta regla nos indica que aquellas personas con un balance en cuenta superior a 200 marcos alemanes pagará correctamente su deuda.
+
+* Regla 11:
+
+````
+## Rule 11: (31/5, lift 1.2)
+##  other_debtors = guarantor
+##  credit_history in {critical, repaid}
+##  ->  class repaid  [0.818]
+````
+
+Esta regla nos indica que las personas con otro deudor avalado y con un histórico de crédito crítico o pagado cumplirá con el pago de la deuda.
+ 
+* Regla 12:
+
+````
+## Rule 12: (552/151, lift 1.0)
+##  other_debtors = none
+##  credit_history in {critical, repaid, delayed}
+##  ->  class repaid  [0.726]
+## 
+````
+Esta última regla nos indica que aquella spersonas que no poseen otros dudores y con un histórico de deuda pagado, crítco o atrasado cumplirá con la devolución del préstamo.
+
+
+De todas las reglas podríamos destacar que hay dos variables importantes, y son prncipalmente el balance en cuenta, ya que la mayoría de impagos se produce cuando el contratante posee un balance menor a 200 marcos alemanes, por otro lado también destaca el balance ed ahorros, ya que principalmente se produce el impago en aquellas personas con un balance de ahorro menor a 500 marcos alemanes.
 
 ## Análisis de la bondad de ajuste sobre el conjunto de test y matriz de confusión
 
+Una vez obtenido el modelo vamos comprobar su calidad prediciendo la clase para la muestra de testeo que separamos de los datos de entrenamiento al principio.
+
+````{r}
+predicted_model <- predict(model, test_x, type="class")
+print(sprintf("La precisión del árbol es: %.4f %%",100*sum(predicted_model == test_y) / length(predicted_model)))
+````
+
+Observamos que para la muestra de testeo el modelo acietta en un 71.17% de los casos.
+
+Mostramos la matrix de confusión para identificar los tipos de errores cometidos.
+
+````{r}
+mat_conf <- table(test_y, Predicted=predicted_model)
+mat_conf
+````
+
+Observamos que el princiapl error se comete en los impagos ya que clasifica más registros impagados como pagados. 
+
+Mostramos más información acerca de los errores.
+
+
+````{r}
+CrossTable(test_y, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
+````
+
 
 ## Modelos complementarios
+
+En primer lugar emplearemos la tecnica RPART o Recursive Partitioning and Regression Trees mediante la librería con el mismo nombre rpart
+
+Cargamos la nueva librería.
+````{r}
+library(rpart)
+library(rpart.plot)
+````
+
+
+train <- data_credit_model[1:tr_limit,]
+# Muestra de testeo
+test <- data_credit_model[ts_limit:nrow(data_credit_model),]
+
+model2 <- rpart(formula = default_var~., data = train, method="class" )
+rpart.plot(model2)
+````
 
 
 ## Conclusiones obtenidas
