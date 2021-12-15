@@ -853,23 +853,79 @@ CrossTable(test_y, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =
 
 ## Modelos complementarios
 
+### RPART 
 En primer lugar emplearemos la tecnica RPART o Recursive Partitioning and Regression Trees mediante la librería con el mismo nombre rpart
 
 Cargamos la nueva librería.
-````{r}
-library(rpart)
-library(rpart.plot)
+
+````{r, echo=FALSE, warning=FALSE}
+if (!require('rpart')) install.packages('rpart'); library('rpart')
+if (!require('rpart.plot')) install.packages('rpart.plot'); library('rpart.plot')
 ````
 
+Para este caso no vamos a distinguir dos conjuntos de datos uno con la variable objetivo y otro con el resto de variables. Sin embargo si que obtenemos un conjunto de datos de entrenamiento y otro de testeo con los mismos criterios empleados anteriormente.
 
+````{r}
+#Muestra de entrenamiento
 train <- data_credit_model[1:tr_limit,]
 # Muestra de testeo
 test <- data_credit_model[ts_limit:nrow(data_credit_model),]
+````
 
+Obtenemos el modelo aplicando la nueva técnica y visualizamos el árbol de decisiones.
+
+````{r}
 model2 <- rpart(formula = default_var~., data = train, method="class" )
 rpart.plot(model2)
 ````
 
+Evaluamos el modelo obtenido mediante el conjunto de datos de testeo.
+
+````{r}
+predicted_model2 <- predict(model2, newdata = test, type="class")
+print(sprintf("La precisión del árbol es: %.4f %%",100*sum(predicted_model2 == test$default_var) / length(predicted_model)))
+````
+
+Observamos que para la muestra de testeo el modelo acietta en un 70.87% de los casos. Podemos comprobar que es un porcentaje un poco inferior al modelo obtenido en los apartados anteriores.
+
+Mostramos la matriz de confusión para identificar los tipos de errores cometidos.
+
+````{r}
+mat_conf <- table(test$default_var, Predicted=predicted_model2)
+mat_conf
+````
+
+Podemos observar que esta técnica s ee quivoca más en la clasificación de préstamos pagadfos, ya que clasifica un mayor número de préstamos pagados como impagados.
+
+### C50 Adaptative boosting
+
+En este caso aplicaremos la mísma técnica empleada durante la prácita C50, pero añadiendo adaptative boosting. Realizamos el nuevo modelo aplicando el cambio. Emplearemos los mismos conjuntos de datos obtenidos para el primer árbol de decisiones obtenido durante la práctica.
+
+````{r, warning = FALSE}
+model3 <- C50::C5.0(train_x, train_y, trials = 10, Rules=TRUE)
+summary(model3)
+
+model3 <- C50::C5.0(train_x, train_y, trials = 10)
+plot(model3)
+````
+
+Evaluamos el modelo obtenido mediante el conjunto de datos de testeo.
+
+`````{r}
+predicted_model <- predict(model3, test_x, type="class")
+print(sprintf("La precisión del árbol es: %.4f %%",100*sum(predicted_model == test_y) / length(predicted_model)))
+````
+
+Para este modelo observamos que la muestra de testeo acierta en un 70.57% de los casos. Comprobamos que es el menor porcentaje de acierto de los 3 modelos
+
+Mostramos la matriz de confusión para identificar los tipos de errores cometidos.
+
+````{r}
+mat_conf <- table(test_y, Predicted=predicted_model)
+mat_conf
+````
+
+Observamos que este modelo tiene un mayor número de erroes al clasificar los pagos como impagos.
 
 ## Conclusiones obtenidas
 
