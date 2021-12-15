@@ -690,9 +690,8 @@ Esta primera regla nos predice que los hombres casados con un balance de cuenta 
 ##  credit_history in {repaid, delayed}
 ##  housing in {own, for free}
 ##  ->  class non-payment  [0.818]
-
-Esta segunda regla nos establece que las mujeres entre 30 y 39 años con un balance de cuenta menor de 200 marcos alemanes con un historico de créditos pagados o atrasados y con casa propia o gratis realizarán un impago.
 ````
+Esta segunda regla nos establece que las mujeres entre 30 y 39 años con un balance de cuenta menor de 200 marcos alemanes con un histórico de créditos pagados o atrasados y con casa propia o gratis realizarán un impago.
 
 * Regla 3:
 
@@ -731,7 +730,7 @@ Esta cuarta regla indica que las personas en el rango de edad de 10 a 19 años, 
 ##  ->  class non-payment  [0.711]
 ````
 
-Esta quinta regla establece que cualquier persona con un balance en cuenta menor de 200 marcos alemanes, aunque haya paga compeltamente sus deudas anteriores realizará un impago.
+Esta quinta regla establece que cualquier persona con un balance en cuenta menor de 200 marcos alemanes, aunque haya paga completamente sus deudas anteriores realizarán un impago.
 
 * Regla 6:
 
@@ -757,7 +756,7 @@ La sexta regla establece que los hombres divorciados con un balance en cuenta me
 ##  credit_history = repaid
 ##  ->  class non-payment  [0.659]
 ````
- La séptima regla establece que las mujeres de 20 a 29 años, con un historial de crédito de pagados, sin otros deudores pero con un balance en cuenta menor de 200 marcos alemanes y un balance de ahorros menor de 500 marcos alemanes realizará un impago del préstamo.
+ La séptima regla establece que las mujeres de 20 a 29 años, con un historial de crédito de pagados, sin otros deudores, pero con un balance en cuenta menor de 200 marcos alemanes y un balance de ahorros menor de 500 marcos alemanes realizará un impago del préstamo.
 
 
 * Regla 8:
@@ -795,7 +794,7 @@ Esta novena regla nos dice que aquellos contratantes sin otros deudores, con un 
 ##  ->  class repaid  [0.863]
 ````
 
-Esta regla nos indica que aquellas personas con un balance en cuenta superior a 200 marcos alemanes pagará correctamente su deuda.
+Esta regla nos indica que aquellas personas con un balance en cuenta superior a 200 marcos alemanes pagarán correctamente su deuda.
 
 * Regla 11:
 
@@ -817,10 +816,11 @@ Esta regla nos indica que las personas con otro deudor avalado y con un históri
 ##  ->  class repaid  [0.726]
 ## 
 ````
-Esta última regla nos indica que aquella spersonas que no poseen otros dudores y con un histórico de deuda pagado, crítco o atrasado cumplirá con la devolución del préstamo.
+Esta última regla nos indica que aquellas personas que no poseen otros deudores y con un histórico de deuda pagado, crítico o atrasado cumplirá con la devolución del préstamo.
 
 
-De todas las reglas podríamos destacar que hay dos variables importantes, y son prncipalmente el balance en cuenta, ya que la mayoría de impagos se produce cuando el contratante posee un balance menor a 200 marcos alemanes, por otro lado también destaca el balance ed ahorros, ya que principalmente se produce el impago en aquellas personas con un balance de ahorro menor a 500 marcos alemanes.
+De todas las reglas podríamos destacar que hay dos variables importantes, y son principalmente el balance en cuenta, ya que la mayoría de los impagos se produce cuando el contratante posee un balance menor a 200 marcos alemanes, por otro lado, también destaca el balance de ahorros, ya que principalmente se produce el impago en aquellas personas con un balance de ahorro menor a 500 marcos alemanes.
+
 
 ## Análisis de la bondad de ajuste sobre el conjunto de test y matriz de confusión
 
