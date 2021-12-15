@@ -558,26 +558,48 @@ grid.newpage()
 plotAge <- ggplot(data_credit,aes(range_age, fill=default_var))+geom_bar() +labs(x="range  age", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default by range age")
 
 #default by other_debtors
-plotDebtors<-ggplot(data_credit,aes(other_debtors,fill=default_var))+geom_bar() +labs(x="other_debtors", y="default")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default by other debptors")
+plotDebtors <- ggplot(data_credit,aes(other_debtors,fill=default_var))+geom_bar() +labs(x="other_debtors", y="default")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default by other debptors")
 
-#default by personal status
-plotPersonal<-ggplot(data_credit,aes(personal_status,fill=default_var))+geom_bar() +labs(x="personal_status", y="default")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default by personal status")
+grid.arrange(plotAge, plotDebtors, ncol=1)
 
-
-grid.arrange(plotAge, plotDebtors, plotPersonal, ncol=1)
 ````
+
+En este caso podemos observar que la mayor cantidad de impagos se obtiene en el rango de edad de 20 a 29 años, siendo también como vimos antes el rango de edad con mayor cantiodad de prestamos concediods. Hay que destacar que el reango de edad de 30 a 39 años tiene una cantidad de préstamos pagados similar a el rango de eedad de 20 a 29 años siendo reseñable ya que hay una mayor cantidad de préstamos concedidos para este último rango de edad.
+
+También destacar que las personas que tneían otros deudores destaca que los avalados tienen una mayor cantidad de pre´stamos pagados y los co-solicitantes tienen una mayor cantidad de impagos.
+
+
+````{r}
+grid.newpage()
+
+#default by personal_status
+plotPersonal <- ggplot(data_credit,aes(personal_status,fill=default_var))+geom_bar() +labs(x="personal_status", y="default")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default by personal status")
+
+#default by credit_history
+plotCredit <- ggplot(data_credit,aes(credit_history,fill=default_var))+geom_bar() +labs(x="credit_history", y="default")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default by credit history")
+
+grid.arrange(plotPersonal, plotCredit, ncol=1)
+````
+
+Por último destacar que tanto los diferentes estados civiles como los diferentes histórcios de creditos se reparten bastante homogeneamente entre cada uno de los diferentes grupos. Destacar también que para las mujeres nos e hace una distinción del estado civil a diferencia de los hombres que tienen los estados civiles de divorciado, casado y soltero.
 
 ## Primer árbol de decisión
 
-Para el entrenamiento de los datos incialmente escogemos de todas las variabels que caracterizan nuestra muestra un subconjunto de ellas.
+Para el entrenamiento de los datos incialmente escogemos de todas las variabels que caracterizan nuestra muestra un subconjunto de ellas que hemos considerado las más importaqntes a la hora de saber si se puede conceder un préstamo o no, elegimos un total de 9 variables más la variable objetivo. Las variables seleccionadas son checking_balance, savings_balance, other_debtors, employment_length, personal_status, dependents_var, range_age, credit_history, housing y la variable objetivo default_var
 
 ````{r}
-data_credit_model <- data_credit[,c("checking_balance", "savings_balance", "other_debtors", "employment_length", "personal_status", "dependents_var", "credit_history", "housing", "installment_plan", "default_var")]
+data_credit_model <- data_credit[,c("checking_balance", "savings_balance", "other_debtors", "employment_length", "personal_status", "dependents_var", "range_age", "credit_history", "housing", "default_var")]
+````
+
+Vemos una pequeña muestra de los datos seleccionados.
+
+````{r}
 head(data_credit_model)
 ````
 
+Para la realización del modelo de árbol de decisión clasificaremos por la variable default_var que indica si se produjo un impago o no. Obtendremos dos conjuntos de datos uno para el entrenamiento del modelo  y uno para la validación de este. Para la muestra de entrenamiento emplearemos la proporción de 2/3 del conjunto de datos y para la muestra de testeo 1/3 del conjunto de los datos. Con el conjunto de entrenamiento construiremos el árbol de decisiones y con la muestra de testeo realizaremos la validación del árbl generado con el conjnunto de datos de entrenamiento.
 
-Para la realización del modelo de arbol de decisión clasificaremos por la variable default que indica si se produjo un impago o no. Obtendremos dos conjuntos de datos uno para el entrenamiento y uno para la validación
+En primer lugar dividimos el conjunto de datos en dos partes, en la primera parte obtendremos los datos sin la variable objetivo y en el segundo conjunto sólo dispondremos de la variable a evaluar.
 
 `````{r}
 y <-  data_credit_model[,10]
@@ -585,42 +607,99 @@ x <- data_credit_model[,1:9]
 
 ````
 
+Realizamos la división del conjunto de datos en la muestra de entrenamiento y de validación. Realizaremos esta operación tanto con la muestra con la variable objetivo como con la muestra con el resto de variables.
+
 
 `````{r}
+
 split_prop <- 3
 max_split <- floor(nrow(x)/split_prop)
+# límite superior de la muestra de entrenamiento 
 tr_limit <- nrow(x) - max_split
+
+#límite inferior de la muestra de validación
 ts_limit <- nrow(x) - max_split + 1
 
+# Muestra de entrenamiento 
 train_x <- x[1:tr_limit,]
 train_y <- y[1:tr_limit]
 
-
+# Muestra de testeo
 test_x <- x[ts_limit:nrow(x),]
 test_y <- y[ts_limit:nrow(x)]
+````
 
+Mostramos un resumen de cada uno de los subconjuntos de datos para comprobar que no ha habido ningún error.
+
+````{r}
 summary(train_x)
 summary(train_y)
 summary(test_x)
 summary(test_y)
 ````
 
+Creamos el árbol de decisión usando los datos de entrenamiento. Convertimos la variable objetivo a tipo factor para que funcione correctmaente.
 
 `````{r}
 
 train_y = as.factor(train_y)
 model <- C50::C5.0(train_x, train_y, rules = TRUE)
+````
+
+Mostramos las reglas definidas por nuestro modelo
+
+````{r}
 summary(model)
 ````
 
+Observamos que el árbol clasifica mla 145 registros de los 667 registros de la muestra de entrenamiento. Vemos que se han generado 12 reglas que explicaremos en el siguiente apartado.
 
-````{r}
+Mostramos ahora el árbol d decisión resultante
+
+````{r, warning= FALSE}
+
 model <- C50::C5.0(train_x, train_y)
-plot(model)
+plot(model, unifrom = TRUE)
 ````
 
 ## Explicación de las reglas obtenidas
 
+En el modelo realizado en el apartado anterior hemos obtenido un total de 12 reglas, explicamos ahora cada una de ellas.
+
+* Regla 1:
+
+
+````
+## Rule 1: (6, lift 2.9)
+##  checking_balance in {< 0 DM, 1 - 200 DM}
+##  savings_balance in {unknown, 101 - 500 DM}
+##  personal_status = married male
+##  credit_history = repaid
+##  ->  class non-payment  [0.875]
+## 
+````
+
+Esta primera regla nos predice que los hombres casados con un balance de cuenta menor de 200 marcos alemanes, con un balance de ahorros entre 101 y 500 marcos alemanes y con un historial de crédito pagados realizará un impago.
+
+* Regla 2
+
+````
+## Rule 2: (9/1, lift 2.7)
+##  checking_balance in {< 0 DM, 1 - 200 DM}
+##  personal_status = female
+##  range_age = 30-39
+##  credit_history in {repaid, delayed}
+##  housing in {own, for free}
+##  ->  class non-payment  [0.818]
+
+Esta segunda regla nos establece que las mujeres entre 30 y 39 años con un balance de cuenta menor de 200 marcos alemanes con un historico de créditos pagados o atrasados y con casa propia o gratis realizarán un impago.
+````
+
+* Rule 3:
+
+````
+
+````
 
 ## Análisis de la bondad de ajuste sobre el conjunto de test y matriz de confusión
 
