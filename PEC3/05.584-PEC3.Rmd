@@ -549,7 +549,6 @@ Por último, podemos ver que la mayoría de personas poseían casa propia y que 
 Mostramos la relación entre la variable default que es la que nos indica si se realiza incumplimientos del pago y algunas de las variables anteriores.
 
 ````{r}
-table(data_credit$default)
 
 grid.newpage()
 
@@ -857,7 +856,7 @@ En primer lugar, emplearemos la técnica RPART o Recursive Partitioning and Regr
 
 Cargamos la nueva librería.
 
-````{r, echo=FALSE, warning=FALSE}
+````{r, echo=TRUE, warning=FALSE, message=FALSE}
 if (!require('rpart')) install.packages('rpart'); library('rpart')
 if (!require('rpart.plot')) install.packages('rpart.plot'); library('rpart.plot')
 ````
