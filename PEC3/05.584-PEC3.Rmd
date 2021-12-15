@@ -406,10 +406,17 @@ Reealizamos la carga de los datos
 
 ````{r}
 data_credit <- read.csv("./credit.csv")
+````
+
+Observamos una muestra de los datos cargados para comprobar que la carga se ha realizado correctamente.
+
+`````{r}
 head(data_credit)
 ````
 
-Realizamos un aanálisis de los datos a modo general. En primer lugar obtenemos las dimensiones de la muestra de datos.
+De este primer vistazo a los datos, debemso destavar que la unidad de dinero empleada en la muestra es el marco alemán en lugar al euro, lo que nos hace indicar que no es una muestra reciente.
+
+Realizamos un análisis de los datos a modo general. En primer lugar obtenemos las dimensiones de la muestra de datos.
 
 `````{r}
 dim(data_credit)
@@ -417,33 +424,35 @@ dim(data_credit)
 
 Observamos que disponemos de 1000 registros y 21 variables que los caracterizan. Estas variables que caracterizan el conjunto de datos son:
 
-* **checking_balance:**
+* **checking_balance:** balance de cuenta de la persona contratante del prestamo
 * **month_loan_duration:** meses de duración del prestamo.
 * **credit_history:** historial de crédito.
 * **purpose:** propósito del crédito.
 * **amount:** importe del préstamo.
-* **savings_balance:**
+* **savings_balance:** balance de ahorros de la persona contratante del prestamo
 * **employment_length:** duración del empleo de la persona contratante del prestamo
 * **installment_rate:** porcentaje de la cuota respecto del total del préstamo solicitado
 * **personal_status:** estado civil de la persona contratante del préstamo.
 * **other_debtors:** otros deudores además del prestatario del dinero
-* **residence_history:**
-* **property:**
+* **residence_history:** historial de alojamientos.
+* **property:** tipo de contrato de la propiedad.
 * **age:** edad de la persona contratante del crédito.
-* **installment_plan: origen del préstamo**
-* **housing:**
+* **installment_plan:** origen del préstamo.
+* **housing:** alojamiento de la persona contratante
 * **existing_credits:** existencia de otros créditos concedidos
 * **default:** indica si se realiza un incumplimiento en el pago del préstamo 
-* **dependents:**
-* **telephone:** 
+* **dependents:** indica si la persona contratante tiene a alguien a su cargo.
+* **telephone:** indica si el contratante posee número de teléfono
 * **foreign_worker:** indica si es un trabajador extranjero
 * **job:** trabajo de la persona contratante del crédito.
 
-vemos el tipo de dato de cada una de las variables.
+Vemos el tipo de dato de cada una de las variables.
 
 ````{r}
 str(data_credit)
 ````
+
+Podemos ver que la mayoría de las variables se reparten entre el tipo de dato cadena y el tipo de dato entero. Entre algunas de estas variables de tipo entero son variables dicotómicas que toman los valores 1 y 2. Más adelante realizaremos una transformación del tipo entero a tipo cadena para una mayor legibilidad de los datos
 
 
 Observamos el resumen de cada una de las variables.
@@ -452,34 +461,163 @@ Observamos el resumen de cada una de las variables.
 summary(data_credit)
 ````
 
-Comprobamos al existencia de valores perdidos en la muestra de daos
+Del resúmen podemos destacar las variables dicotómicas comentadas anteriormente debido a que s eobserva que algunas variables tienen el valor máximo en 2 y el mínimo en 1 comopueden ser las variables dependents y default. Podemos desracar que la mayoría de prestamos son e un monto pequeño ya que los tres primeros cuartiles abarcan la cantidad de 250 a 3972 marcos alemanes. Podemos observar también que la persona de más edad a la que se le ha concedido un prestamo es de 75ños y la más joven de 19 años
+
+Comprobamos al existencia de valores perdidos en la muestra de datos.
 
 `````{r}
 colSums(is.na(data_credit))
 colSums(data_credit == "")
 ````
 
-Observamos que no existen valores perdidos por lo tanto no será necesario preparar los datos en este aspecto. Por lo tanto disponemo de un data frame formado por 21 variables sin valores nulos. Deberemos de reducir el número de variables de la muestra a aquellas que sean relevantes para predecir si se producirá un incumplimiento de pago del préstamo.
+Observamos que no existen valores perdidos por lo tanto no será necesario preparar los datos en este aspecto. Disponemos de un dataframe formado por 21 variables sin valores nulos. Debemos de reducir el número de variables de la muestra a aquellas que sean relevantes para predecir si se producirá un incumplimiento de pago del préstamo.
 
-Pasaremos ahora a visualizar los datos de la muestra
+Con el fin de mejorar la visualización e interpretación de los datos se realizán una serie de modificaciones sobre las variables dicotómicas que se definen binarias con los valores 1 y 2, estableciendo el 1 como afirmación falsa y el 2 como afirmación verdadera. Las variables a sustituir son la variable dependents y la variable objetivo default. También dividiremos en rango las adedaes de las personas de forma que se agrupen en rangos de 10 años.
+
+
+````{r}
+data_credit$dependents_var <- ""
+data_credit$default_var <- ""
+
+for (i in 1:length(data_credit$dependents)) {
+  data_credit$dependents_var[i] <- ifelse(data_credit$dependents[i] == 2 , "yes", "none")
+  data_credit$default_var[i] <- ifelse(data_credit$default[i] == 2, "non-payment", "repaid")
+}
+
+data_credit$range_age <- cut(data_credit$age, breaks = c(10,20,30,40,50,60,70,80), labels = c("10-19", "20-29", "30-39","40-49","50-59","60-69","70-80"))
+````
+
+Pasaremos ahora a visualizar los datos de la muestra.
+
+````{r}
+grid.newpage()
+
+# checking_balance
+plotChecking <- ggplot(data_credit,aes(checking_balance))+geom_bar() +labs(x="checking balance", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("checking_balance")
+
+#savings_balance
+plotSavings <- ggplot(data_credit,aes(savings_balance))+geom_bar() +labs(x="savings balance", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("savings_balance")
+
+#other_debtors
+plotDebtors <- ggplot(data_credit,aes(other_debtors))+geom_bar() +labs(x="other debtors", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("other_debtors")
+
+#credit_history
+plotCredit <- ggplot(data_credit,aes(credit_history))+geom_bar() +labs(x="credit history", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("credit history")
+
+grid.arrange(plotChecking,  plotSavings, plotDebtors, plotCredit, ncol=2)
+
+````
+
+De estos datos podemos destacar que la mayoría de balances de cuenta son desconocidos en el momento en que se conde el préstamo, sin embargo el balance de ahorros predominante es el inferior a 100 marcos alemanes. También podemos destacar que la mayor parte de personas contratantes no poseen otr deudor. Por último destacar que la mayoría de los creditos pedidos con anterioridad al actual fueron devueltos por las personas.
+
 
 ````{r}
 
 grid.newpage()
-plotDebtors<-ggplot(data_credit,aes(other_debtors))+geom_bar() +labs(x="other debtors", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("other_debtors")
 
-plotExisting<-ggplot(data_credit,aes(existing_credits))+geom_bar() +labs(x="existing credits", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("existing credits")
+# employment_lkength
+plotEmployment <- ggplot(data_credit,aes(employment_length))+geom_bar() +labs(x="employment length", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("employment length")
 
-plotEmployment<-ggplot(data_credit,aes(employment_length))+geom_bar() +labs(x="employment length", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("employment_length")
+# personal_status
+plotPersonal <- ggplot(data_credit,aes(personal_status))+geom_bar() +labs(x="personal status", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("personal status")
 
-plotSavings<-ggplot(data_credit,aes(savings_balance))+geom_bar() +labs(x="savings balance", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("savings_balance")
+# range_age
+plotAge <- ggplot(data_credit,aes(range_age))+geom_bar() +labs(x="range  age", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("range age")
 
-grid.arrange(plotDebtors,plotExisting, plotEmployment, plotSavings, ncol=2)
+# dependents_var
+plotDependents <- ggplot(data_credit,aes(dependents_var))+geom_bar() +labs(x="dependents", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("dependents")
+grid.arrange(plotEmployment, plotPersonal, plotAge, plotDependents, ncol=2)
 
+````
+
+Podemos ver en este caso que la mayoría de contratantes poseían un empleo de una duración entre 1 y 4 años, también podemos ver que la mayoría de personas era hombres solteros y que la edad de la que más se pide préstamos es entre los 20 y 29 años. Por último destacar que la mayoría de personas no dsisponían de personas a su cargo.
+
+````{r}
+grid.newpage()
+
+# housing
+plotHousing <- ggplot(data_credit,aes(housing))+geom_bar() +labs(x="housing", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("housing")
+
+# default_var
+plotDefault <- ggplot(data_credit,aes(default_var))+geom_bar() +labs(x="default", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default")
+
+grid.arrange(plotHousing, plotDefault, ncol=2)
+
+````
+
+Por último podemos ver  que la mayoría de personas poseían casa propia y que la mayoría de préstamos fueron devueltos.
+
+Mostramos la relación entre la variable default que es la que nos indica si se realiza incumplimientos del pago y algunas de las variables anteriores.
+
+````{r}
+table(data_credit$default)
+
+grid.newpage()
+
+# default by range_age
+plotAge <- ggplot(data_credit,aes(range_age, fill=default_var))+geom_bar() +labs(x="range  age", y="cantidad")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default by range age")
+
+#default by other_debtors
+plotDebtors<-ggplot(data_credit,aes(other_debtors,fill=default_var))+geom_bar() +labs(x="other_debtors", y="default")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default by other debptors")
+
+#default by personal status
+plotPersonal<-ggplot(data_credit,aes(personal_status,fill=default_var))+geom_bar() +labs(x="personal_status", y="default")+ guides(fill=guide_legend(title=""))+ scale_fill_manual(values=c("blue","#008000"))+ggtitle("default by personal status")
+
+
+grid.arrange(plotAge, plotDebtors, plotPersonal, ncol=1)
 ````
 
 ## Primer árbol de decisión
 
+Para el entrenamiento de los datos incialmente escogemos de todas las variabels que caracterizan nuestra muestra un subconjunto de ellas.
+
+````{r}
+data_credit_model <- data_credit[,c("checking_balance", "savings_balance", "other_debtors", "employment_length", "personal_status", "dependents_var", "credit_history", "housing", "installment_plan", "default_var")]
+head(data_credit_model)
+````
+
+
+Para la realización del modelo de arbol de decisión clasificaremos por la variable default que indica si se produjo un impago o no. Obtendremos dos conjuntos de datos uno para el entrenamiento y uno para la validación
+
+`````{r}
+y <-  data_credit_model[,10]
+x <- data_credit_model[,1:9]
+
+````
+
+
+`````{r}
+split_prop <- 3
+max_split <- floor(nrow(x)/split_prop)
+tr_limit <- nrow(x) - max_split
+ts_limit <- nrow(x) - max_split + 1
+
+train_x <- x[1:tr_limit,]
+train_y <- y[1:tr_limit]
+
+
+test_x <- x[ts_limit:nrow(x),]
+test_y <- y[ts_limit:nrow(x)]
+
+summary(train_x)
+summary(train_y)
+summary(test_x)
+summary(test_y)
+````
+
+
+`````{r}
+
+train_y = as.factor(train_y)
+model <- C50::C5.0(train_x, train_y, rules = TRUE)
+summary(model)
+````
+
+
+````{r}
+model <- C50::C5.0(train_x, train_y)
+plot(model)
+````
 
 ## Explicación de las reglas obtenidas
 
