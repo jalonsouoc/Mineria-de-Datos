@@ -1,0 +1,264 @@
+---
+title: 'Minería de datos: PRA2 - Proyecto de minería de datos'
+author: "Autor: Nombre estudiante"
+date: "Diciembre 2021"
+output:
+  html_document:
+    highlight: default
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_depth: 2
+    includes:
+      in_header: 75.584-PEC-header.html
+  word_document: default
+  pdf_document:
+    highlight: zenburn
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+******
+# Enunciado
+******
+
+Como continuación del estudio iniciado en la Práctica 1, procedemos en **aplicar modelos analíticos** sobre el juego de datos seleccionado y preparado.  En esta **Práctica 2** se aconseja de adjuntar los “chunks” de la parte de preparación previa, ejemplo (limpieza, discretización, normalización, PCA/SVD etc.), o en su defecto cargar solo los datos previamente preparados.
+
+
+* **(Punto común para todos los ejercicios)**
+
+En todos los puntos sucesivos se pide al estudiante, además de aplicar los diferentes métodos, de analizar correctamente el problema, **detallar de manera exhaustiva** resaltando el por qué y cómo se ha realizado, incluyendo elementos visuales, explicando los resultados, realizar las comparativas oportunas con sus conclusiones.
+
+**NOTA**: *En esta actividad vamos a usar al mismo dataset un método no supervisado y supervisado*.
+
+De este modo se pide al estudiante que complete los siguientes pasos:
+
+1. Aplicar un modelo **no supervisado** y basado en el concepto de distancia, sobre el juego de datos.
+
+2. Aplicar de nuevo el modelo anterior, pero usando una **métrica distinta** y comparar los resultados.
+
+3. Se aplican lo algoritmos **DBSCAN y OPTICS**, se prueban con diferentes valores de eps y se comparan los resultados con los métodos anteriores.
+
+4. Aplicar un modelo de generación de reglas a partir de **árboles de decisión** ajustando las diferentes opciones de creación como sin y con opciones de poda o boosting y comparar los resultados.
+
+5. Aplicar un **modelo supervisado** diferente al anterior a elegir de los vistos en el material docente.Comparar el resultado con el modelo generado anterior.
+	
+6. Identificar eventuales **limitaciones** del dataset seleccionado y **analizar los riesgos** para el caso de uso.
+
+
+******
+# Criterios de evaluación
+******
+
+* Ejercicio 1
+	- 30%. Se genera un modelo no supervisado.
+	- 40%. Se analizan, muestran y comentan las medidas de calidad del modelo generado.
+	- 30%. Se comentan las conclusiones.
+
+* Ejercicio 2
+	- 20%. Se genera de nuevo el modelo no supervisado anterior, pero usando una métrica de distancia distinta.
+	- 35%. Se muestran y comentan las medidas de calidad del modelo generado.
+	- 30%. Adicionalmente se comparan los dos modelos no supervisados con métricas de distancia distintas.
+	- 15%. Se comentan las conclusiones. 
+	
+* Ejercicio 3
+	- 20%. Se aplican lo algoritmos DBSCAN y OPTICS de forma correcta.
+  - 25%. Se prueban, describen e interpretan los resultados con diferentes valores de eps.
+  - 25%. Se obtiene una medida de lo bueno que es el agrupamiento.
+  - 20%. Se comparan los resultados obtenidos de los modelos anteriores y DBSCAN.
+  - 10%. Se comentan las conclusiones. 
+
+* Ejercicio 4
+	- 15%. Se generan reglas y se comentan e interpretan las más significativas.
+	- 25%. Extraemos las reglas del modelo en formato texto y gráfico.
+	- 10%. Adicionalmente se genera matriz de confusión para medir la capacidad predictiva del algoritmo.
+	- 25%. Se comparan e interpretan los resultados (sin y con opciones de poda o boosting), explicando las ventajas e inconvenientes del modelo generado respecto a otro método de construcción.
+	- 15%. Se evalúa la tasa de error en cada nivel de árbol, la eficiencia en clasificación (en las fases de training, validación y test) y la comprensibilidad.
+	- 10%. Se comentan las conclusiones.
+
+* Ejercicio 5
+	- 30%. Prueba con una variación u otro enfoque algorítmico. 
+	- 45%. Se detalla, comenta y evalúa la calidad de clasificación.
+	- 25%. Se comparan y comentan los resultados de manera exhaustiva con el anterior método de construcción.
+
+* Ejercicio 6
+  - 50%. Identifica qué posibles limitaciones tienen los datos que has seleccionado para obtener conclusiones con los modelos (supervisado y no supervisado)
+  - 50%. Se identifican posibles riesgos del uso del modelo  (mínimo 300 palabras).
+  
+* Consideración general
+  - 15%. Se presenta el código y es fácilmente reproducible.
+  - 35%. Se detalla cada pregunta de manera correcta, mostrando el código, comentando como se ha hecho y porque se ha hecho, comparando los resultados y/o indicando otras alternativas al problema indicado.
+  - 30%. Se muestran las conclusiones en cada apartado
+  - 20%. Se indican eventuales citaciones bibliográficas, fuentes internas/externas y materiales de investigación.
+
+******
+# Recursos de programación
+******
+* Incluimos en este apartado una lista de recursos de programación para minería de datos donde podréis encontrar ejemplos, ideas e inspiración:
+
+  + [Material adicional del libro: Minería de datos Modelos y Algoritmos](http://oer.uoc.edu/libroMD/)
+  + [Espacio de recursos UOC para ciencia de datos](http://datascience.recursos.uoc.edu/es/)
+  + [Buscador de código R](https://rseek.org/)  
+  + [Colección de cheatsheets en R](https://rstudio.com/resources/cheatsheets/)  
+  
+  
+******
+# Formato y fecha de entrega
+******
+
+El formato de entrega es: **username_estudiante-PRA2** *.Rmd* y el **output generado** en uno de estos formatos *html/doc/docx/odt/pdf*.
+
+
+Se debe entregar la PRA en el buzón de entregas del aula en formato comprimido que incluye los ficheros:
+- ejecutable
+- output
+- el dataset seleccionado o en su defecto indicar la ruta para su descarga en el ejecutable.  
+
+******
+# Nota: Propiedad intelectual 
+******
+
+> A menudo es inevitable, al producir una obra multimedia, hacer uso de recursos creados por terceras personas. Es por lo tanto comprensible hacerlo en el marco de una práctica de los estudios de Informática, Multimedia y Telecomunicación de la UOC, siempre y cuando esto se documente claramente y no suponga plagio en la práctica. 
+
+> Por lo tanto, al presentar una práctica que haga uso de recursos ajenos, se debe presentar junto con ella un documento en que se detallen todos ellos, especificando el nombre de cada recurso, su autor, el lugar donde se obtuvo y su estatus legal: si la obra esta protegida por el copyright o se acoge a alguna otra licencia de uso (Creative Commons, licencia GNU, GPL ...). 
+El estudiante deberá asegurarse de que la licencia no impide específicamente su uso en el marco de la práctica. En caso de no encontrar la información correspondiente tendrá que asumir que la obra esta protegida por copyright. 
+
+> Deberéis, además, adjuntar los ficheros originales cuando las obras utilizadas sean digitales, y su código fuente si corresponde.
+
+
+******
+# Ejercicios
+******
+
+````{r message= FALSE, warning=FALSE}
+# Carga de librerías
+if (!require('cluster')) install.packages('cluster'); library('cluster')
+if (!require('dbscan')) install.packages('dbscan'); library('dbscan')
+````
+
+Inicialmente realizamos la lectura del fichero preparado en la práctica anterior, se han añadido las variables coordenada_x_utm y coordenada_y_utm para poder realizar el modelo no supervisado.
+
+````{r message= FALSE, warning=FALSE}
+# Ruta del fichero
+ruta_csv <-"C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA2\\accidentes.csv"
+#Lectura
+accidentes <- read.csv2(ruta_csv,na.strings="NA")
+head(accidentes)
+table(accidentes$categoria_lesividad)
+````
+
+
+# Ejercicio 1
+
+PAra este primer ejercicio obtendremos un modelo no supervisado basado en el concepto de distancia. Para ello aplicaremos el algoritmo kmeans sobre los datos de las coordenadas, de esta forma agruparemos las coordenadas con el fin de determinar si la localización geográfica es relevante a la hora de clasificar la gravedad de un accidente.
+
+Como en el juego de datos poseemos cuatro tipos de grado de lesividad (Grave, Leve, Mortal, Sin asistencia) comprobaremos el comportamiento del algoritmo de kmeans para 4 clústeres.
+
+
+````{r message= FALSE, warning=FALSE}
+# Obtenemos las coordenadas por separado
+coordenadas <- na.omit(accidentes[c("coordenada_x_utm", "coordenada_y_utm")])
+
+# Se aplica el algortimo de kmeans para 4 clústeres
+coordenadas4clusters <- kmeans(coordenadas, 4)
+
+plot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], col=coordenadas4clusters$cluster, main="Clasificación K-means")
+````
+
+Observamos que obtenemos las 4 agrupaciones que pueden hacer referencia a los cuatro tipos de grado de lesividad cada uno correspondiente a una sección de la comunidad de madrid. COmprobamos ahora los resultados con los datos reales
+
+````{r message= FALSE, warning=FALSE}
+plot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], col=as.factor(accidentes$grado_lesividad), main="Clasificación K-means")
+````
+
+Comprobamos que los difrentes grados de lesividad de los accidentes de la comunidad de madrid están bastante repartidos por toda la comuniadd y no coinciden con las agrupaciones obtenidas con el algoritmo anterior, lo cual nos indica que la ubicación geográfica no es relevante a la hora de clasificar la gravedad de un accidente de tráfico en la Comunidad de Madrid.
+
+Realizaremos la comprobación ahora con las diferentes categorías de lesividad (Asistencia ambulatoria con posterioridad, Asistencia en urgencias sin posterior ingreso, Asistencia sanitaria inmediata en centro de salud o mutua, Asistencia sanitaria sólo en el lugar del accidente, Fallecido 24 horas, Ingreso inferior o igual a 24 horas, Ingreso superior a 24 horas, Sin asistencia sanitaria). En este caso poseemos 8 categorías por lo que comprobaremos el comportamiento del algoritmo e kmeans para 8 agrupaciones
+
+````{r message= FALSE, warning=FALSE}
+# Se aplica el algoritmo de kmeans para 8 clúateres
+coordenadas4clusters <- kmeans(coordenadas, 8)
+
+plot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], col=coordenadas4clusters$cluster, main="Clasificación K-means")
+````
+
+Obtenemos las ocho agrupaciones según el algoritmo que corresponderían a las categorías de lesividad. Comparamos los resultados con los datos reales.
+
+````{r message= FALSE, warning=FALSE}
+plot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], col=as.factor(accidentes$categoria_lesividad), main="Clasificación K-means")
+````
+
+De nuevo comprobamos que las diferentes categorías de los accidentes de tráfico de la comunidad de Madrid están bastante repartidos y no corresponde con los resultados obtenidos por el algorimto de kmeans para ocho clústeres. 
+
+Podemos concluir que no existe una zona geográfica con predominio de ningún grado, ni categoría de lesividad de los accidentes ocasionados en la zona.
+
+# Ejercicio 2
+
+# Ejercicio 3
+
+Analizaremos ahora la miestra de datos empleando los algoritmos DBSCAN y OPTICS.
+
+Inicialmente aplicaremos una densidad mínima aceptada de 50.
+
+`````{r message= FALSE, warning=FALSE}
+resOptics <- optics(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], minPts = 50)
+resOptics
+````
+
+Mostramos el diagrama de alcanzabilidad para las coordenadas de los accidentes.
+
+`````{r message= FALSE, warning=FALSE}
+plot(resOptics)
+````
+
+Podemos observar a simple vista que se hace bastante dificil el establecer cuantos clústeres alberga la muestra debido a la densidad de esta, podríamos intuir algunos por los pequeños valles que se ven en el diagrama pero va a depender bastante del radio que establezcamos.
+
+Extraemos las agrupaciones de la ordenación realizda por OPTICS como lo hubiera hecho el algoritmo DBSCAn estableciendo el radio inicial en 300
+
+`````{r message= FALSE, warning=FALSE}
+resOpticsDBSCAN <- extractDBSCAN(resOptics, eps_cl=300)
+plot(resOpticsDBSCAN)
+````
+
+`````{r message= FALSE, warning=FALSE}
+hullplot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], resOpticsDBSCAN)
+````
+
+Para este radio podemos observar que s ehan generado dos grandes clústeres en el centro del diagrama y un montón de clústeres más pequeños alrededor de estos.
+
+Aumentamos el radio para comprobar como se comporta el algoritmo, lo establecemos en 400.
+
+`````{r message= FALSE, warning=FALSE}
+resOpticsDBSCAN <- extractDBSCAN(resOptics, eps_cl=400)
+plot(resOpticsDBSCAN)
+````
+
+`````{r message= FALSE, warning=FALSE}
+hullplot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], resOpticsDBSCAN)
+````
+
+Comprobamos qe ahora tenemos un gran clúster central que alberga casi toda la muestra rodeado de clústeres mas pequeños. Lo cual podría refrenciar a la zona central de madrid y los clústeres más pequeños a las afueras.
+
+Por último comprobamos el comportamiento del algoritmo para un radio más pequeño que el probado inicialmente, lo establecemos en 200
+
+`````{r message= FALSE, warning=FALSE}
+resOpticsDBSCAN <- extractDBSCAN(resOptics, eps_cl=200)
+plot(resOpticsDBSCAN)
+````
+
+`````{r message= FALSE, warning=FALSE}
+hullplot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], resOpticsDBSCAN)
+````
+
+En este caso vemos que los grandes clústeres centrales han desaparecido dando lugar a clústeres pequeños en el centro de la muestra, dejando sin agrupar una gran cantidad de datos.
+
+# Ejercicio 4
+
+Para el entrenamiento del árbol de decisión escogemos de todas las variables de nuestro conjunto de datos aquellas que consideramos más importantes para predecir la gravedad de un 
+
+# Ejercicio 5
+
+# Ejercicio 6
