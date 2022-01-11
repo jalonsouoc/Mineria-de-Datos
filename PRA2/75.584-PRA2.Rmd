@@ -133,10 +133,12 @@ El estudiante deberá asegurarse de que la licencia no impide específicamente s
 # Ejercicios
 ******
 
+
 ````{r message= FALSE, warning=FALSE}
 # Carga de librerías
 if (!require('cluster')) install.packages('cluster'); library('cluster')
 if (!require('dbscan')) install.packages('dbscan'); library('dbscan')
+if (!require('C50')) install.packages('C50'); library('C50')
 ````
 
 Inicialmente realizamos la lectura del fichero preparado en la práctica anterior, se han añadido las variables coordenada_x_utm y coordenada_y_utm para poder realizar el modelo no supervisado.
@@ -257,7 +259,110 @@ En este caso vemos que los grandes clústeres centrales han desaparecido dando l
 
 # Ejercicio 4
 
-Para el entrenamiento del árbol de decisión escogemos de todas las variables de nuestro conjunto de datos aquellas que consideramos más importantes para predecir la gravedad de un 
+Para el entrenamiento del árbol de decisión escogemos de todas las variables de nuestro conjunto de datos aquellas que consideramos más importantes para predecir la gravedad de un accidente de tráfico, estas serían tipo_accidente, estado_meteorologico, tipo_vehiculo, rango_edad, sexo,positiva_alcohol, partes_dia y la variable objetivo grado_lesividad
+
+`````{r message= FALSE, warning=FALSE}
+accidentes_model <- accidentes[c("tipo_accidente","estado_meteorologico", "tipo_vehiculo", "rango_edad", "sexo", "positiva_alcohol", "partes_dia", "grado_lesividad")]
+head(accidentes_model)
+````
+
+Para la relaización del modelo de árbol de decisión clasificaremos por la variable grado_lesividad que indica el grado de las lesiones ocasionadas en un accidente de tráfico en la Comunidad de Madrid. Obtendremos dos conjuntos de datos uno para el entrenamiento del modelo y uno para la posterior validación de est. Para la muestra de entrenamiento emplearemos el 90% del total del conjunto de datos y para la muestra de testeo el 10%. Con el conjunto de entrenamiento construiremos el árbol de decisiones y con la muestra de testeo realizaremos la validación del modelo generado.
+
+
+Antes de obtener las muestras de entrenamiento y testeo eliminamos una serie de tipos de vehículos que aparecen 1 única vez en el conunto de datos y nos van a generar problemas dado que pueden aparecer únicamente en la muestra de testeo.
+
+`````````{r message= FALSE, warning=FALSE}
+accidentes_model <- accidentes_model[!(accidentes$tipo_vehiculo == 'Patinete' | accidentes$tipo_vehiculo == 'Ciclomotor de tres ruedas'),]
+````
+
+Una vez realizada la corrección dividimos la muestra en dos partes una primera con todos los datos sin la variable objetivo y una segunda con únicamente esta variable objetivo.
+
+`````{r message= FALSE, warning=FALSE}
+y <-  accidentes_model[, 8]
+x <- accidentes_model[,1:7]
+````
+
+Realizamos la división del conjunto de datos en la muestra de entrenamiento y de testeo.
+
+`````{r message= FALSE, warning=FALSE}
+split_prop <- 10
+max_split <- floor(nrow(x)/split_prop)
+
+max_split
+nrow(x)
+
+# límite superior de la muestra de entrenamiento 
+tr_limit <- nrow(x) - max_split
+
+#límite inferior de la muestra de validación
+ts_limit <- nrow(x) - max_split + 1
+
+# Muestra de entrenamiento 
+train_x <- x[1:tr_limit,]
+train_y <- y[1:tr_limit]
+
+# Muestra de testeo
+test_x <- x[ts_limit:nrow(x),]
+test_y <- y[ts_limit:nrow(x)]
+````
+
+Creamos el árbol de decisión usando los datos de entrenamiento y convertimos la variable objetivo a tipo factor para el correcto funcionamiento.
+
+`````{r message= FALSE, warning=FALSE}
+train_y = as.factor(train_y)
+model <- C50::C5.0(train_x, train_y, rules = TRUE)
+````
+
+Mostramos las reglas del modelo creado.
+
+```{r message= FALSE, warning=FALSE}
+summary(model)
+````
+
+Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas son:
+
+* Regla 1:
+* Regla 2:
+* Regla 3:
+* Regla 4:
+* Regla 5:
+* Regla 6:
+* Regla 7:
+* Regla 8:
+* Regla 9:
+* Regla 10:
+* Regla 11:
+* Regla 12:
+* Regla 13:
+* Regla 14:
+* Regla 15:
+* Regla 16:
+* Regla 17:
+* Regla 18:
+
+Ahora mostramos el árbol de decisión resultante
+
+```{r message= FALSE, warning=FALSE}
+model <- C50::C5.0(train_x, train_y)
+plot(model, uniform = TRUE)
+````
+
+Una vez obtenido el modelo bamos a comprobar su calidad empleando la muestre de testeo que separamos inicialmente.
+
+
+```{r message= FALSE, warning=FALSE}
+predicted_model <- predict(model, test_x, type="class")
+print(sprintf("La precisión del árbol es: %.4f %%",100*sum(predicted_model == test_y) / length(predicted_model)))
+````
+
+Obtenemos que para la muestra de testeo el modelo acierta en un 71.39%
+
+Mostramos la matriz de confusión 
+
+````{r message= FALSE, warning=FALSE}
+mat_conf <- table(test_y, Predicted=predicted_model)
+mat_conf
+````
 
 # Ejercicio 5
 
