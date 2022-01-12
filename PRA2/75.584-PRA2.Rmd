@@ -139,6 +139,9 @@ El estudiante deberá asegurarse de que la licencia no impide específicamente s
 if (!require('cluster')) install.packages('cluster'); library('cluster')
 if (!require('dbscan')) install.packages('dbscan'); library('dbscan')
 if (!require('C50')) install.packages('C50'); library('C50')
+if (!require('rpart')) install.packages('rpart'); library('rpart')
+if (!require('rpart.plot')) install.packages('rpart.plot'); library('rpart.plot')
+if (!require('gmodels')) install.packages('gmodels'); library('gmodels')
 ````
 
 Inicialmente realizamos la lectura del fichero preparado en la práctica anterior, se han añadido las variables coordenada_x_utm y coordenada_y_utm para poder realizar el modelo no supervisado.
@@ -153,7 +156,7 @@ table(accidentes$categoria_lesividad)
 ````
 
 
-# Ejercicio 1
+## Ejercicio 1
 
 PAra este primer ejercicio obtendremos un modelo no supervisado basado en el concepto de distancia. Para ello aplicaremos el algoritmo kmeans sobre los datos de las coordenadas, de esta forma agruparemos las coordenadas con el fin de determinar si la localización geográfica es relevante a la hora de clasificar la gravedad de un accidente.
 
@@ -197,9 +200,31 @@ De nuevo comprobamos que las diferentes categorías de los accidentes de tráfic
 
 Podemos concluir que no existe una zona geográfica con predominio de ningún grado, ni categoría de lesividad de los accidentes ocasionados en la zona.
 
-# Ejercicio 2
+## Ejercicio 2
 
-# Ejercicio 3
+En este caso vamos a emplear un algoritmo de agrupamiento jerárquico, para ello emplearemos la función en R hclust. Como métrica para obtner la distancia Manhattan (geometría del taxi). Comprobamos el comportamiento para 4 clústeres.
+
+`````{r message= FALSE, warning=FALSE}
+d <- dist(coordenadas, method = "manhattan")
+hc1 <- hclust(d, method = "complete")
+plot(hc1)
+groups <- cutree(hc1, k=4)
+rect.hclust(hc1, k=4, border="red")
+```
+
+Observamos que nuevamente tenemos  un gran clúster que alberga la mayor parte de la muestra, el cual podría referenciar a los clústeres de la zona central obtenidos en apartados anterirores, en este caso vemos que se forman 2 clústeres con bastantes datos en comparación al algoritmo anterior y un último clúster con una muestra ínfima de datos lo que pdoría corresponder  las zonas exteriores.
+
+Comprobamos le resultado ahora para 8 clústeres.
+
+````{r message= FALSE, warning=FALSE}
+plot(hc1)
+groups <- cutree(hc1, k=8)
+rect.hclust(hc1, k=8, border="red")
+````
+
+Nuevamente se diferencia un gran clúster en relación con el resto de clústeres de menor tamaño, nuevamente podríamos considerar que es la zona central de madrid y el resto de clústeres más pequeños podrían hacer refrencia a las zonas de las afueras de la comunidad.
+
+## Ejercicio 3
 
 Analizaremos ahora la miestra de datos empleando los algoritmos DBSCAN y OPTICS.
 
@@ -257,7 +282,7 @@ hullplot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], resOpticsDBSCAN
 
 En este caso vemos que los grandes clústeres centrales han desaparecido dando lugar a clústeres pequeños en el centro de la muestra, dejando sin agrupar una gran cantidad de datos.
 
-# Ejercicio 4
+## Ejercicio 4
 
 Para el entrenamiento del árbol de decisión escogemos de todas las variables de nuestro conjunto de datos aquellas que consideramos más importantes para predecir la gravedad de un accidente de tráfico, estas serían tipo_accidente, estado_meteorologico, tipo_vehiculo, rango_edad, sexo,positiva_alcohol, partes_dia y la variable objetivo grado_lesividad
 
@@ -322,16 +347,138 @@ summary(model)
 Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas son:
 
 * Regla 1:
+
+````
+##  tipo_vehiculo in {Motocicleta > 125cc, Motocicleta hasta 125cc,
+##                           Ciclomotor, Bicicleta, Otros vehículos con motor,
+##                           VMU eléctrico, Autobus EMT, Ciclo,
+##                           Bicicleta EPAC (pedaleo asistido), Desconocido,
+##                           Autobús articulado, Otros vehículos sin motor,
+##                           Moto de tres ruedas > 125cc, Cuadriciclo no ligero,
+##                           Moto de tres ruedas hasta 125cc,
+##                           Ciclomotor de dos ruedas L1e-B,
+##                           Autobús articulado EMT}
+##  sexo in {Hombre, Mujer}
+##  ->  class Leve  [0.828]
+````
+
 * Regla 2:
+
+````
+## Rule 2: (54/12, lift 1.7)
+##  tipo_accidente = Choque contra obstáculo fijo
+##  estado_meteorologico = Lluvia débil
+##  tipo_vehiculo = Turismo
+##  positiva_alcohol = N
+##  ->  class Leve  [0.768]
+````
 * Regla 3:
+
+````
+## Rule 3: (19/4, lift 1.7)
+##  tipo_accidente in {Choque contra obstáculo fijo, Atropello a persona,
+##                            Vuelco}
+##  tipo_vehiculo = Turismo
+##  rango_edad = De 25 a 29 años
+##  positiva_alcohol = N
+##  partes_dia = Madrugada
+##  ->  class Leve  [0.762]
+````
+
 * Regla 4:
+
+````
+## Rule 4: (124/30, lift 1.7)
+##  tipo_accidente in {Colisión lateral, Colisión fronto-lateral,
+##                            Colisión frontal, Alcance, Caída}
+##  tipo_vehiculo in {Autobús, Maquinaria de obras}
+##  sexo = Mujer
+##  ->  class Leve  [0.754]
+````
+
 * Regla 5:
+
+````
+## Rule 5: (80/20, lift 1.7)
+##  tipo_accidente in {Choque contra obstáculo fijo, Atropello a persona,
+##                            Solo salida de la vía, Vuelco}
+##  estado_meteorologico in {Lluvia débil, LLuvia intensa}
+##  tipo_vehiculo in {Turismo, Todo terreno, Furgoneta, Tractocamión}
+##  sexo = Mujer
+##  ->  class Leve  [0.744]
+````
+
 * Regla 6:
+
+````
+## Rule 6: (25/7, lift 1.6)
+##  tipo_accidente in {Choque contra obstáculo fijo, Atropello a persona,
+##                            Solo salida de la vía}
+##  rango_edad = De 50 a 54 años
+##  sexo = Mujer
+##  positiva_alcohol = N
+##  partes_dia = Noche
+##  ->  class Leve  [0.704]
+````
 * Regla 7:
+
+````
+## Rule 7: (46/15, lift 1.5)
+##  tipo_accidente in {Choque contra obstáculo fijo, Atropello a persona,
+##                            Solo salida de la vía}
+##  estado_meteorologico = Despejado
+##  rango_edad = De 30 a 34 años
+##  sexo = Mujer
+##  partes_dia in {Mañana, Noche}
+##  ->  class Leve  [0.667]
+````
+
 * Regla 8:
+
+
+````
+## Rule 8: (68/23, lift 1.5)
+##  tipo_accidente in {Choque contra obstáculo fijo, Atropello a persona,
+##                            Solo salida de la vía}
+##  estado_meteorologico = Despejado
+##  tipo_vehiculo in {Todo terreno, Furgoneta, Camión rígido}
+##  sexo = Mujer
+##  ->  class Leve  [0.657]
+````
+
 * Regla 9:
+
+````
+## Rule 9: (74/26, lift 1.4)
+##  tipo_accidente in {Vuelco, Despeñamiento}
+##  tipo_vehiculo in {Turismo, Todo terreno, Furgoneta, Camión rígido,
+##                           Tractocamión, Cuadriciclo ligero}
+##  ->  class Leve  [0.645]
+````
+
 * Regla 10:
+
+````
+## Rule 10: (450/164, lift 1.4)
+##  tipo_accidente in {Choque contra obstáculo fijo, Atropello a persona,
+##                            Solo salida de la vía, Vuelco}
+##  estado_meteorologico in {Despejado, Nublado, Lluvia débil}
+##  rango_edad in {Más de 74 años, De 70 a 74 años, Menor de 5 años,
+##                        De 10 a 14 años, De 15 a 17 años, De 6 a 9 años}
+##  ->  class Leve  [0.635]
+````
+
 * Regla 11:
+
+````
+## Rule 11: (130/51, lift 1.4)
+##  tipo_accidente in {Choque contra obstáculo fijo, Atropello a persona,
+##                            Solo salida de la vía, Vuelco}
+##  rango_edad in {De 45 a 49 años, De 18 a 20 años}
+##  sexo = Mujer
+##  ->  class Leve  [0.606]
+````
+
 * Regla 12:
 * Regla 13:
 * Regla 14:
@@ -364,6 +511,58 @@ mat_conf <- table(test_y, Predicted=predicted_model)
 mat_conf
 ````
 
-# Ejercicio 5
+Mostramos más información acerca de los errores.
 
-# Ejercicio 6
+`````{r message= FALSE, warning=FALSE}
+CrossTable(test_y, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
+````
+
+## Ejercicio 5
+
+Probamos a crear otro árbol de decisiones en este caso con otro enfoque, emplearemos la técnica RPTRAT (Recursive Partitioning and Regression Trees)
+
+Obtenemos la muestra de testeo y la de entrenamiento sin diferenciar entre variable objetivo y el resto de variables.
+
+`````{r message= FALSE, warning=FALSE}
+#Muestra de entrenamiento
+train <- accidentes_model[1:tr_limit,]
+# Muestra de testeo
+test <- accidentes_model[ts_limit:nrow(accidentes_model),]
+
+````
+
+Obtenemos el modelo empleando la función en R rpart
+
+`````{r message= FALSE, warning=FALSE}
+model2 <- rpart(formula = grado_lesividad~., data = train, method="class" )
+rpart.plot(model2)
+````
+
+Vemos que este modelo sólo tiene en cuenta la variable de tipo_vehiculo de todas las seleccionadas en el conjunto de datos y no es capaz de predecir los accidentes Graves y los Mortales. Podemos ver que sólo es capaz de clasificar según el tipo_vehiculo en accidentes Leves y Sin asistencia.
+
+Evaluamos el modelo mediante la muestre de testeo
+
+````{r message= FALSE, warning=FALSE}
+predicted_model2 <- predict(model2, newdata = test, type="class")
+print(sprintf("La precisión del árbol es: %.4f %%",100*sum(predicted_model2 == test$grado_lesividad) / length(predicted_model)))
+````
+
+Vemos que este modelo para la muestra de testeo acierta en un 69.92 % de los casos comprobamso que es un porcentaje inferior al obtenido en el apartado anterior.
+
+Mostramos la matriz de confusión para ver los errores cometidos por el modelo.
+
+````{r message= FALSE, warning=FALSE}
+mat_conf <- table(test$grado_lesividad, Predicted=predicted_model2)
+mat_conf
+````
+
+Mostramos más información acerca de los errores.
+
+````{r message= FALSE, warning=FALSE}
+CrossTable(test$grado_lesividad, predicted_model2,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
+````
+
+
+Podemos ver que este algoritmo tiene un porcentaje de acierto menor que el obtenido en el ejercicio aterior, también observamos que de todas las variables sólo considera relevante la variable tipo_vehiculo, es cierto que el modelo anteriro también la tenía como la más relevante pero tomaba en cuenta algunas de las otras variables. Por último destacar la incapacidad del modelo de predecir los accidentes Graves y Mortales.
+
+## Ejercicio 6
