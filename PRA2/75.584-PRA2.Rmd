@@ -148,17 +148,16 @@ Inicialmente realizamos la lectura del fichero preparado en la práctica anterio
 
 ````{r message= FALSE, warning=FALSE}
 # Ruta del fichero
-ruta_csv <-"C:\\Users\\Jorge\\Documents\\Rstudio Workspace\\Minería de datos\\PRA2\\accidentes.csv"
+ruta_csv <-"accidentes.csv"
 #Lectura
 accidentes <- read.csv2(ruta_csv,na.strings="NA")
 head(accidentes)
-table(accidentes$categoria_lesividad)
 ````
 
 
 ## Ejercicio 1
 
-PAra este primer ejercicio obtendremos un modelo no supervisado basado en el concepto de distancia. Para ello aplicaremos el algoritmo kmeans sobre los datos de las coordenadas, de esta forma agruparemos las coordenadas con el fin de determinar si la localización geográfica es relevante a la hora de clasificar la gravedad de un accidente.
+Para este primer ejercicio obtendremos un modelo no supervisado basado en el concepto de distancia. Para ello aplicaremos el algoritmo kmeans sobre los datos de las coordenadas, de esta forma agruparemos las coordenadas con el fin de determinar si la localización geográfica es relevante a la hora de clasificar la gravedad de un accidente.
 
 Como en el juego de datos poseemos cuatro tipos de grado de lesividad (Grave, Leve, Mortal, Sin asistencia) comprobaremos el comportamiento del algoritmo de kmeans para 4 clústeres.
 
@@ -173,15 +172,15 @@ coordenadas4clusters <- kmeans(coordenadas, 4)
 plot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], col=coordenadas4clusters$cluster, main="Clasificación K-means")
 ````
 
-Observamos que obtenemos las 4 agrupaciones que pueden hacer referencia a los cuatro tipos de grado de lesividad cada uno correspondiente a una sección de la comunidad de madrid. COmprobamos ahora los resultados con los datos reales
+Observamos que obtenemos las 4 agrupaciones que pueden hacer referencia a los cuatro tipos de grado de lesividad cada uno correspondiente a una sección de la comunidad de Madrid. Comprobamos ahora los resultados con los datos reales.
 
 ````{r message= FALSE, warning=FALSE}
 plot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], col=as.factor(accidentes$grado_lesividad), main="Clasificación K-means")
 ````
 
-Comprobamos que los difrentes grados de lesividad de los accidentes de la comunidad de madrid están bastante repartidos por toda la comuniadd y no coinciden con las agrupaciones obtenidas con el algoritmo anterior, lo cual nos indica que la ubicación geográfica no es relevante a la hora de clasificar la gravedad de un accidente de tráfico en la Comunidad de Madrid.
+Comprobamos que los diferentes grados de lesividad de los accidentes de la comunidad de Madrid están bastante repartidos por toda la comunidad y no coinciden con las agrupaciones obtenidas con el algoritmo anterior, lo cual nos indica que la ubicación geográfica no es relevante a la hora de clasificar la gravedad de un accidente de tráfico en la Comunidad de Madrid.
 
-Realizaremos la comprobación ahora con las diferentes categorías de lesividad (Asistencia ambulatoria con posterioridad, Asistencia en urgencias sin posterior ingreso, Asistencia sanitaria inmediata en centro de salud o mutua, Asistencia sanitaria sólo en el lugar del accidente, Fallecido 24 horas, Ingreso inferior o igual a 24 horas, Ingreso superior a 24 horas, Sin asistencia sanitaria). En este caso poseemos 8 categorías por lo que comprobaremos el comportamiento del algoritmo e kmeans para 8 agrupaciones
+Realizaremos la comprobación ahora con las diferentes categorías de lesividad (Asistencia ambulatoria con posterioridad, Asistencia en urgencias sin posterior ingreso, Asistencia sanitaria inmediata en centro de salud o mutua, Asistencia sanitaria sólo en el lugar del accidente, Fallecido 24 horas, Ingreso inferior o igual a 24 horas, Ingreso superior a 24 horas, Sin asistencia sanitaria). En este caso poseemos 8 categorías por lo que comprobaremos el comportamiento del algoritmo e kmeans para 8 agrupaciones.
 
 ````{r message= FALSE, warning=FALSE}
 # Se aplica el algoritmo de kmeans para 8 clúateres
@@ -196,13 +195,13 @@ Obtenemos las ocho agrupaciones según el algoritmo que corresponderían a las c
 plot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], col=as.factor(accidentes$categoria_lesividad), main="Clasificación K-means")
 ````
 
-De nuevo comprobamos que las diferentes categorías de los accidentes de tráfico de la comunidad de Madrid están bastante repartidos y no corresponde con los resultados obtenidos por el algorimto de kmeans para ocho clústeres. 
+De nuevo comprobamos que las diferentes categorías de los accidentes de tráfico de la comunidad de Madrid están bastante repartidos y no corresponde con los resultados obtenidos por el algoritmo de kmeans para ocho clústeres. 
 
 Podemos concluir que no existe una zona geográfica con predominio de ningún grado, ni categoría de lesividad de los accidentes ocasionados en la zona.
 
 ## Ejercicio 2
 
-En este caso vamos a emplear un algoritmo de agrupamiento jerárquico, para ello emplearemos la función en R hclust. Como métrica para obtner la distancia Manhattan (geometría del taxi). Comprobamos el comportamiento para 4 clústeres.
+En este caso vamos a emplear un algoritmo de agrupamiento jerárquico, para ello emplearemos la función en R hclust. Como métrica para obtener la distancia Manhattan (geometría del taxi). Comprobamos el comportamiento para 4 clústeres.
 
 `````{r message= FALSE, warning=FALSE}
 d <- dist(coordenadas, method = "manhattan")
@@ -212,7 +211,7 @@ groups <- cutree(hc1, k=4)
 rect.hclust(hc1, k=4, border="red")
 ```
 
-Observamos que nuevamente tenemos  un gran clúster que alberga la mayor parte de la muestra, el cual podría referenciar a los clústeres de la zona central obtenidos en apartados anterirores, en este caso vemos que se forman 2 clústeres con bastantes datos en comparación al algoritmo anterior y un último clúster con una muestra ínfima de datos lo que pdoría corresponder  las zonas exteriores.
+Observamos que nuevamente tenemos un gran clúster que alberga la mayor parte de la muestra, el cual podría referenciar a los clústeres de la zona central obtenidos en apartados anteriores, en este caso vemos que se forman 2 clústeres con bastantes datos en comparación al algoritmo anterior y un último clúster con una muestra ínfima de datos lo que podría corresponder a las zonas exteriores.
 
 Comprobamos le resultado ahora para 8 clústeres.
 
@@ -222,11 +221,11 @@ groups <- cutree(hc1, k=8)
 rect.hclust(hc1, k=8, border="red")
 ````
 
-Nuevamente se diferencia un gran clúster en relación con el resto de clústeres de menor tamaño, nuevamente podríamos considerar que es la zona central de madrid y el resto de clústeres más pequeños podrían hacer refrencia a las zonas de las afueras de la comunidad.
+Nuevamente se diferencia un gran clúster en relación con el resto de clústeres de menor tamaño, nuevamente podríamos considerar que es la zona central de Madrid y el resto de clústeres más pequeños podrían hacer referencia a las zonas de las afueras de la comunidad.
 
 ## Ejercicio 3
 
-Analizaremos ahora la miestra de datos empleando los algoritmos DBSCAN y OPTICS.
+Analizaremos ahora la muestra de datos empleando los algoritmos DBSCAN y OPTICS.
 
 Inicialmente aplicaremos una densidad mínima aceptada de 50.
 
@@ -241,9 +240,9 @@ Mostramos el diagrama de alcanzabilidad para las coordenadas de los accidentes.
 plot(resOptics)
 ````
 
-Podemos observar a simple vista que se hace bastante dificil el establecer cuantos clústeres alberga la muestra debido a la densidad de esta, podríamos intuir algunos por los pequeños valles que se ven en el diagrama pero va a depender bastante del radio que establezcamos.
+Podemos observar a simple vista que se hace bastante difícil el establecer cuantos clústeres alberga la muestra debido a la densidad de esta, podríamos intuir algunos por los pequeños valles que se ven en el diagrama, pero va a depender bastante del radio que establezcamos.
 
-Extraemos las agrupaciones de la ordenación realizda por OPTICS como lo hubiera hecho el algoritmo DBSCAn estableciendo el radio inicial en 300
+Extraemos las agrupaciones de la ordenación realizada por OPTICS como lo hubiera hecho el algoritmo DBSCAn estableciendo el radio inicial en 300.
 
 `````{r message= FALSE, warning=FALSE}
 resOpticsDBSCAN <- extractDBSCAN(resOptics, eps_cl=300)
@@ -254,9 +253,9 @@ plot(resOpticsDBSCAN)
 hullplot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], resOpticsDBSCAN)
 ````
 
-Para este radio podemos observar que s ehan generado dos grandes clústeres en el centro del diagrama y un montón de clústeres más pequeños alrededor de estos.
+Para este radio podemos observar que se han generado dos grandes clústeres en el centro del diagrama y un montón de clústeres más pequeños alrededor de estos.
 
-Aumentamos el radio para comprobar como se comporta el algoritmo, lo establecemos en 400.
+Aumentamos el radio para comprobar cómo se comporta el algoritmo, lo establecemos en 400.
 
 `````{r message= FALSE, warning=FALSE}
 resOpticsDBSCAN <- extractDBSCAN(resOptics, eps_cl=400)
@@ -267,9 +266,9 @@ plot(resOpticsDBSCAN)
 hullplot(accidentes[,c("coordenada_x_utm", "coordenada_y_utm")], resOpticsDBSCAN)
 ````
 
-Comprobamos qe ahora tenemos un gran clúster central que alberga casi toda la muestra rodeado de clústeres mas pequeños. Lo cual podría refrenciar a la zona central de madrid y los clústeres más pequeños a las afueras.
+Comprobamos que ahora tenemos un gran clúster central, que alberga casi toda la muestra, rodeado de clústeres más pequeños. Lo cual podría referencia a la zona central de Madrid y los clústeres más pequeños a las afueras.
 
-Por último comprobamos el comportamiento del algoritmo para un radio más pequeño que el probado inicialmente, lo establecemos en 200
+Por último, comprobamos el comportamiento del algoritmo para un radio más pequeño que el probado inicialmente, lo establecemos en 200.
 
 `````{r message= FALSE, warning=FALSE}
 resOpticsDBSCAN <- extractDBSCAN(resOptics, eps_cl=200)
@@ -284,17 +283,17 @@ En este caso vemos que los grandes clústeres centrales han desaparecido dando l
 
 ## Ejercicio 4
 
-Para el entrenamiento del árbol de decisión escogemos de todas las variables de nuestro conjunto de datos aquellas que consideramos más importantes para predecir la gravedad de un accidente de tráfico, estas serían tipo_accidente, estado_meteorologico, tipo_vehiculo, rango_edad, sexo,positiva_alcohol, partes_dia y la variable objetivo grado_lesividad
+Para el entrenamiento del árbol de decisión escogemos de todas las variables de nuestro conjunto de datos aquellas que consideramos más importantes para predecir la gravedad de un accidente de tráfico, estas serían tipo_accidente, estado_meteorologico, tipo_vehiculo, rango_edad, sexo,positiva_alcohol, partes_dia y la variable objetivo grado_lesividad.
 
 `````{r message= FALSE, warning=FALSE}
 accidentes_model <- accidentes[c("tipo_accidente","estado_meteorologico", "tipo_vehiculo", "rango_edad", "sexo", "positiva_alcohol", "partes_dia", "grado_lesividad")]
 head(accidentes_model)
 ````
 
-Para la relaización del modelo de árbol de decisión clasificaremos por la variable grado_lesividad que indica el grado de las lesiones ocasionadas en un accidente de tráfico en la Comunidad de Madrid. Obtendremos dos conjuntos de datos uno para el entrenamiento del modelo y uno para la posterior validación de est. Para la muestra de entrenamiento emplearemos el 90% del total del conjunto de datos y para la muestra de testeo el 10%. Con el conjunto de entrenamiento construiremos el árbol de decisiones y con la muestra de testeo realizaremos la validación del modelo generado.
+Para la realización del modelo de árbol de decisión clasificaremos por la variable grado_lesividad que indica el grado de las lesiones ocasionadas en un accidente de tráfico en la Comunidad de Madrid. Obtendremos dos conjuntos de datos uno para el entrenamiento del modelo y uno para la posterior validación de esta. Para la muestra de entrenamiento emplearemos el 90% del total del conjunto de datos y para la muestra de testeo el 10%. Con el conjunto de entrenamiento construiremos el árbol de decisiones y con la muestra de testeo realizaremos la validación del modelo generado.
 
 
-Antes de obtener las muestras de entrenamiento y testeo eliminamos una serie de tipos de vehículos que aparecen 1 única vez en el conunto de datos y nos van a generar problemas dado que pueden aparecer únicamente en la muestra de testeo.
+Antes de obtener las muestras de entrenamiento y testeo eliminamos una serie de tipos de vehículos que aparecen 1 única vez en el conjunto de datos y nos van a generar problemas dado que pueden aparecer únicamente en la muestra de testeo.
 
 `````````{r message= FALSE, warning=FALSE}
 accidentes_model <- accidentes_model[!(accidentes$tipo_vehiculo == 'Patinete' | accidentes$tipo_vehiculo == 'Ciclomotor de tres ruedas'),]
@@ -362,6 +361,20 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  ->  class Leve  [0.828]
 ````
 
+Esta regla nos indica que para los accidentes que se produzcan con uno de estos vehículos:
+
+            Motocicleta > 125cc, Motocicleta hasta 125cc
+            Ciclomotor, Bicicleta, Otros vehículos con motor
+            VMU eléctrico, autobús EMT, Ciclo
+            Bicicleta EPAC (pedaleo asistido), Desconocido
+            Autobús articulado, Otros vehículos sin motor
+            Moto de tres ruedas > 125cc, Cuadriciclo no ligero
+            Moto de tres ruedas hasta 125cc,
+            Ciclomotor de dos ruedas L1e-B
+            Autobús articulado EMT
+            
+y personas de ambos sexos la gravedad del accidente será Leve.
+
 * Regla 2:
 
 ````
@@ -372,6 +385,9 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  positiva_alcohol = N
 ##  ->  class Leve  [0.768]
 ````
+
+Esta regla establece que los accidentes de tipo Choque contra obstáculo fijo, el estado meteorológico sea lluvia débil, el tipo de vehículo un turismo y se dé negativo en una prueba de alcoholemia serán de gravedad leve.
+
 * Regla 3:
 
 ````
@@ -384,6 +400,7 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  partes_dia = Madrugada
 ##  ->  class Leve  [0.762]
 ````
+Esta regla establece que para los tipos de accidente choque contra obstáculo fijo, atropello a persona y vuelco, el tipo de vehículo sea un turismo, el rango de edad sea de 25 a 29 años, se dé negativo en el test de alcoholemia y se produzca en la madrugada, la gravedad será leve.
 
 * Regla 4:
 
@@ -395,6 +412,8 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  sexo = Mujer
 ##  ->  class Leve  [0.754]
 ````
+
+Esta regla establece que para los tipos de accidente colisión latera, colisión fronto-lateral, colisión frontal, alcance y caída, los tipos de vehículo autobús y maquinaria de obras y el sexo mujer, serán de gravedad leve.
 
 * Regla 5:
 
@@ -408,6 +427,8 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  ->  class Leve  [0.744]
 ````
 
+Esta regla establece que para los tipos de accidente choque contra obstáculo fijo, atropello a persona, solo salida de la vía y vuelco, el estado meteorológico lluvia débil o intensa, el tipo de vehículo turismo, furgoneta o tractocamión y el sexo mujer serán de gravedad leve.
+
 * Regla 6:
 
 ````
@@ -420,6 +441,10 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  partes_dia = Noche
 ##  ->  class Leve  [0.704]
 ````
+
+Esta regla establece que para los tipos de accidentes choque contra obstáculo fijo, atropello a persona y solo salida de la vía, el rango de edad de 50 a 54 años, el sexo mujer, test negativo de alcoholemia y que se produzcan en la noche, serán de gravedad leve. 
+
+
 * Regla 7:
 
 ````
@@ -433,8 +458,9 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  ->  class Leve  [0.667]
 ````
 
-* Regla 8:
+Esta regla establece que los tipos de accidente choque contra obstáculo fijo, atropello a persona y solo salida de vida, con el estado meteorológico despejado, para las mujeres en el rango de edad entre 30 y 34 años y que se produzcan durante la mañana o la noche serán de gravedad leve.
 
+* Regla 8:
 
 ````
 ## Rule 8: (68/23, lift 1.5)
@@ -446,6 +472,8 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  ->  class Leve  [0.657]
 ````
 
+Esta regla establece que los tipos de accidente choque contra obstáculo fijo, atropello a persona, solo salida de la vía, el estado meteorológico despejado, el tipo de vehículo todoterreno, furgoneta y camión rígido y para el sexo mujer será de gravedad leve.
+
 * Regla 9:
 
 ````
@@ -455,6 +483,8 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##                           Tractocamión, Cuadriciclo ligero}
 ##  ->  class Leve  [0.645]
 ````
+
+Esta regla establece que para el tipo de accidente vuelco y despeñamiento y para los tipos de vehículos turismo, todoterreno, furgoneta, camión rígido, tractocamión y cuadriciclo ligero será de gravedad leve.
 
 * Regla 10:
 
@@ -468,6 +498,8 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  ->  class Leve  [0.635]
 ````
 
+Esta regla establece que para el tipo de accidente choque contra obstáculo fijo, atropello a persona, solo salida de la vía y vuelco, en el estado meteorológico despejado, nublado y lluvia débil para los rangos de edad superior a 70 años e inferior a 17 años se clasificará como gravedad leve.
+
 * Regla 11:
 
 ````
@@ -479,13 +511,107 @@ Vemos que se han generado 18 reglas que clasfican los accidentes, dichas reglas 
 ##  ->  class Leve  [0.606]
 ````
 
+Esta regla establece que el tipo de accidente choque contra obstáculo fijo, atropello a persona, solo salida de la vía y vuelvo para las mujeres en los rangos de edad 45 a 49 años y 18 a 20 años se clasificará como gravedad leve.
+
 * Regla 12:
+
+````
+## Rule 12: (1006/456, lift 1.2)
+##  tipo_accidente in {Choque contra obstáculo fijo, Atropello a persona,
+##                            Solo salida de la vía, Vuelco, Despeñamiento}
+##  sexo = Mujer
+##  ->  class Leve  [0.547]
+## 
+````
+
+Esta regla establece que si el tipo de accidente es choque contra obstáculo fijo, atropello a persona, solo salida de la vía, vuelco y sepeñamiento para el sexo mujer se clasificará como gravedad leve.
+
 * Regla 13:
+
+````
+## Rule 13: (60/2, lift 1.8)
+##  sexo = Desconocido
+##  ->  class Sin asistencia  [0.952]
+````
+
+Esta regla establece que para el sexo desconocido la gravedad será sin asistencia.
+
 * Regla 14:
+
+````
+## Rule 14: (626/107, lift 1.6)
+##  estado_meteorologico in {Desconocido, LLuvia intensa}
+##  tipo_vehiculo in {Turismo, Todo terreno, Furgoneta, Camión rígido,
+##                           Autobús, Tractocamión, Vehículo articulado}
+##  ->  class Sin asistencia  [0.828]
+````
+
+Esta regla establece que para los estados meteorológicos desconocido y lluvia intensa, el tipo de vehículo turismo, todoterreno, furgoneta, camión rígido, autobús, tractocamión y vehículo articulado se clasificarán como sin asistencia.
+
 * Regla 15:
+
+````
+## Rule 15: (5830/1250, lift 1.5)
+##  tipo_accidente in {Colisión lateral, Colisión fronto-lateral,
+##                            Colisión frontal, Alcance, Caída, Colisión múltiple,
+##                            Otro, Atropello a animal}
+##  tipo_vehiculo in {Turismo, Todo terreno, Furgoneta, Camión rígido,
+##                           Autobús, Tractocamión, Maquinaria de obras,
+##                           Vehículo articulado, Cuadriciclo ligero,
+##                           Ambulancia SAMUR, Maquinaria agrícola,
+##                           Camión de bomberos}
+##  sexo in {Hombre, Desconocido}
+##  ->  class Sin asistencia  [0.785]
+````
+
+Esta regla establece que para los tipos de accidente colisión lateral, colisión fronto-lateral, colisión frontal, alcance, caída, colisión múltiple, otro y atropello a animal, los vehículos del tipo turismo, todoterreno, furgoneta, camión rígido, autobús, tractocamión, maquinaria de obras, vehículo articulado, cuadriciclo ligero, ambulancia DAMUR, maquinaria agrícola y camión de bomberos y para los sexos hombre y desconocido se clasificará como sin asistencia.
+
 * Regla 16:
+
+````
+## Rule 16: (8784/2389, lift 1.4)
+##  tipo_accidente in {Colisión lateral, Colisión fronto-lateral,
+##                            Colisión frontal, Alcance, Caída, Colisión múltiple,
+##                            Otro, Atropello a animal}
+##  tipo_vehiculo in {Turismo, Todo terreno, Furgoneta, Camión rígido,
+##                           Tractocamión, Vehículo articulado, Cuadriciclo ligero,
+##                           Ambulancia SAMUR, Autocaravana, Maquinaria agrícola,
+##                           Camión de bomberos}
+##  ->  class Sin asistencia  [0.728]
+````
+
+Esta regla establece que para los tipos de accidentes colisión lateral, colisión fronto-lateral, colisión frontal, alcance, caída, colisión múltiple, otro y atropello a animal y para los tipos de vehículos turismo, todoterreno, furgoneta, camión rígido, tractocamión, vehículo articulado, cuadriciclo ligero, ambulancia SAMUR, autocaravana, maquinaria agrícola y camión de bomberos se clasificara la gravedad del accidente como sin asistencia.
+
 * Regla 17:
+
+````
+## Rule 17: (497/137, lift 1.4)
+##  estado_meteorologico = Despejado
+##  tipo_vehiculo = Turismo
+##  rango_edad = De 50 a 54 años
+##  partes_dia in {Madrugada, Mañana, Tarde}
+##  ->  class Sin asistencia  [0.723]
+````
+
+Esta regla establece que para el estado meteorológico despejado, el tipo de vehículo turismo, para el rango de edad de 50 a 54 años y que se produzcan por la madrugada, mañana o tarde se clasificará la gravedad del accidente como sin asistencia.
+
 * Regla 18:
+
+````
+## Rule 18: (10361/3071, lift 1.3)
+##  tipo_vehiculo in {Turismo, Todo terreno, Furgoneta, Camión rígido,
+##                           Autobús, Tractocamión, Maquinaria de obras,
+##                           Vehículo articulado, Cuadriciclo ligero,
+##                           Ambulancia SAMUR, Autocaravana, Maquinaria agrícola,
+##                           Camión de bomberos}
+##  rango_edad in {De 45 a 49 años, De 40 a 44 años, De 25 a 29 años,
+##                        De 35 a 39 años, De 55 a 59 años, De 18 a 20 años,
+##                        Desconocido, De 21 a 24 años, De 60 a 64 años,
+##                        De 30 a 34 años, De 50 a 54 años, De 65 a 69 años}
+##  ->  class Sin asistencia  [0.704]
+````
+
+Esta regla establece que para los tipos de vehículos turismo, todoterreno, furgoneta, camión rígido, autobús, tractocamión, maquinaria de obras, vehículo articulado, cuadriciclo ligero, ambulancia SAMUR, autocaravana, maquinaria agrícola y camión de bomberos y para los rangos de edad de los 18 años a los 69 años se clasificará la gravedad del accidente como sin asistencia. 
 
 Ahora mostramos el árbol de decisión resultante
 
@@ -494,7 +620,7 @@ model <- C50::C5.0(train_x, train_y)
 plot(model, uniform = TRUE)
 ````
 
-Una vez obtenido el modelo bamos a comprobar su calidad empleando la muestre de testeo que separamos inicialmente.
+Una vez obtenido el modelo vamos a comprobar su calidad empleando la muestre de testeo que separamos inicialmente.
 
 
 ```{r message= FALSE, warning=FALSE}
@@ -516,6 +642,9 @@ Mostramos más información acerca de los errores.
 `````{r message= FALSE, warning=FALSE}
 CrossTable(test_y, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
 ````
+
+
+De este modelo obtenido podemos destacar que no es capaz de predecir los accidentes de gravedad grave o mortal. Podemos ver que el tipo de vehículo parece jugar un papel relevante en la clasificación de los accidentes al igual que el tipo de accidente. Las variables de estado meteorológico, sexo y momento en el que se produce no aparecen jugar un papel relevante. También destacar que los test de alcoholemia no son un indicativo relevante para clasificar los accidentes graves.
 
 ## Ejercicio 5
 
@@ -547,7 +676,7 @@ predicted_model2 <- predict(model2, newdata = test, type="class")
 print(sprintf("La precisión del árbol es: %.4f %%",100*sum(predicted_model2 == test$grado_lesividad) / length(predicted_model)))
 ````
 
-Vemos que este modelo para la muestra de testeo acierta en un 69.92 % de los casos comprobamso que es un porcentaje inferior al obtenido en el apartado anterior.
+Vemos que este modelo para la muestra de testeo acierta en un 69.92 % de los casos comprobamos que es un porcentaje inferior al obtenido en el apartado anterior.
 
 Mostramos la matriz de confusión para ver los errores cometidos por el modelo.
 
@@ -563,6 +692,12 @@ CrossTable(test$grado_lesividad, predicted_model2,prop.chisq  = FALSE, prop.c = 
 ````
 
 
-Podemos ver que este algoritmo tiene un porcentaje de acierto menor que el obtenido en el ejercicio aterior, también observamos que de todas las variables sólo considera relevante la variable tipo_vehiculo, es cierto que el modelo anteriro también la tenía como la más relevante pero tomaba en cuenta algunas de las otras variables. Por último destacar la incapacidad del modelo de predecir los accidentes Graves y Mortales.
+Podemos ver que este algoritmo tiene un porcentaje de acierto menor que el obtenido en el ejercicio anterior, también observamos que de todas las variables sólo considera relevante la variable tipo_vehiculo, es cierto que el modelo anterior también la tenía como la más relevante, pero tomaba en cuenta algunas de las otras variables. Por último, hay que destacar la incapacidad del modelo de predecir los accidentes Graves y Mortales.
 
 ## Ejercicio 6
+
+De las limitaciones que nos encontramos respecto a los análisis realizados las encontramos principalmente a la hora de poder clasificar los accidentes de graveda mortal y grave, ya que sería lo que más útil nos sería para poder prevenirlos, quizá se deba a la poca existencia de accidentes de este tipo o que no se han registrado correctamente. Otro aspecto que nos encontramos es con la poca cantidad de test de drogas que se realizan lo que nos hace que no sea una variable que podamos utilizar en el análisis y se considera un facotr bastante relevante en los accidentes más graves.
+
+En cuanto a los modelos no supervisados, no sencontramos con el problema de sólo poseer como variables numéricas las coordenadas donde se producen los accidentes que si bien no ses útil para localizar y dibujar un mapa con los lugares donde se producen los accidentes, hemos visto que no podemos encontrar una zona geográfica concreta con accidentes graves  o mortales localizados. Una variable que podría ser de utilidad para el análisis serían los grados de alchol en sangre de las personas a las que se realiza el test de alcoholemia.
+
+Tal como hemos ido viendo durante el análisis el principal riesgo que nos podemos encontrar en aplicar este modelo es que estamos pasando por alto los accidentes de mayor gravedad, lo cual no nos sería del todo útil fiarnos de este módelo únicamente ya que pese a que si que podríamos prevenir los accidentes leves, los que requieren un mayor despliegue y acción rápida por parte de los servicios sanitarios sobre todo, no los podemos prevenir con lo que sólo ubicar tanto a policía como servicios sanitarios en base a los accidentes leves es posible que los accidentes más graves sean peor atendidos. Si debe servinos para mejorar los controles de drogas ya que como hemos mencionado es un factor de riesgo que puede influir en la gravedad de un accidente y a prevenir los accidentes que aunque sean de gravedad leve si que nos sería util para bajar la presión de los servicios sanitarios.
